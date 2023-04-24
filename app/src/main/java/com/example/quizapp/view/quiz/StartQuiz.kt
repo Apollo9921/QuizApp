@@ -46,6 +46,7 @@ private var loading = mutableStateOf(false)
 private var success = mutableStateOf(false)
 private var error = mutableStateOf(false)
 private var cancel = mutableStateOf(false)
+private var enable = mutableStateOf(true)
 private var correctAnswers = mutableStateOf(0)
 private var incorrectAnswers = mutableStateOf(0)
 private var progress = mutableStateOf(20)
@@ -100,6 +101,7 @@ private fun ShowQuiz(it: PaddingValues, navHostController: NavHostController, ca
             answers.add(quiz[index].correctAnswer)
             for (i in 0 until 3) {
                 answers.add(quiz[index].incorrectAnswers[i])
+                enable.value = true
             }
             answers.sort()
             LazyColumn(
@@ -140,7 +142,8 @@ private fun ShowQuiz(it: PaddingValues, navHostController: NavHostController, ca
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(start = 20.dp, end = 20.dp)
-                                .clickable {
+                                .clickable(enabled = enable.value) {
+                                    enable.value = false
                                     if (answers[i] == quiz[index].correctAnswer) {
                                         correctAnswers.value++
                                     } else {

@@ -21,7 +21,7 @@
     <string name="points">Points:</string>
     <string name="progressPercentage">Progress:</string>
     <string name="badge">Badge:</string>
-    <string name="totalAndTotalPossiblePoints">%1$d / %2$d possible points</string>
+    <string name="totalAndTotalPossiblePoints">%1$s / %2$s possible points</string>
     <string name="artsAndLiterature">Arts and Literature</string>
     <string name="filmAndTV">Film and TV</string>
     <string name="foodAndDrink">Food and Drink</string>

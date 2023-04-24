@@ -56,7 +56,10 @@ fun QuizResult(
     userViewModel = UserViewModel(context)
     resultsViewModel = ResultsViewModel(context)
 
-    val total = correctAnswers + incorrectAnswers
+    var total = correctAnswers + incorrectAnswers
+    if (total > 5) {
+        total = 5
+    }
     val pointsReceived = correctAnswers * 5
     val pointsPossible = total * 5
     if (isLoadedUser.value && isLoadedResults.value && count == 0) {

@@ -120,8 +120,8 @@ private fun ShowResults() {
                 Text(
                     text = stringResource(
                         id = R.string.totalAndTotalPossiblePoints,
-                        formatTotalCount(user[0].totalPoints.toFloat()).toInt(),
-                        formatTotalCount(user[0].totalPointsPossible.toFloat()).toInt()
+                        formatTotalCount(user[0].totalPoints.toFloat()),
+                        formatTotalCount(user[0].totalPointsPossible.toFloat())
                     ),
                     color = White,
                     fontSize =
