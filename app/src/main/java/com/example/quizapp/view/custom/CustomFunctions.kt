@@ -20,6 +20,8 @@ import com.example.quizapp.R
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Surface
@@ -28,6 +30,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import com.example.quizapp.view.theme.*
 import kotlin.math.ln
@@ -132,18 +135,18 @@ fun formatTotalCount(count: Float): String {
 fun PieChart(
     data: Map<String, Int>,
     radiusOuter: Dp = if (mediaQueryWidth() <= small) {
-        90.dp
+        70.dp
     } else if (mediaQueryWidth() <= normal) {
-        120.dp
+        100.dp
     } else {
-        150.dp
+        130.dp
     },
     chartBarWidth: Dp = if (mediaQueryWidth() <= small) {
-        20.dp
+        15.dp
     } else if (mediaQueryWidth() <= normal) {
-        50.dp
+        25.dp
     } else {
-        70.dp
+        35.dp
     },
     animDuration: Int = 1000,
 ) {
@@ -178,7 +181,7 @@ fun PieChart(
             durationMillis = animDuration,
             delayMillis = 0,
             easing = LinearOutSlowInEasing
-        )
+        ), label = ""
     )
 
     val animateRotation by animateFloatAsState(
@@ -187,7 +190,7 @@ fun PieChart(
             durationMillis = animDuration,
             delayMillis = 0,
             easing = LinearOutSlowInEasing
-        )
+        ), label = ""
     )
 
     LaunchedEffect(key1 = true) {
@@ -198,7 +201,6 @@ fun PieChart(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
         Box(
             modifier = Modifier.size(animateSize.dp),
             contentAlignment = Alignment.Center
@@ -220,14 +222,11 @@ fun PieChart(
                 }
             }
         }
-
-        DetailsPieChart(
-            data = data,
-            colors = colors
-        )
-
     }
-
+    DetailsPieChart(
+        data = data,
+        colors = colors
+    )
 }
 
 @Composable
@@ -235,18 +234,18 @@ fun DetailsPieChart(
     data: Map<String, Int>,
     colors: List<Color>
 ) {
-    Column(
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(2),
         modifier = Modifier
-            .padding(top = 80.dp)
-            .fillMaxWidth()
+            .fillMaxSize()
+            .padding(top = 20.dp)
     ) {
-        data.values.forEachIndexed { index, value ->
+        items(data.size) { item ->
             DetailsPieChartItem(
-                data = Pair(data.keys.elementAt(index), value),
-                color = colors[index]
+                data = Pair(data.keys.elementAt(item), data.values.elementAt(item)),
+                color = colors[item]
             )
         }
-
     }
 }
 
@@ -262,55 +261,49 @@ fun DetailsPieChartItem(
     },
     color: Color
 ) {
-    Surface(
+    Row(
         modifier = Modifier
-            .padding(vertical = 10.dp, horizontal = 40.dp),
-        color = Color.Transparent
+            .fillMaxSize()
+            .padding(top = 10.dp)
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-
-            Box(
-                modifier = Modifier
-                    .background(
-                        color = color,
-                        shape = RoundedCornerShape(10.dp)
-                    )
-                    .size(height)
+        Box(
+            modifier = Modifier
+                .background(
+                    color = color,
+                    shape = RoundedCornerShape(10.dp)
+                )
+                .size(height)
+        )
+        Column(modifier = Modifier.fillMaxWidth()) {
+            Text(
+                modifier = Modifier.padding(start = 15.dp),
+                text = data.first,
+                fontWeight = FontWeight.Medium,
+                fontSize =
+                if (mediaQueryWidth() <= small) {
+                    20.sp
+                } else if (mediaQueryWidth() <= normal) {
+                    30.sp
+                } else {
+                    40.sp
+                },
+                color = Black
             )
-
-            Column(modifier = Modifier.fillMaxWidth()) {
-                Text(
-                    modifier = Modifier.padding(start = 15.dp),
-                    text = data.first,
-                    fontWeight = FontWeight.Medium,
-                    fontSize =
-                    if (mediaQueryWidth() <= small) {
-                        22.sp
-                    } else if (mediaQueryWidth() <= normal) {
-                        32.sp
-                    } else {
-                        42.sp
-                    },
-                    color = Black
-                )
-                Text(
-                    modifier = Modifier.padding(start = 15.dp),
-                    text = data.second.toString() + "%",
-                    fontWeight = FontWeight.Medium,
-                    fontSize =
-                    if (mediaQueryWidth() <= small) {
-                        22.sp
-                    } else if (mediaQueryWidth() <= normal) {
-                        32.sp
-                    } else {
-                        42.sp
-                    },
-                    color = White
-                )
-            }
+            Text(
+                modifier = Modifier.padding(start = 15.dp),
+                text = data.second.toString() + "%",
+                fontWeight = FontWeight.Medium,
+                fontSize =
+                if (mediaQueryWidth() <= small) {
+                    20.sp
+                } else if (mediaQueryWidth() <= normal) {
+                    30.sp
+                } else {
+                    40.sp
+                },
+                color = White,
+                textAlign = TextAlign.Center
+            )
         }
     }
 }

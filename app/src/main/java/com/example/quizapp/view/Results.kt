@@ -1,7 +1,6 @@
 package com.example.quizapp.view
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
@@ -50,7 +49,7 @@ fun Results() {
             }
         }
 
-    if(user.isNotEmpty() && results.isNotEmpty()) {
+    if (user.isNotEmpty() && results.isNotEmpty()) {
         ShowResults()
     }
 }
@@ -85,61 +84,59 @@ private fun ShowResults() {
         }
     }
 
-    LazyColumn(
+    Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(start = 20.dp, end = 20.dp)
     ) {
-        item {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(20.dp),
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    text = stringResource(id = R.string.results),
-                    color = White,
-                    fontSize =
-                    if (mediaQueryWidth() <= small) {
-                        35.sp
-                    } else if (mediaQueryWidth() <= normal) {
-                        40.sp
-                    } else {
-                        45.sp
-                    },
-                    fontFamily = FontFamily.SansSerif,
-                    fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center
-                )
-            }
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    text = stringResource(
-                        id = R.string.totalAndTotalPossiblePoints,
-                        formatTotalCount(user[0].totalPoints.toFloat()),
-                        formatTotalCount(user[0].totalPointsPossible.toFloat())
-                    ),
-                    color = White,
-                    fontSize =
-                    if (mediaQueryWidth() <= small) {
-                        25.sp
-                    } else if (mediaQueryWidth() <= normal) {
-                        30.sp
-                    } else {
-                        35.sp
-                    },
-                    fontFamily = FontFamily.SansSerif,
-                    textAlign = TextAlign.Center
-                )
-            }
-            Spacer(modifier = Modifier.padding(20.dp))
-            PieChart(
-                data = data
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(20.dp),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Text(
+                text = stringResource(id = R.string.results),
+                color = White,
+                fontSize =
+                if (mediaQueryWidth() <= small) {
+                    35.sp
+                } else if (mediaQueryWidth() <= normal) {
+                    40.sp
+                } else {
+                    45.sp
+                },
+                fontFamily = FontFamily.SansSerif,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center
             )
         }
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Text(
+                text = stringResource(
+                    id = R.string.totalAndTotalPossiblePoints,
+                    formatTotalCount(user[0].totalPoints.toFloat()),
+                    formatTotalCount(user[0].totalPointsPossible.toFloat())
+                ),
+                color = White,
+                fontSize =
+                if (mediaQueryWidth() <= small) {
+                    25.sp
+                } else if (mediaQueryWidth() <= normal) {
+                    30.sp
+                } else {
+                    35.sp
+                },
+                fontFamily = FontFamily.SansSerif,
+                textAlign = TextAlign.Center
+            )
+        }
+        Spacer(modifier = Modifier.padding(20.dp))
+        PieChart(
+            data = data
+        )
     }
 }
