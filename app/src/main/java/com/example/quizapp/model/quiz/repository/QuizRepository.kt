@@ -11,6 +11,6 @@ class QuizRepository {
         KtorClient.httpClient.get {
             url("${BuildConfig.BASE_URL}questions?limit=5")
             parameter("categories", category)
-            parameter("difficulty", level)
+            parameter("difficulties", level)
         }
 }

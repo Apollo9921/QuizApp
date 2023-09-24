@@ -2,7 +2,7 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
-    id 'org.jetbrains.kotlin.plugin.serialization'
+    id 'kotlinx-serialization'
 }
 
 android {
@@ -24,10 +24,10 @@ android {
 
     buildTypes {
         debug {
-            buildConfigField "String", "BASE_URL", "\"https://the-trivia-api.com/api/\""
+            buildConfigField "String", "BASE_URL", "\"https://the-trivia-api.com/v2/\""
         }
         release {
-            buildConfigField "String", "BASE_URL", "\"https://the-trivia-api.com/api/\""
+            buildConfigField "String", "BASE_URL", "\"https://the-trivia-api.com/v2/\""
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }

@@ -107,7 +107,7 @@ val categoriesImages = listOf(
     R.drawable.sports
 )
 
-val levelsDifficulty = arrayOf(
+val levelsDifficulty = listOf(
     R.string.easy,
     R.string.medium,
     R.string.hard

@@ -1,7 +1,8 @@
-package com.example.quizapp.model.quiz
+package com.example.quizapp.model.quiz.quizItem
 
+import kotlinx.serialization.Serializable
 
-@kotlinx.serialization.Serializable
+@Serializable
 data class QuizItem(
     val category: String,
     val correctAnswer: String,
@@ -9,7 +10,7 @@ data class QuizItem(
     val id: String,
     val incorrectAnswers: List<String>,
     val isNiche: Boolean,
-    val question: String,
+    val question: Question,
     val regions: List<String?>,
     val tags: List<String>,
     val type: String

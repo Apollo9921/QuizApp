@@ -39,13 +39,12 @@ private lateinit var context: Context
 private var level = mutableStateOf("")
 private var noWifi = ""
 
-@SuppressLint("CoroutineCreationDuringComposition")
 @OptIn(ExperimentalMaterial3Api::class)
+@SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun LevelDifficulty(navHostController: NavHostController, category: String) {
     context = LocalContext.current
     noWifi = stringResource(id = R.string.noInternet)
-    level.value = context.resources.getString(levelsDifficulty[0])
     val (selectedOption, onOptionSelected) = remember { mutableStateOf(levelsDifficulty[0]) }
     BackHandler {
         navHostController.popBackStack(Destination.Main.route, inclusive = true)
@@ -108,21 +107,22 @@ fun LevelDifficulty(navHostController: NavHostController, category: String) {
                     .padding(10.dp),
                 horizontalArrangement = Arrangement.Center
             ) {
-                levelsDifficulty.forEach { text ->
+                levelsDifficulty.forEach { item ->
                     Row(
                         Modifier
                             .selectable(
-                                selected = (text == selectedOption),
+                                selected = (selectedOption == item),
                                 onClick = {
-                                    onOptionSelected(text)
+                                    onOptionSelected(item)
+                                    level.value = context.resources.getString(item)
                                 }
                             )
                     ) {
                         RadioButton(
-                            selected = (text == selectedOption),
+                            selected = (selectedOption == item),
                             onClick = {
-                                onOptionSelected(text)
-                                level.value = context.resources.getString(text)
+                                onOptionSelected(item)
+                                level.value = context.resources.getString(item)
                             },
                             colors = RadioButtonDefaults.colors(
                                 selectedColor = White,
@@ -142,7 +142,7 @@ fun LevelDifficulty(navHostController: NavHostController, category: String) {
                                 )
                         )
                         Text(
-                            text = stringResource(id = text),
+                            text = stringResource(id = item),
                             color = White,
                             fontSize =
                             if (mediaQueryWidth() <= small) {
