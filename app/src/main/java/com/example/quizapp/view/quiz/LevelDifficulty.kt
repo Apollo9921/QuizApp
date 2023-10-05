@@ -164,6 +164,9 @@ fun LevelDifficulty(navHostController: NavHostController, category: String) {
                 onClick = {
                     internet.value = checkInternetConnection(context)
                     if (internet.value) {
+                        if (level.value.isBlank()) {
+                            level.value = context.resources.getString(levelsDifficulty[0])
+                        }
                         navHostController.navigate(
                             Destination.StartQuiz.passArgument(category, level.value)
                         )
