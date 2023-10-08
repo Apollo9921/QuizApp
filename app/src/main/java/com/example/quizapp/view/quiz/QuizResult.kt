@@ -42,7 +42,6 @@ private lateinit var owner: LifecycleOwner
 private lateinit var userViewModel: UserViewModel
 private lateinit var resultsViewModel: ResultsViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun QuizResult(
     navHostController: NavHostController,

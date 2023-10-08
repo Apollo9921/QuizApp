@@ -36,7 +36,6 @@ import com.example.quizapp.viewModel.QuizViewModel
 import io.ktor.client.call.*
 import io.ktor.client.statement.*
 import kotlinx.coroutines.*
-import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
 @SuppressLint("StaticFieldLeak")
@@ -47,17 +46,17 @@ private var success = mutableStateOf(false)
 private var error = mutableStateOf(false)
 private var cancel = mutableStateOf(false)
 private var enable = mutableStateOf(true)
-private var correctAnswers = mutableStateOf(0)
-private var incorrectAnswers = mutableStateOf(0)
-private var progress = mutableStateOf(20)
+private var correctAnswers = mutableIntStateOf(0)
+private var incorrectAnswers = mutableIntStateOf(0)
+private var progress = mutableIntStateOf(20)
 private var quizViewModel: QuizViewModel = QuizViewModel()
 
-@OptIn(ExperimentalMaterial3Api::class)
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun StartQuiz(navHostController: NavHostController, category: String, level: String) {
     context = LocalContext.current
-    correctAnswers.value = 0
-    incorrectAnswers.value = 0
+    correctAnswers.intValue = 0
+    incorrectAnswers.intValue = 0
     getQuiz(category, level)
     Scaffold(
         topBar = { TopBar() },
@@ -75,17 +74,18 @@ fun StartQuiz(navHostController: NavHostController, category: String, level: Str
 }
 
 @SuppressLint("CoroutineCreationDuringComposition")
-@OptIn(
-    ExperimentalFoundationApi::class,
-    ExperimentalMaterial3Api::class
-)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun ShowQuiz(it: PaddingValues, navHostController: NavHostController, category: String) {
-    val state = rememberPagerState()
+private fun ShowQuiz(
+    it: PaddingValues,
+    navHostController: NavHostController,
+    category: String
+) {
+    val state = rememberPagerState(pageCount = { quiz.size })
     val coroutineScope = rememberCoroutineScope()
-    LaunchedEffect(progress.value) {
+    LaunchedEffect(progress.intValue) {
         delay(1000)
-        progress.value--
+        progress.intValue--
     }
     Column(
         modifier = Modifier
@@ -93,7 +93,6 @@ private fun ShowQuiz(it: PaddingValues, navHostController: NavHostController, ca
             .padding(top = it.calculateTopPadding())
     ) {
         HorizontalPager(
-            pageCount = quiz.size,
             state = state,
             userScrollEnabled = false
         ) { index ->
@@ -145,19 +144,19 @@ private fun ShowQuiz(it: PaddingValues, navHostController: NavHostController, ca
                                 .clickable(enabled = enable.value) {
                                     enable.value = false
                                     if (answers[i] == quiz[index].correctAnswer) {
-                                        correctAnswers.value++
+                                        correctAnswers.intValue++
                                     } else {
-                                        incorrectAnswers.value++
+                                        incorrectAnswers.intValue++
                                     }
-                                    progress.value = 20
+                                    progress.intValue = 20
                                     if (state.currentPage < quiz.size - 1) {
                                         coroutineScope.launch { state.animateScrollToPage(state.currentPage + 1) }
                                     } else {
                                         navHostController.navigate(
                                             Destination.QuizResult.passArgument(
                                                 category = category,
-                                                correctAnswers = correctAnswers.value,
-                                                incorrectAnswers = incorrectAnswers.value
+                                                correctAnswers = correctAnswers.intValue,
+                                                incorrectAnswers = incorrectAnswers.intValue
                                             )
                                         )
                                     }
@@ -183,7 +182,7 @@ private fun ShowQuiz(it: PaddingValues, navHostController: NavHostController, ca
                     }
                     Spacer(modifier = Modifier.padding(20.dp))
                     Text(
-                        text = progress.value.toString(),
+                        text = progress.intValue.toString(),
                         color = White,
                         fontSize =
                         if (mediaQueryWidth() <= small) {
@@ -197,17 +196,17 @@ private fun ShowQuiz(it: PaddingValues, navHostController: NavHostController, ca
                         fontWeight = FontWeight.Normal,
                         textAlign = TextAlign.Center,
                     )
-                    if (progress.value == 0) {
-                        incorrectAnswers.value++
-                        progress.value = 20
+                    if (progress.intValue == 0) {
+                        incorrectAnswers.intValue++
+                        progress.intValue = 20
                         if (state.currentPage < quiz.size - 1) {
                             coroutineScope.launch { state.animateScrollToPage(page = state.currentPage + 1) }
                         } else {
                             navHostController.navigate(
                                 Destination.QuizResult.passArgument(
                                     category = category,
-                                    correctAnswers = correctAnswers.value,
-                                    incorrectAnswers = incorrectAnswers.value
+                                    correctAnswers = correctAnswers.intValue,
+                                    incorrectAnswers = incorrectAnswers.intValue
                                 )
                             )
                         }
@@ -229,10 +228,12 @@ private fun getQuiz(category: String, level: String) {
                     loading.value = false
                     cancel.value = true
                 }
+
                 QuizViewModel.QuizUIState.Error -> {
                     loading.value = false
                     error.value = true
                 }
+
                 is QuizViewModel.QuizUIState.Success -> {
                     quiz = Json.decodeFromString(it.quiz.body())
                     loading.value = false
@@ -275,11 +276,13 @@ private fun GetResult(navHostController: NavHostController) {
         loading.value -> {
             Loading()
         }
+
         error.value -> {
             navHostController.popBackStack(Destination.LevelDifficulty.route, inclusive = true)
             navHostController.navigate(Destination.LevelDifficulty.route)
             Toast.makeText(context, stringResource(id = R.string.error), Toast.LENGTH_SHORT).show()
         }
+
         cancel.value -> {
             navHostController.popBackStack(Destination.LevelDifficulty.route, inclusive = true)
             navHostController.navigate(Destination.LevelDifficulty.route)

@@ -1,17 +1,17 @@
 package com.example.quizapp.model.quiz.network
 
 import io.ktor.client.*
-import io.ktor.client.engine.android.*
 import io.ktor.client.plugins.*
-import io.ktor.client.plugins.contentnegotiation.*
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.logging.*
-import io.ktor.client.request.*
-import io.ktor.http.*
-import io.ktor.serialization.kotlinx.json.*
+import io.ktor.client.request.accept
+import io.ktor.http.ContentType
+import io.ktor.http.contentType
+import io.ktor.serialization.kotlinx.json.json
 
 object KtorClient {
 
-    val httpClient = HttpClient(Android) {
+    val httpClient = HttpClient {
         install(HttpTimeout) {
             socketTimeoutMillis = 30000
             requestTimeoutMillis = 30000
@@ -19,17 +19,13 @@ object KtorClient {
         }
 
         install(Logging) {
-            logger = object : Logger {
-                override fun log(message: String) {
-
-                }
-            }
+            logger = Logger.DEFAULT
+            level = LogLevel.ALL
         }
 
         install(ContentNegotiation) {
             json()
         }
-
 
         defaultRequest {
             contentType(ContentType.Application.Json)

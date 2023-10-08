@@ -1,13 +1,14 @@
 package com.example.quizapp.view.navigation
 
-import androidx.compose.animation.AnimatedContentScope
-import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.EaseInOut
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.quizapp.view.Main
 import com.example.quizapp.view.createUser.CreateUser
@@ -15,13 +16,10 @@ import com.example.quizapp.view.onBoard.OnBoard
 import com.example.quizapp.view.quiz.LevelDifficulty
 import com.example.quizapp.view.quiz.QuizResult
 import com.example.quizapp.view.quiz.StartQuiz
-import com.google.accompanist.navigation.animation.AnimatedNavHost
-import com.google.accompanist.navigation.animation.composable
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun AnimationNav(navHostController: NavHostController) {
-    AnimatedNavHost(
+    NavHost(
         navController = navHostController,
         startDestination = Destination.OnBoard.route
     ) {
@@ -32,7 +30,7 @@ fun AnimationNav(navHostController: NavHostController) {
             },
             exitTransition = {
                 slideOutOfContainer(
-                    AnimatedContentScope.SlideDirection.Right,
+                    AnimatedContentTransitionScope.SlideDirection.Right,
                     animationSpec = tween(700)
                 )
             }
@@ -43,13 +41,13 @@ fun AnimationNav(navHostController: NavHostController) {
             route = Destination.CreateUser.route,
             enterTransition = {
                 slideIntoContainer(
-                    AnimatedContentScope.SlideDirection.Left,
+                    AnimatedContentTransitionScope.SlideDirection.Left,
                     animationSpec = tween(700)
                 )
             },
             exitTransition = {
                 slideOutOfContainer(
-                    AnimatedContentScope.SlideDirection.Right,
+                    AnimatedContentTransitionScope.SlideDirection.Right,
                     animationSpec = tween(700)
                 )
             }
@@ -60,13 +58,13 @@ fun AnimationNav(navHostController: NavHostController) {
             route = Destination.Main.route,
             enterTransition = {
                 slideIntoContainer(
-                    AnimatedContentScope.SlideDirection.Left,
+                    AnimatedContentTransitionScope.SlideDirection.Left,
                     animationSpec = tween(700)
                 )
             },
             exitTransition = {
                 slideOutOfContainer(
-                    AnimatedContentScope.SlideDirection.Right,
+                    AnimatedContentTransitionScope.SlideDirection.Right,
                     animationSpec = tween(700)
                 )
             }
@@ -82,13 +80,13 @@ fun AnimationNav(navHostController: NavHostController) {
             ),
             enterTransition = {
                 slideIntoContainer(
-                    AnimatedContentScope.SlideDirection.Left,
+                    AnimatedContentTransitionScope.SlideDirection.Left,
                     animationSpec = tween(700)
                 )
             },
             exitTransition = {
                 slideOutOfContainer(
-                    AnimatedContentScope.SlideDirection.Right,
+                    AnimatedContentTransitionScope.SlideDirection.Right,
                     animationSpec = tween(700)
                 )
             }
@@ -110,13 +108,13 @@ fun AnimationNav(navHostController: NavHostController) {
             ),
             enterTransition = {
                 slideIntoContainer(
-                    AnimatedContentScope.SlideDirection.Left,
+                    AnimatedContentTransitionScope.SlideDirection.Left,
                     animationSpec = tween(300)
                 )
             },
             exitTransition = {
                 slideOutOfContainer(
-                    AnimatedContentScope.SlideDirection.Right,
+                    AnimatedContentTransitionScope.SlideDirection.Right,
                     animationSpec = tween(700)
                 )
             }
@@ -142,13 +140,13 @@ fun AnimationNav(navHostController: NavHostController) {
             ),
             enterTransition = {
                 slideIntoContainer(
-                    AnimatedContentScope.SlideDirection.Left,
+                    AnimatedContentTransitionScope.SlideDirection.Left,
                     animationSpec = tween(700)
                 )
             },
             exitTransition = {
                 slideOutOfContainer(
-                    AnimatedContentScope.SlideDirection.Right,
+                    AnimatedContentTransitionScope.SlideDirection.Right,
                     animationSpec = tween(700)
                 )
             }

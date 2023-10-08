@@ -18,8 +18,8 @@ class QuizViewModel : ViewModel() {
 
     sealed class QuizUIState {
         data class Success(val quiz: HttpResponse) : QuizUIState()
-        object Error : QuizUIState()
-        object Cancel : QuizUIState()
+        data object Error : QuizUIState()
+        data object Cancel : QuizUIState()
     }
 
     fun getQuiz(category: String, level: String, context: Context) {

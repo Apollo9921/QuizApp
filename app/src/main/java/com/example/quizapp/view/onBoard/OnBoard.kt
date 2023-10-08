@@ -43,7 +43,7 @@ import kotlinx.coroutines.*
 fun OnBoard(navHostController: NavHostController) {
     isSplashScreenOpen = false
     val pageCount = 5
-    val state = rememberPagerState()
+    val state = rememberPagerState(pageCount = { pageCount })
     val coroutineScope = rememberCoroutineScope()
     Box(
         modifier = Modifier
@@ -51,7 +51,6 @@ fun OnBoard(navHostController: NavHostController) {
             .background(PurpleGrey40)
     ) {
         HorizontalPager(
-            pageCount = pageCount,
             state = state
         ) {
             val composition by rememberLottieComposition(

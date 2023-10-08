@@ -7,7 +7,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
@@ -229,7 +229,7 @@ private fun ShowProfile(painter: AsyncImagePainter) {
                         )
                     }
                     Spacer(modifier = Modifier.padding(10.dp))
-                    Divider(
+                    HorizontalDivider(
                         color = Black,
                         modifier = Modifier
                             .fillMaxWidth()
@@ -288,7 +288,7 @@ private fun ShowProfile(painter: AsyncImagePainter) {
                         )
                     }
                     Spacer(modifier = Modifier.padding(10.dp))
-                    Divider(
+                    HorizontalDivider(
                         color = Black,
                         modifier = Modifier
                             .fillMaxWidth()
