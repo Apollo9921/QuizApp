@@ -1,10 +1,10 @@
-package com.example.quizapp.model.user
+package com.example.quizapp.data.local.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "user_table")
-data class User(
+data class UserEntity(
     @PrimaryKey(autoGenerate = false)
     val name: String,
     val totalPoints: Int,

@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.NavHostController
 import com.example.quizapp.R
-import com.example.quizapp.model.database.QuizDatabase
+import com.example.quizapp.data.local.database.QuizDatabase
 import com.example.quizapp.view.custom.*
 import com.example.quizapp.view.main.userManager
 import com.example.quizapp.view.main.userName

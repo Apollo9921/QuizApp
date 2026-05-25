@@ -3,22 +3,22 @@ package com.example.quizapp.viewModel
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.quizapp.model.database.QuizDatabase
-import com.example.quizapp.model.results.Results
-import com.example.quizapp.model.results.ResultsRepository
+import com.example.quizapp.data.local.database.QuizDatabase
+import com.example.quizapp.data.local.entity.ResultsEntity
+import com.example.quizapp.data.repository.ResultsRepositoryImpl
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class ResultsViewModel(application: Context): ViewModel() {
 
-    private val repository: ResultsRepository
+    private val repository: ResultsRepositoryImpl
 
     init {
         val resultsDAO = QuizDatabase.getDatabase(application).resultsDao()
-        repository = ResultsRepository(resultsDAO)
+        repository = ResultsRepositoryImpl(resultsDAO)
     }
 
-    fun createCategory(results: Results) {
+    fun createCategory(results: ResultsEntity) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.createResults(results)
         }

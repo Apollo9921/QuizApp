@@ -30,15 +30,15 @@ import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.example.quizapp.R
-import com.example.quizapp.model.database.QuizDatabase
-import com.example.quizapp.model.user.User
+import com.example.quizapp.data.local.database.QuizDatabase
+import com.example.quizapp.data.local.entity.UserEntity
 import com.example.quizapp.view.custom.*
 import com.example.quizapp.view.main.userName
 import com.example.quizapp.view.theme.Black
 import com.example.quizapp.view.theme.White
 import com.example.quizapp.viewModel.UserViewModel
 
-private lateinit var user: SnapshotStateList<User>
+private lateinit var user: SnapshotStateList<UserEntity>
 private var badge = 0
 private var badgeLevel = 0
 @SuppressLint("StaticFieldLeak")

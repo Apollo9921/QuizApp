@@ -3,22 +3,22 @@ package com.example.quizapp.viewModel
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.quizapp.model.database.QuizDatabase
-import com.example.quizapp.model.user.User
-import com.example.quizapp.model.user.UserRepository
+import com.example.quizapp.data.local.database.QuizDatabase
+import com.example.quizapp.data.local.entity.UserEntity
+import com.example.quizapp.data.repository.UserRepositoryImpl
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class UserViewModel(application: Context): ViewModel() {
 
-    private val repository: UserRepository
+    private val repository: UserRepositoryImpl
 
     init {
         val userDAO = QuizDatabase.getDatabase(application).userDao()
-        repository = UserRepository(userDAO)
+        repository = UserRepositoryImpl(userDAO)
     }
 
-    fun createUser(user: User) {
+    fun createUser(user: UserEntity) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.createUser(user)
         }

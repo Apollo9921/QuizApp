@@ -1,15 +1,15 @@
-package com.example.quizapp.model.database
+package com.example.quizapp.data.local.database
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.quizapp.model.results.Results
-import com.example.quizapp.model.results.ResultsDAO
-import com.example.quizapp.model.user.User
-import com.example.quizapp.model.user.UserDAO
+import com.example.quizapp.data.local.entity.ResultsEntity
+import com.example.quizapp.data.local.dao.ResultsDAO
+import com.example.quizapp.data.local.entity.UserEntity
+import com.example.quizapp.data.local.dao.UserDAO
 
-@Database(entities = [User::class, Results::class], version = 1, exportSchema = false)
+@Database(entities = [UserEntity::class, ResultsEntity::class], version = 1, exportSchema = false)
 abstract class QuizDatabase: RoomDatabase() {
 
     abstract fun userDao(): UserDAO

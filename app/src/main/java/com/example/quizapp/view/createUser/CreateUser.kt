@@ -24,8 +24,8 @@ import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.example.quizapp.R
-import com.example.quizapp.model.results.Results
-import com.example.quizapp.model.user.User
+import com.example.quizapp.data.local.entity.ResultsEntity
+import com.example.quizapp.data.local.entity.UserEntity
 import com.example.quizapp.view.custom.*
 import com.example.quizapp.view.main.userManager
 import com.example.quizapp.view.navigation.Destination
@@ -48,7 +48,7 @@ fun CreateUser(navHostController: NavHostController) {
     resultsViewModel = ResultsViewModel(LocalContext.current)
     if(create.value) {
         create.value = false
-        val user = User(
+        val user = UserEntity(
             name = name.value,
             totalPoints = 0,
             totalPointsPossible = 0,
@@ -56,7 +56,7 @@ fun CreateUser(navHostController: NavHostController) {
         )
         userViewModel.createUser(user)
         for (i in categories.indices) {
-            val results = Results(
+            val results = ResultsEntity(
                 category = LocalContext.current.resources.getString(categories[i]),
                 correctAnswers = 0,
                 incorrectAnswers = 0

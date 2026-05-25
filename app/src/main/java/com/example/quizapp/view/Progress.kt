@@ -23,7 +23,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.quizapp.R
-import com.example.quizapp.model.database.QuizDatabase
+import com.example.quizapp.data.local.database.QuizDatabase
 import com.example.quizapp.view.custom.*
 import com.example.quizapp.view.main.isSplashScreenOpen
 import com.example.quizapp.view.theme.White

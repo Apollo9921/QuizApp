@@ -16,14 +16,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.quizapp.R
-import com.example.quizapp.model.database.QuizDatabase
-import com.example.quizapp.model.results.Results
-import com.example.quizapp.model.user.User
+import com.example.quizapp.data.local.database.QuizDatabase
+import com.example.quizapp.data.local.entity.ResultsEntity
+import com.example.quizapp.data.local.entity.UserEntity
 import com.example.quizapp.view.custom.*
 import com.example.quizapp.view.theme.White
 
-private lateinit var user: SnapshotStateList<User>
-private lateinit var results: SnapshotStateList<Results>
+private lateinit var user: SnapshotStateList<UserEntity>
+private lateinit var results: SnapshotStateList<ResultsEntity>
 private lateinit var data: Map<String, Int>
 
 @Composable

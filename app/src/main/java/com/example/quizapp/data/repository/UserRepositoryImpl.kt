@@ -1,8 +1,11 @@
-package com.example.quizapp.model.user
+package com.example.quizapp.data.repository
 
-class UserRepository(private val userDAO: UserDAO) {
+import com.example.quizapp.data.local.dao.UserDAO
+import com.example.quizapp.data.local.entity.UserEntity
 
-    suspend fun createUser(user: User) {
+class UserRepositoryImpl(private val userDAO: UserDAO) {
+
+    suspend fun createUser(user: UserEntity) {
         userDAO.createUser(user)
     }
 

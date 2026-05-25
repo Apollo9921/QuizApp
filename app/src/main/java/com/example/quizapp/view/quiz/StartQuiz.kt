@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.quizapp.R
-import com.example.quizapp.model.quiz.quizItem.QuizItem
+import com.example.quizapp.data.network.dto.QuizItem
 import com.example.quizapp.view.custom.*
 import com.example.quizapp.view.navigation.Destination
 import com.example.quizapp.view.theme.Black
@@ -34,7 +34,6 @@ import com.example.quizapp.view.theme.PurpleGrey40
 import com.example.quizapp.view.theme.White
 import com.example.quizapp.viewModel.QuizViewModel
 import io.ktor.client.call.*
-import io.ktor.client.statement.*
 import kotlinx.coroutines.*
 import kotlinx.serialization.json.Json
 

@@ -2,7 +2,7 @@ package com.example.quizapp.viewModel
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
-import com.example.quizapp.model.quiz.repository.QuizRepository
+import com.example.quizapp.data.network.service.Service
 import com.example.quizapp.view.custom.internet
 import com.example.quizapp.view.internet.checkInternetConnection
 import io.ktor.client.statement.*
@@ -24,7 +24,7 @@ class QuizViewModel : ViewModel() {
 
     fun getQuiz(category: String, level: String, context: Context) {
         runBlocking {
-            val call = QuizRepository()
+            val call = Service()
                 .getQuiz(
                     category.replace(" ", "_").lowercase(),
                     level.lowercase()
