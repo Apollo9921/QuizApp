@@ -3,7 +3,6 @@ package com.example.quizapp.view
 import android.annotation.SuppressLint
 import android.content.Context
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -13,21 +12,19 @@ import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.quizapp.R
 import com.example.quizapp.view.bottomBar.BottomNavigationBar
 import com.example.quizapp.view.custom.*
 import com.example.quizapp.view.main.isSplashScreenOpen
@@ -39,10 +36,52 @@ import com.example.quizapp.view.theme.White
 @SuppressLint("StaticFieldLeak")
 private lateinit var context: Context
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun Quiz(navHostController: NavHostController) {
+fun QuizRoute(navHostController: NavHostController) {
     isSplashScreenOpen = false
+    context = LocalContext.current
+    val navigateToCategory = { it: Int ->
+        navHostController.navigate(
+            Destination.LevelDifficulty.passArgument(
+                context.resources.getString(
+                    categories[it]
+                )
+            )
+        )
+    }
+    count = 0
+    isLoadedUser.value = false
+    isLoadedResults.value = false
+    totalPoints = 0
+    totalPointsPossible = 0
+    correctAnswersBefore = 0
+    incorrectAnswersBefore = 0
+    val categoriesImages = listOf(
+        R.drawable.book,
+        R.drawable.movie,
+        R.drawable.food,
+        R.drawable.knowledge,
+        R.drawable.geography,
+        R.drawable.history,
+        R.drawable.music,
+        R.drawable.science,
+        R.drawable.society,
+        R.drawable.sports
+    )
+
+    QuizScreen(
+        navHostController = navHostController,
+        navigateToCategory = navigateToCategory,
+        categoriesImages = categoriesImages
+    )
+}
+
+@Composable
+private fun QuizScreen(
+    navHostController: NavHostController,
+    navigateToCategory: (Int) -> Unit,
+    categoriesImages: List<Int>
+) {
     Scaffold(
         bottomBar = { BottomNavigationBar(navHostController) }
     ) {
@@ -52,14 +91,6 @@ fun Quiz(navHostController: NavHostController) {
                 .background(PurpleGrey40)
                 .padding(bottom = it.calculateBottomPadding())
         ) {
-            count = 0
-            isLoadedUser.value = false
-            isLoadedResults.value = false
-            totalPoints = 0
-            totalPointsPossible = 0
-            correctAnswersBefore = 0
-            incorrectAnswersBefore = 0
-            context = LocalContext.current
             LazyVerticalStaggeredGrid(
                 columns = StaggeredGridCells.Fixed(2),
                 verticalItemSpacing = 20.dp,
@@ -78,24 +109,9 @@ fun Quiz(navHostController: NavHostController) {
                             disabledContentColor = Black
                         ),
                         modifier = Modifier
-                            .size(
-                                if (mediaQueryWidth() <= small) {
-                                    150.dp
-                                } else if (mediaQueryWidth() <= normal) {
-                                    250.dp
-                                } else {
-                                    350.dp
-                                }
-                            )
-                            .clickable {
-                                navHostController.navigate(
-                                    Destination.LevelDifficulty.passArgument(
-                                        context.resources.getString(
-                                            categories[it]
-                                        )
-                                    )
-                                )
-                            }
+                            .fillMaxWidth()
+                            .aspectRatio(1f)
+                            .clickable { navigateToCategory(it) }
                     ) {
                         Column(
                             modifier = Modifier.fillMaxSize(),
@@ -105,31 +121,14 @@ fun Quiz(navHostController: NavHostController) {
                             Image(
                                 painter = painterResource(id = categoriesImages[it]),
                                 contentDescription = null,
-                                modifier = Modifier
-                                    .size(
-                                        if (mediaQueryWidth() <= small) {
-                                            35.dp
-                                        } else if (mediaQueryWidth() <= normal) {
-                                            40.dp
-                                        } else {
-                                            45.dp
-                                        }
-                                    )
+                                modifier = Modifier.fillMaxSize(0.5f),
+                                contentScale = ContentScale.Fit
                             )
                             Text(
                                 text = stringResource(id = categories[it]),
                                 color = Black,
-                                fontSize =
-                                    if (mediaQueryWidth() <= small) {
-                                        20.sp
-                                    } else if (mediaQueryWidth() <= normal) {
-                                        25.sp
-                                    } else {
-                                        30.sp
-                                    },
-                                fontFamily = FontFamily.SansSerif,
-                                fontWeight = FontWeight.Bold,
-                                textAlign = TextAlign.Center
+                                style = MaterialTheme.typography.labelMedium,
+                                modifier = Modifier.padding(top = 8.dp)
                             )
                         }
                     }

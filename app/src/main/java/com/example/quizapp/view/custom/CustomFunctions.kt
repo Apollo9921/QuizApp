@@ -97,19 +97,6 @@ val categories = listOf(
     R.string.sportAndLeisure
 )
 
-val categoriesImages = listOf(
-    R.drawable.book,
-    R.drawable.movie,
-    R.drawable.food,
-    R.drawable.knowledge,
-    R.drawable.geography,
-    R.drawable.history,
-    R.drawable.music,
-    R.drawable.science,
-    R.drawable.society,
-    R.drawable.sports
-)
-
 val levelsDifficulty = listOf(
     R.string.easy,
     R.string.medium,
