@@ -4,6 +4,7 @@ import androidx.room.Room
 import com.example.quizapp.data.local.database.QuizDatabase
 import com.example.quizapp.data.repository.ResultsRepositoryImpl
 import com.example.quizapp.data.repository.UserRepositoryImpl
+import com.example.quizapp.viewModel.ProgressViewModel
 import com.example.quizapp.viewModel.QuizViewModel
 import com.example.quizapp.viewModel.ResultsViewModel
 import com.example.quizapp.viewModel.UserViewModel
@@ -45,4 +46,5 @@ val viewModelModule = module {
     viewModel { QuizViewModel() }
     viewModel { ResultsViewModel(androidContext()) }
     viewModel { UserViewModel(get()) }
+    viewModel { ProgressViewModel(get()) }
 }

@@ -11,6 +11,12 @@ class UserRepositoryImpl(
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) {
 
+    suspend fun fetchUser(): UserEntity {
+        return withContext(ioDispatcher) {
+            userDAO.fetchUser()
+        }
+    }
+
     suspend fun createUser(user: UserEntity) {
         withContext(ioDispatcher) {
             userDAO.insertUser(user)

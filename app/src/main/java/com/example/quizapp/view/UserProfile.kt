@@ -63,7 +63,7 @@ fun UserProfile(navHostController: NavHostController, viewModel: UserViewModel =
             user = remember { mutableStateListOf() }
             context = LocalContext.current
             QuizDatabase.getDatabase(context)
-                .userDao().getUserProfile()
+                .userDao().fetchUserProfile()
                 .observe(LocalLifecycleOwner.current) {
                     for (i in badgesPoints.indices) {
                         if (it.totalPoints <= badgesPoints[i]) {

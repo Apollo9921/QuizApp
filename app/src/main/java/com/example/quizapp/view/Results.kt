@@ -45,7 +45,7 @@ fun Results(navHostController: NavHostController) {
             user = remember { mutableStateListOf() }
             results = remember { mutableStateListOf() }
             QuizDatabase.getDatabase(LocalContext.current)
-                .userDao().getUserProfile()
+                .userDao().fetchUserProfile()
                 .observe(LocalLifecycleOwner.current) {
                     if (user.isNotEmpty()) {
                         user.clear()

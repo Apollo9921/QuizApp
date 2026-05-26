@@ -152,7 +152,7 @@ fun QuizResult(
                 QuizDatabase
                     .getDatabase(context)
                     .userDao()
-                    .getUserProfile()
+                    .fetchUserProfile()
                     .observe(owner) {
                         totalPoints = it.totalPoints
                         totalPointsPossible = it.totalPointsPossible

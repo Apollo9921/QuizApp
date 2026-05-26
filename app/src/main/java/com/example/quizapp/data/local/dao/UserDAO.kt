@@ -14,7 +14,11 @@ interface UserDAO {
     suspend fun insertUser(user: UserEntity)
 
     @Query("SELECT * FROM user_table")
-    fun getUserProfile() : LiveData<UserEntity>
+    fun fetchUser() : UserEntity
+
+    //TODO to be removed
+    @Query("SELECT * FROM user_table")
+    fun fetchUserProfile() : LiveData<UserEntity>
 
     @Query("UPDATE user_table SET totalPoints =:totalPoints, totalPointsPossible =:totalPointsPossible WHERE name =:name")
     fun updatePoints(totalPoints: Int, totalPointsPossible: Int, name: String)
