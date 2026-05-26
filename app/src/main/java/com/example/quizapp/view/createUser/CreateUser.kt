@@ -36,15 +36,14 @@ import com.example.quizapp.view.theme.White
 import com.example.quizapp.viewModel.ResultsViewModel
 import com.example.quizapp.viewModel.UserViewModel
 import kotlinx.coroutines.runBlocking
+import org.koin.androidx.compose.koinViewModel
 
 private var name = mutableStateOf("")
 private var create = mutableStateOf(false)
-private lateinit var userViewModel: UserViewModel
 private lateinit var resultsViewModel: ResultsViewModel
 
 @Composable
-fun CreateUser(navHostController: NavHostController) {
-    userViewModel = UserViewModel(LocalContext.current)
+fun CreateUser(navHostController: NavHostController, viewModel: UserViewModel = koinViewModel<UserViewModel>()) {
     resultsViewModel = ResultsViewModel(LocalContext.current)
     if(create.value) {
         create.value = false
@@ -54,7 +53,7 @@ fun CreateUser(navHostController: NavHostController) {
             totalPointsPossible = 0,
             badge = stringResource(id = badgesDescription[0])
         )
-        userViewModel.createUser(user)
+        viewModel.createUser(user)
         for (i in categories.indices) {
             val results = ResultsEntity(
                 category = LocalContext.current.resources.getString(categories[i]),

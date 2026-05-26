@@ -5,6 +5,6 @@ import kotlinx.serialization.Serializable
 
 @OptIn(InternalSerializationApi::class)
 @Serializable
-data class Question(
+data class QuestionDTO(
     val text: String
 )

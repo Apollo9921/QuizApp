@@ -44,5 +44,5 @@ val repositoryModule = module {
 val viewModelModule = module {
     viewModel { QuizViewModel() }
     viewModel { ResultsViewModel(androidContext()) }
-    viewModel { UserViewModel(androidContext()) }
+    viewModel { UserViewModel(get()) }
 }

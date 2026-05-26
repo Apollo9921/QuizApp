@@ -34,12 +34,12 @@ import com.example.quizapp.viewModel.ResultsViewModel
 import com.example.quizapp.viewModel.UserViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
+import org.koin.androidx.compose.koinViewModel
 
 
 @SuppressLint("StaticFieldLeak")
 private lateinit var context: Context
 private lateinit var owner: LifecycleOwner
-private lateinit var userViewModel: UserViewModel
 private lateinit var resultsViewModel: ResultsViewModel
 
 @Composable
@@ -47,12 +47,12 @@ fun QuizResult(
     navHostController: NavHostController,
     category: String,
     correctAnswers: Int,
-    incorrectAnswers: Int
+    incorrectAnswers: Int,
+    viewModel: UserViewModel = koinViewModel<UserViewModel>()
 ) {
     owner = LocalLifecycleOwner.current
     context = LocalContext.current
     runBlocking { userName = userManager.userName.first().toString() }
-    userViewModel = UserViewModel(context)
     resultsViewModel = ResultsViewModel(context)
 
     var total = correctAnswers + incorrectAnswers
@@ -63,7 +63,7 @@ fun QuizResult(
     val pointsPossible = total * 5
     if (isLoadedUser.value && isLoadedResults.value && count == 0) {
         updateResults(category, correctAnswers, incorrectAnswers)
-        updateUser(userName, pointsReceived, pointsPossible)
+        updateUser(userName, pointsReceived, pointsPossible, viewModel)
         count++
     }
 
@@ -216,11 +216,16 @@ private fun updateResults(category: String, correctAnswers: Int, incorrectAnswer
 }
 
 @OptIn(DelicateCoroutinesApi::class)
-private fun updateUser(userName: String, pointsReceived: Int, pointsPossible: Int) {
+private fun updateUser(
+    userName: String,
+    pointsReceived: Int,
+    pointsPossible: Int,
+    viewModel: UserViewModel
+) {
     totalPoints += pointsReceived
     totalPointsPossible += pointsPossible
     GlobalScope.launch(Dispatchers.IO) {
-        userViewModel.updateUser(
+        viewModel.updateUser(
             totalPoints = totalPoints,
             totalPointsPossible = totalPointsPossible,
             name = userName

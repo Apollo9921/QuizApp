@@ -37,6 +37,7 @@ import com.example.quizapp.view.main.userName
 import com.example.quizapp.view.theme.Black
 import com.example.quizapp.view.theme.White
 import com.example.quizapp.viewModel.UserViewModel
+import org.koin.androidx.compose.koinViewModel
 
 private lateinit var user: SnapshotStateList<UserEntity>
 private var badge = 0
@@ -44,13 +45,10 @@ private var badgeLevel = 0
 @SuppressLint("StaticFieldLeak")
 private lateinit var context: Context
 
-private lateinit var userViewModel: UserViewModel
-
 @Composable
-fun UserProfile() {
+fun UserProfile(viewModel: UserViewModel = koinViewModel<UserViewModel>()) {
     user = remember { mutableStateListOf() }
     context = LocalContext.current
-    userViewModel = UserViewModel(context)
     QuizDatabase.getDatabase(context)
         .userDao().getUserProfile()
         .observe(LocalLifecycleOwner.current) {
@@ -77,7 +75,7 @@ fun UserProfile() {
             for (i in badgesPoints.indices) {
                 if (it.totalPoints > badgesPoints[i] && badge == badges[i]) {
                     if (i < badgesPoints.size - 1) {
-                        userViewModel.updateBadge(
+                        viewModel.updateBadge(
                             context.getString(badgesDescription[i + 1]),
                             userName
                         )

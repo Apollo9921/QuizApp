@@ -5,14 +5,14 @@ import kotlinx.serialization.Serializable
 
 @OptIn(InternalSerializationApi::class)
 @Serializable
-data class QuizItem(
+data class QuizDTO(
     val category: String,
     val correctAnswer: String,
     val difficulty: String,
     val id: String,
     val incorrectAnswers: List<String>,
     val isNiche: Boolean,
-    val question: Question,
+    val question: QuestionDTO,
     val regions: List<String?>,
     val tags: List<String>,
     val type: String

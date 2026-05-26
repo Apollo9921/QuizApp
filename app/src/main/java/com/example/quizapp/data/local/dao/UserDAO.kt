@@ -11,7 +11,7 @@ import com.example.quizapp.data.local.entity.UserEntity
 interface UserDAO {
 
     @Insert(onConflict = OnConflictStrategy.Companion.IGNORE)
-    suspend fun createUser(user: UserEntity)
+    suspend fun insertUser(user: UserEntity)
 
     @Query("SELECT * FROM user_table")
     fun getUserProfile() : LiveData<UserEntity>

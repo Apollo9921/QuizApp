@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.quizapp.R
-import com.example.quizapp.data.network.dto.QuizItem
+import com.example.quizapp.data.network.dto.QuizDTO
 import com.example.quizapp.view.custom.*
 import com.example.quizapp.view.navigation.Destination
 import com.example.quizapp.view.theme.Black
@@ -39,7 +39,7 @@ import kotlinx.serialization.json.Json
 
 @SuppressLint("StaticFieldLeak")
 private lateinit var context: Context
-private var quiz: ArrayList<QuizItem> = ArrayList()
+private var quiz: ArrayList<QuizDTO> = ArrayList()
 private var loading = mutableStateOf(false)
 private var success = mutableStateOf(false)
 private var error = mutableStateOf(false)
