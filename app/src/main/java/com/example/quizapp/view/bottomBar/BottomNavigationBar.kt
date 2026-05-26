@@ -3,26 +3,27 @@ package com.example.quizapp.view.bottomBar
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.quizapp.view.theme.Black
 import com.example.quizapp.view.theme.Purple40
 import com.example.quizapp.view.theme.White
 
-private var selectedItem = mutableStateOf(BottomNavigationItems.Progress.route)
-
 @Composable
-fun bottomNavigationBar(): String {
+fun BottomNavigationBar(navController: NavController) {
     val items = listOf(
-        BottomNavigationItems.Progress,
         BottomNavigationItems.Quiz,
+        BottomNavigationItems.Progress,
         BottomNavigationItems.Results,
         BottomNavigationItems.Profile
     )
+    val navBackStackEntry = navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry.value?.destination?.route
 
     NavigationBar(
         containerColor = Purple40,
@@ -39,7 +40,7 @@ fun bottomNavigationBar(): String {
             NavigationBarItem(
                 icon = {
                     Icon(
-                        painterResource(id = item.icon),
+                        painter = painterResource(id = item.icon),
                         contentDescription = null
                     )
                 },
@@ -48,9 +49,19 @@ fun bottomNavigationBar(): String {
                         text = LocalContext.current.getString(item.title)
                     )
                 },
-                selected = selectedItem.value == items[index].route,
+                selected = currentRoute == items[index].route,
                 onClick = {
-                    selectedItem.value = items[index].route
+                    if (currentRoute != item.route) {
+                        navController.navigate(item.route) {
+                            navController.graph.startDestinationRoute?.let { route ->
+                                popUpTo(route) {
+                                    saveState = true
+                                }
+                            }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                    }
                 },
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = Black,
@@ -61,5 +72,4 @@ fun bottomNavigationBar(): String {
             )
         }
     }
-    return selectedItem.value
 }

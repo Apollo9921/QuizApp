@@ -3,7 +3,6 @@ package com.example.quizapp.view.navigation
 sealed class Destination(val route: String) {
     data object OnBoard: Destination(route = "onboard")
     data object CreateUser: Destination(route = "create_user")
-    data object Main: Destination(route = "main")
     data object Progress: Destination(route = "progress")
     data object Quiz: Destination(route = "quiz")
     data object Results: Destination(route = "results")

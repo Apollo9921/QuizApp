@@ -32,13 +32,19 @@ class MainActivity : ComponentActivity() {
         setContent {
             QuizAppTheme {
                 userManager = UserManager(dataStore = LocalContext.current.dataStoreUser)
-                navHostController = rememberNavController()
-                AnimationNav(navHostController = navHostController)
                 runBlocking { isLoaded = userManager.userFlow.first() }
                 runBlocking { userName = userManager.userName.first().toString() }
+                navHostController = rememberNavController()
                 if (isLoaded && userName.isNotBlank()) {
-                    navHostController.popBackStack()
-                    navHostController.navigate(Destination.Main.route)
+                    AnimationNav(
+                        navHostController = navHostController,
+                        startDestination = Destination.Quiz.route
+                    )
+                } else {
+                    AnimationNav(
+                        navHostController = navHostController,
+                        startDestination = Destination.OnBoard.route
+                    )
                 }
             }
         }

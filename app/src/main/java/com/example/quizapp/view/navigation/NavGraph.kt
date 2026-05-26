@@ -10,18 +10,22 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.example.quizapp.view.Main
+import com.example.quizapp.view.Progress
+import com.example.quizapp.view.Quiz
+import com.example.quizapp.view.Results
+import com.example.quizapp.view.UserProfile
 import com.example.quizapp.view.createUser.CreateUser
+import com.example.quizapp.view.main.isSplashScreenOpen
 import com.example.quizapp.view.onBoard.OnBoard
 import com.example.quizapp.view.quiz.LevelDifficulty
 import com.example.quizapp.view.quiz.QuizResult
 import com.example.quizapp.view.quiz.StartQuiz
 
 @Composable
-fun AnimationNav(navHostController: NavHostController) {
+fun AnimationNav(navHostController: NavHostController, startDestination: String) {
     NavHost(
         navController = navHostController,
-        startDestination = Destination.OnBoard.route
+        startDestination = startDestination
     ) {
         composable(
             route = Destination.OnBoard.route,
@@ -54,22 +58,17 @@ fun AnimationNav(navHostController: NavHostController) {
         ) {
             CreateUser(navHostController = navHostController)
         }
-        composable(
-            route = Destination.Main.route,
-            enterTransition = {
-                slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Left,
-                    animationSpec = tween(700)
-                )
-            },
-            exitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Right,
-                    animationSpec = tween(700)
-                )
-            }
-        ) {
-            Main(navHostController = navHostController)
+        composable(route = Destination.Progress.route) {
+            Progress(navHostController = navHostController)
+        }
+        composable(route = Destination.Quiz.route) {
+            Quiz(navHostController = navHostController)
+        }
+        composable(route = Destination.Results.route) {
+            Results(navHostController = navHostController)
+        }
+        composable(route = Destination.Profile.route) {
+            UserProfile(navHostController = navHostController)
         }
         composable(
             route = Destination.LevelDifficulty.route,

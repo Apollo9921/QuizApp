@@ -64,7 +64,7 @@ fun CreateUser(navHostController: NavHostController, viewModel: UserViewModel = 
         }
         runBlocking { userManager.storeToDataStore(true, name.value) }
         navHostController.popBackStack()
-        navHostController.navigate(Destination.Main.route)
+        navHostController.navigate(Destination.Quiz.route)
     }
 
     val painter = rememberAsyncImagePainter(

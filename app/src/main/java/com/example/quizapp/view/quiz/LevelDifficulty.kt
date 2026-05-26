@@ -3,7 +3,6 @@ package com.example.quizapp.view.quiz
 import android.annotation.SuppressLint
 import android.content.Context
 import android.widget.Toast
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -46,10 +45,6 @@ fun LevelDifficulty(navHostController: NavHostController, category: String) {
     context = LocalContext.current
     noWifi = stringResource(id = R.string.noInternet)
     val (selectedOption, onOptionSelected) = remember { mutableStateOf(levelsDifficulty[0]) }
-    BackHandler {
-        navHostController.popBackStack(Destination.Main.route, inclusive = true)
-        navHostController.navigate(Destination.Main.route)
-    }
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -75,8 +70,7 @@ fun LevelDifficulty(navHostController: NavHostController, category: String) {
                         }
                     )
                     .clickable {
-                        navHostController.popBackStack(Destination.Main.route, inclusive = true)
-                        navHostController.navigate(Destination.Main.route)
+                        navHostController.navigateUp()
                     }
             )
         }

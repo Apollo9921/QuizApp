@@ -114,8 +114,7 @@ fun QuizResult(
                 Spacer(modifier = Modifier.padding(20.dp))
                 Button(
                     onClick = {
-                        navHostController.popBackStack(Destination.Main.route, inclusive = true)
-                        navHostController.navigate(Destination.Main.route)
+                        navHostController.navigate(Destination.Quiz.route)
                     },
                     shape = RoundedCornerShape(20.dp),
                     border = BorderStroke(width = 2.dp, color = White),

@@ -1,6 +1,8 @@
 package com.example.quizapp.view
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
@@ -15,11 +17,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.example.quizapp.R
 import com.example.quizapp.data.local.database.QuizDatabase
 import com.example.quizapp.data.local.entity.ResultsEntity
 import com.example.quizapp.data.local.entity.UserEntity
+import com.example.quizapp.view.bottomBar.BottomNavigationBar
 import com.example.quizapp.view.custom.*
+import com.example.quizapp.view.theme.PurpleGrey40
 import com.example.quizapp.view.theme.White
 
 private lateinit var user: SnapshotStateList<UserEntity>
@@ -27,30 +32,41 @@ private lateinit var results: SnapshotStateList<ResultsEntity>
 private lateinit var data: Map<String, Int>
 
 @Composable
-fun Results() {
-    user = remember { mutableStateListOf() }
-    results = remember { mutableStateListOf() }
-    QuizDatabase.getDatabase(LocalContext.current)
-        .userDao().getUserProfile()
-        .observe(LocalLifecycleOwner.current) {
-            if (user.isNotEmpty()) {
-                user.clear()
-            }
-            user.add(it)
-        }
-    QuizDatabase.getDatabase(LocalContext.current)
-        .resultsDao().getResults()
-        .observe(LocalLifecycleOwner.current) {
-            if (results.isNotEmpty()) {
-                results.clear()
-            }
-            for (i in it.indices) {
-                results.add(it[i])
-            }
-        }
+fun Results(navHostController: NavHostController) {
+    Scaffold(
+        bottomBar = { BottomNavigationBar(navHostController) }
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(PurpleGrey40)
+                .padding(bottom = it.calculateBottomPadding())
+        ) {
+            user = remember { mutableStateListOf() }
+            results = remember { mutableStateListOf() }
+            QuizDatabase.getDatabase(LocalContext.current)
+                .userDao().getUserProfile()
+                .observe(LocalLifecycleOwner.current) {
+                    if (user.isNotEmpty()) {
+                        user.clear()
+                    }
+                    user.add(it)
+                }
+            QuizDatabase.getDatabase(LocalContext.current)
+                .resultsDao().getResults()
+                .observe(LocalLifecycleOwner.current) {
+                    if (results.isNotEmpty()) {
+                        results.clear()
+                    }
+                    for (i in it.indices) {
+                        results.add(it[i])
+                    }
+                }
 
-    if (user.isNotEmpty() && results.isNotEmpty()) {
-        ShowResults()
+            if (user.isNotEmpty() && results.isNotEmpty()) {
+                ShowResults()
+            }
+        }
     }
 }
 
@@ -99,13 +115,13 @@ private fun ShowResults() {
                 text = stringResource(id = R.string.results),
                 color = White,
                 fontSize =
-                if (mediaQueryWidth() <= small) {
-                    35.sp
-                } else if (mediaQueryWidth() <= normal) {
-                    40.sp
-                } else {
-                    45.sp
-                },
+                    if (mediaQueryWidth() <= small) {
+                        35.sp
+                    } else if (mediaQueryWidth() <= normal) {
+                        40.sp
+                    } else {
+                        45.sp
+                    },
                 fontFamily = FontFamily.SansSerif,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center
@@ -123,13 +139,13 @@ private fun ShowResults() {
                 ),
                 color = White,
                 fontSize =
-                if (mediaQueryWidth() <= small) {
-                    25.sp
-                } else if (mediaQueryWidth() <= normal) {
-                    30.sp
-                } else {
-                    35.sp
-                },
+                    if (mediaQueryWidth() <= small) {
+                        25.sp
+                    } else if (mediaQueryWidth() <= normal) {
+                        30.sp
+                    } else {
+                        35.sp
+                    },
                 fontFamily = FontFamily.SansSerif,
                 textAlign = TextAlign.Center
             )
