@@ -11,9 +11,14 @@ class UserRepositoryImpl(
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) {
 
-    suspend fun fetchUser(): UserEntity {
+    suspend fun fetchUser(): Result<UserEntity> {
         return withContext(ioDispatcher) {
-            userDAO.fetchUser()
+            try {
+                val result = userDAO.fetchUser()
+                Result.success(result)
+            } catch (e: Exception) {
+                Result.failure(e)
+            }
         }
     }
 
