@@ -1,15 +1,11 @@
 package com.example.quizapp.view.quiz
 
-import android.annotation.SuppressLint
-import android.content.Context
-import android.widget.Toast
-import androidx.activity.compose.BackHandler
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -17,7 +13,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -28,216 +23,71 @@ import androidx.navigation.NavHostController
 import com.example.quizapp.R
 import com.example.quizapp.data.network.dto.QuizDTO
 import com.example.quizapp.view.custom.*
-import com.example.quizapp.view.navigation.Destination
 import com.example.quizapp.view.theme.Black
 import com.example.quizapp.view.theme.PurpleGrey40
 import com.example.quizapp.view.theme.White
 import com.example.quizapp.viewModel.QuizViewModel
-import io.ktor.client.call.*
-import kotlinx.coroutines.*
-import kotlinx.serialization.json.Json
+import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 
-@SuppressLint("StaticFieldLeak")
-private lateinit var context: Context
-private var quiz: ArrayList<QuizDTO> = ArrayList()
-private var loading = mutableStateOf(false)
-private var success = mutableStateOf(false)
-private var error = mutableStateOf(false)
-private var cancel = mutableStateOf(false)
-private var enable = mutableStateOf(true)
-private var correctAnswers = mutableIntStateOf(0)
-private var incorrectAnswers = mutableIntStateOf(0)
-private var progress = mutableIntStateOf(20)
-private var quizViewModel: QuizViewModel = QuizViewModel()
-
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun StartQuiz(navHostController: NavHostController, category: String, level: String) {
-    context = LocalContext.current
-    correctAnswers.intValue = 0
-    incorrectAnswers.intValue = 0
-    getQuiz(category, level)
+fun StartQuiz(
+    navHostController: NavHostController,
+    category: String,
+    level: String,
+    viewModel: QuizViewModel = koinViewModel { parametersOf(category, level) }
+) {
+    val uiState = viewModel.uiState.collectAsState().value
+    val quizState = viewModel.quizState.collectAsState().value
+    val correctAnswer = remember {
+        { currentPage: Int ->
+            viewModel.incrementCorrectAnswer(
+                currentPage,
+                navHostController
+            )
+        }
+    }
+    val incorrectAnswer = remember {
+        { currentPage: Int ->
+            viewModel.incrementIncorrectAnswer(
+                currentPage,
+                navHostController
+            )
+        }
+    }
+    val resetValues = remember { { viewModel.resetValues() } }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            resetValues()
+        }
+    }
+
     Scaffold(
         topBar = { TopBar() },
         modifier = Modifier
             .fillMaxSize()
             .background(PurpleGrey40)
             .padding(20.dp)
-    ) {
-        if (success.value) {
-            BackHandler(enabled = true) {}
-            ShowQuiz(it, navHostController, category)
-        }
-    }
-    GetResult(navHostController)
-}
-
-@SuppressLint("CoroutineCreationDuringComposition")
-@OptIn(ExperimentalFoundationApi::class)
-@Composable
-private fun ShowQuiz(
-    it: PaddingValues,
-    navHostController: NavHostController,
-    category: String
-) {
-    val state = rememberPagerState(pageCount = { quiz.size })
-    val coroutineScope = rememberCoroutineScope()
-    LaunchedEffect(progress.intValue) {
-        delay(1000)
-        progress.intValue--
-    }
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(top = it.calculateTopPadding())
-    ) {
-        HorizontalPager(
-            state = state,
-            userScrollEnabled = false
-        ) { index ->
-            val answers: ArrayList<String> = ArrayList()
-            answers.add(quiz[index].correctAnswer)
-            for (i in 0 until 3) {
-                answers.add(quiz[index].incorrectAnswers[i])
-                enable.value = true
+    ) { pv ->
+        when (uiState) {
+            QuizViewModel.UIState.Loading -> {
+                Loading()
             }
-            answers.sort()
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(PurpleGrey40),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                item {
-                    Text(
-                        text = quiz[index].question.text,
-                        color = White,
-                        fontSize =
-                        if (mediaQueryWidth() <= small) {
-                            20.sp
-                        } else if (mediaQueryWidth() <= normal) {
-                            25.sp
-                        } else {
-                            30.sp
-                        },
-                        fontFamily = FontFamily.SansSerif,
-                        fontWeight = FontWeight.Bold,
-                        textAlign = TextAlign.Center
-                    )
 
-                    for (i in 0 until answers.size) {
-                        Spacer(modifier = Modifier.padding(10.dp))
-                        Card(
-                            shape = RoundedCornerShape(20.dp),
-                            border = BorderStroke(width = 3.dp, color = White),
-                            colors = CardDefaults.cardColors(
-                                containerColor = Black,
-                                contentColor = White,
-                                disabledContentColor = White,
-                                disabledContainerColor = Black
-                            ),
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(start = 20.dp, end = 20.dp)
-                                .clickable(enabled = enable.value) {
-                                    enable.value = false
-                                    if (answers[i] == quiz[index].correctAnswer) {
-                                        correctAnswers.intValue++
-                                    } else {
-                                        incorrectAnswers.intValue++
-                                    }
-                                    progress.intValue = 20
-                                    if (state.currentPage < quiz.size - 1) {
-                                        coroutineScope.launch { state.animateScrollToPage(state.currentPage + 1) }
-                                    } else {
-                                        navHostController.navigate(
-                                            Destination.QuizResult.passArgument(
-                                                category = category,
-                                                correctAnswers = correctAnswers.intValue,
-                                                incorrectAnswers = incorrectAnswers.intValue
-                                            )
-                                        )
-                                    }
-                                }
-                        ) {
-                            Text(
-                                text = answers[i],
-                                color = White,
-                                fontSize =
-                                if (mediaQueryWidth() <= small) {
-                                    30.sp
-                                } else if (mediaQueryWidth() <= normal) {
-                                    35.sp
-                                } else {
-                                    40.sp
-                                },
-                                fontFamily = FontFamily.SansSerif,
-                                fontWeight = FontWeight.Normal,
-                                textAlign = TextAlign.Center,
-                                modifier = Modifier.padding(20.dp)
-                            )
-                        }
-                    }
-                    Spacer(modifier = Modifier.padding(20.dp))
-                    Text(
-                        text = progress.intValue.toString(),
-                        color = White,
-                        fontSize =
-                        if (mediaQueryWidth() <= small) {
-                            25.sp
-                        } else if (mediaQueryWidth() <= normal) {
-                            35.sp
-                        } else {
-                            45.sp
-                        },
-                        fontFamily = FontFamily.SansSerif,
-                        fontWeight = FontWeight.Normal,
-                        textAlign = TextAlign.Center,
-                    )
-                    if (progress.intValue == 0) {
-                        incorrectAnswers.intValue++
-                        progress.intValue = 20
-                        if (state.currentPage < quiz.size - 1) {
-                            coroutineScope.launch { state.animateScrollToPage(page = state.currentPage + 1) }
-                        } else {
-                            navHostController.navigate(
-                                Destination.QuizResult.passArgument(
-                                    category = category,
-                                    correctAnswers = correctAnswers.intValue,
-                                    incorrectAnswers = incorrectAnswers.intValue
-                                )
-                            )
-                        }
-                    }
-                }
+            is QuizViewModel.UIState.Error -> {
+                Log.e("StartQuiz", "Error ${uiState.errorMessage}")
             }
-        }
-    }
-}
 
-private fun getQuiz(category: String, level: String) {
-    loading.value = true
-    success.value = false
-    CoroutineScope(Dispatchers.IO).launch {
-        quizViewModel.getQuiz(category, level, context)
-        quizViewModel.getQuizUIState.collect {
-            when (it) {
-                QuizViewModel.QuizUIState.Cancel -> {
-                    loading.value = false
-                    cancel.value = true
-                }
-
-                QuizViewModel.QuizUIState.Error -> {
-                    loading.value = false
-                    error.value = true
-                }
-
-                is QuizViewModel.QuizUIState.Success -> {
-                    quiz = Json.decodeFromString(it.quiz.body())
-                    loading.value = false
-                    success.value = true
-                }
+            is QuizViewModel.UIState.Success -> {
+                ShowQuiz(
+                    pv,
+                    uiState.quiz,
+                    correctAnswer,
+                    incorrectAnswer,
+                    quizState
+                )
             }
         }
     }
@@ -255,13 +105,13 @@ private fun TopBar() {
             text = stringResource(id = R.string.quiz),
             color = White,
             fontSize =
-            if (mediaQueryWidth() <= small) {
-                35.sp
-            } else if (mediaQueryWidth() <= normal) {
-                40.sp
-            } else {
-                45.sp
-            },
+                if (mediaQueryWidth() <= small) {
+                    35.sp
+                } else if (mediaQueryWidth() <= normal) {
+                    40.sp
+                } else {
+                    45.sp
+                },
             fontFamily = FontFamily.SansSerif,
             fontWeight = FontWeight.SemiBold,
             textAlign = TextAlign.Center
@@ -269,24 +119,94 @@ private fun TopBar() {
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun GetResult(navHostController: NavHostController) {
-    when {
-        loading.value -> {
-            Loading()
-        }
+private fun ShowQuiz(
+    it: PaddingValues,
+    data: List<QuizDTO>,
+    correctAnswer: (Int) -> Unit,
+    incorrectAnswer: (Int) -> Unit,
+    quizState: QuizViewModel.QuizState
+) {
+    val state = rememberPagerState(pageCount = { data.size })
+    val coroutineScope = rememberCoroutineScope()
 
-        error.value -> {
-            navHostController.popBackStack(Destination.LevelDifficulty.route, inclusive = true)
-            navHostController.navigate(Destination.LevelDifficulty.route)
-            Toast.makeText(context, stringResource(id = R.string.error), Toast.LENGTH_SHORT).show()
+    LaunchedEffect(quizState.progress) {
+        if (quizState.progress == 0) {
+            incorrectAnswer(state.currentPage)
+            state.animateScrollToPage(state.currentPage + 1)
         }
+    }
 
-        cancel.value -> {
-            navHostController.popBackStack(Destination.LevelDifficulty.route, inclusive = true)
-            navHostController.navigate(Destination.LevelDifficulty.route)
-            Toast.makeText(context, stringResource(id = R.string.noInternet), Toast.LENGTH_SHORT)
-                .show()
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(PurpleGrey40)
+            .padding(top = it.calculateTopPadding())
+    ) {
+        HorizontalPager(
+            state = state,
+            userScrollEnabled = false
+        ) { pageNumber ->
+            val currentQuestion = data[pageNumber]
+            val options = remember(pageNumber) {
+                val list = currentQuestion.incorrectAnswers.toMutableList()
+                list.add(currentQuestion.correctAnswer)
+                list.shuffled()
+            }
+
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.fillMaxSize()
+            ) {
+                Text(
+                    text = currentQuestion.question.text,
+                    color = White,
+                    style = MaterialTheme.typography.labelMedium,
+                    modifier = Modifier.padding(16.dp)
+                )
+
+                Spacer(modifier = Modifier.padding(10.dp))
+
+                options.forEach { answer ->
+                    Card(
+                        shape = RoundedCornerShape(20.dp),
+                        border = BorderStroke(width = 3.dp, color = White),
+                        colors = CardDefaults.cardColors(containerColor = Black),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 20.dp, vertical = 8.dp)
+                            .clickable {
+                                if (answer == currentQuestion.correctAnswer) {
+                                    correctAnswer(state.currentPage)
+                                } else {
+                                    incorrectAnswer(state.currentPage)
+                                }
+                                coroutineScope.launch {
+                                    state.animateScrollToPage(state.currentPage + 1)
+                                }
+                            }
+                    ) {
+                        Text(
+                            text = answer,
+                            color = White,
+                            style = MaterialTheme.typography.labelMedium,
+                            modifier = Modifier.padding(20.dp)
+                        )
+                    }
+                }
+                Spacer(modifier = Modifier.weight(1f))
+                Text(
+                    text = "${quizState.progress}",
+                    color = White,
+                    style = MaterialTheme.typography.titleLarge
+                )
+                Text(
+                    text = "Question ${pageNumber + 1} / ${data.size}",
+                    color = White,
+                    style = MaterialTheme.typography.labelMedium
+                )
+            }
         }
     }
 }

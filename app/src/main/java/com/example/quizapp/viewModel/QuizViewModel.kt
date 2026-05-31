@@ -1,50 +1,112 @@
 package com.example.quizapp.viewModel
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
-import com.example.quizapp.data.network.service.Service
-import com.example.quizapp.view.custom.internet
-import com.example.quizapp.view.internet.checkInternetConnection
-import io.ktor.client.statement.*
+import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavHostController
+import com.example.quizapp.data.network.dto.QuizDTO
+import com.example.quizapp.data.repository.QuizRepositoryImpl
+import com.example.quizapp.view.navigation.Destination
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.launch
 
-class QuizViewModel : ViewModel() {
-    private var checking = 0
+class QuizViewModel(
+    private val quizRepositoryImpl: QuizRepositoryImpl,
+    val category: String,
+    val level: String
+) : ViewModel() {
+    private val _uiState = MutableStateFlow<UIState>(UIState.Loading)
+    val uiState: StateFlow<UIState> = _uiState
 
-    private val _getQuizUIState = MutableStateFlow<QuizUIState>(QuizUIState.Error)
-    val getQuizUIState: StateFlow<QuizUIState> = _getQuizUIState
+    private val _quizState = MutableStateFlow<QuizState>(QuizState())
+    val quizState: StateFlow<QuizState> = _quizState
 
-    sealed class QuizUIState {
-        data class Success(val quiz: HttpResponse) : QuizUIState()
-        data object Error : QuizUIState()
-        data object Cancel : QuizUIState()
+    private var timerJob: Job? = null
+
+    data class QuizState(
+        var progress: Int = 20,
+        var correctAnswers: Int = 0,
+        var incorrectAnswers: Int = 0,
+    )
+
+    init {
+        getQuiz()
     }
 
-    fun getQuiz(category: String, level: String, context: Context) {
-        runBlocking {
-            val call = Service()
-                .getQuiz(
-                    category.replace(" ", "_").lowercase(),
-                    level.lowercase()
+    sealed class UIState {
+        data object Loading : UIState()
+        data class Success(val quiz: List<QuizDTO>, val answers: ArrayList<String>) : UIState()
+        data class Error(val errorMessage: Int) : UIState()
+    }
+
+    private fun getQuiz() {
+        viewModelScope.launch {
+            _uiState.value = UIState.Loading
+            val data = quizRepositoryImpl.getQuiz(
+                category.replace(" ", "_").lowercase(),
+                level.lowercase()
+            )
+            val answers: ArrayList<String> = ArrayList()
+            for (i in 0 until data.size) {
+                answers.add(data[i].correctAnswer)
+                answers.addAll(data[i].incorrectAnswers)
+            }
+            _uiState.value = UIState.Success(data, answers)
+            timing()
+        }
+    }
+
+    fun timing() {
+        timerJob?.cancel()
+        timerJob = viewModelScope.launch {
+            _quizState.value = _quizState.value.copy(progress = 20)
+            while (_quizState.value.progress >= 0) {
+                delay(1000L)
+                _quizState.value = _quizState.value.copy(
+                    progress = _quizState.value.progress - 1
                 )
-            checking = 0
-            while (checking == 0) {
-                internet.value = checkInternetConnection(context)
-                if (internet.value) {
-                    if (call.status.value in 200..299) {
-                        _getQuizUIState.value = QuizUIState.Success(call)
-                        checking++
-                    } else {
-                        _getQuizUIState.value = QuizUIState.Error
-                        checking++
-                    }
-                } else {
-                    _getQuizUIState.value = QuizUIState.Cancel
-                    checking++
-                }
             }
         }
+    }
+
+    fun incrementCorrectAnswer(currentPage: Int, navHostController: NavHostController) {
+        viewModelScope.launch {
+            _quizState.value = _quizState.value.copy(
+                correctAnswers = _quizState.value.correctAnswers + 1
+            )
+            checkCurrentPage(currentPage, navHostController)
+            timing()
+        }
+    }
+
+    fun incrementIncorrectAnswer(currentPage: Int, navHostController: NavHostController) {
+        viewModelScope.launch {
+            _quizState.value = _quizState.value.copy(
+                incorrectAnswers = _quizState.value.incorrectAnswers + 1
+            )
+            checkCurrentPage(currentPage, navHostController)
+            timing()
+        }
+    }
+
+    private fun checkCurrentPage(currentPage: Int, navHostController: NavHostController) {
+        val previousState = _uiState.value as UIState.Success
+        if (currentPage >= previousState.quiz.size - 1) {
+            navHostController.navigate(
+                Destination.QuizResult.passArgument(
+                    category = category,
+                    correctAnswers = _quizState.value.correctAnswers,
+                    incorrectAnswers = _quizState.value.incorrectAnswers
+                )
+            )
+            resetValues()
+        }
+    }
+
+    fun resetValues() {
+        timerJob?.cancel()
+        _quizState.value = QuizState()
     }
 }

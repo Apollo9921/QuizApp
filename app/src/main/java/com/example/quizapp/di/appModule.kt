@@ -2,6 +2,8 @@ package com.example.quizapp.di
 
 import androidx.room.Room
 import com.example.quizapp.data.local.database.QuizDatabase
+import com.example.quizapp.data.network.instance.Instance
+import com.example.quizapp.data.repository.QuizRepositoryImpl
 import com.example.quizapp.data.repository.ResultsRepositoryImpl
 import com.example.quizapp.data.repository.UserRepositoryImpl
 import com.example.quizapp.viewModel.ProgressViewModel
@@ -34,16 +36,18 @@ val localModule = module {
 }
 
 val networkModule = module {
+    single { Instance }
     single { HttpClient(Android) }
 }
 
 val repositoryModule = module {
     single { ResultsRepositoryImpl(get()) }
     single { UserRepositoryImpl(get()) }
+    single { QuizRepositoryImpl(get()) }
 }
 
 val viewModelModule = module {
-    viewModel { QuizViewModel() }
+    viewModel { QuizViewModel(get(), get(), get()) }
     viewModel { ResultsViewModel(androidContext()) }
     viewModel { UserViewModel(get()) }
     viewModel { ProgressViewModel(get()) }
