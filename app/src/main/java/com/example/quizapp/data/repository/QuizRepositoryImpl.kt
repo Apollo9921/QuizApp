@@ -3,7 +3,7 @@ package com.example.quizapp.data.repository
 import com.example.quizapp.BuildConfig
 import com.example.quizapp.data.network.dto.QuizDTO
 import com.example.quizapp.data.network.instance.Instance
-import com.example.quizapp.data.network.service.QuizService
+import com.example.quizapp.domain.repository.QuizRepository
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
@@ -11,7 +11,7 @@ import io.ktor.client.request.url
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 
-class QuizRepositoryImpl(private val instance: Instance) : QuizService {
+class QuizRepositoryImpl(private val instance: Instance) : QuizRepository {
     override suspend fun getQuiz(
         category: String,
         level: String,

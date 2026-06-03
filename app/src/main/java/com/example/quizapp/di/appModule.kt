@@ -6,6 +6,8 @@ import com.example.quizapp.data.network.instance.Instance
 import com.example.quizapp.data.repository.QuizRepositoryImpl
 import com.example.quizapp.data.repository.ResultsRepositoryImpl
 import com.example.quizapp.data.repository.UserRepositoryImpl
+import com.example.quizapp.domain.repository.QuizRepository
+import com.example.quizapp.domain.usecase.GetQuizUseCase
 import com.example.quizapp.viewModel.ProgressViewModel
 import com.example.quizapp.viewModel.QuizViewModel
 import com.example.quizapp.viewModel.ResultsViewModel
@@ -43,7 +45,7 @@ val networkModule = module {
 val repositoryModule = module {
     single { ResultsRepositoryImpl(get()) }
     single { UserRepositoryImpl(get()) }
-    single { QuizRepositoryImpl(get()) }
+    single<QuizRepository> { QuizRepositoryImpl(get()) }
 }
 
 val viewModelModule = module {
@@ -51,4 +53,8 @@ val viewModelModule = module {
     viewModel { ResultsViewModel(androidContext()) }
     viewModel { UserViewModel(get()) }
     viewModel { ProgressViewModel(get()) }
+}
+
+val useCaseModule = module {
+    factory { GetQuizUseCase(get()) }
 }

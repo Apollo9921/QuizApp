@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import com.example.quizapp.data.network.dto.QuizDTO
-import com.example.quizapp.data.repository.QuizRepositoryImpl
+import com.example.quizapp.domain.usecase.GetQuizUseCase
 import com.example.quizapp.view.navigation.Destination
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class QuizViewModel(
-    private val quizRepositoryImpl: QuizRepositoryImpl,
+    private val getQuizUseCase: GetQuizUseCase,
     val category: String,
     val level: String
 ) : ViewModel() {
@@ -44,7 +44,7 @@ class QuizViewModel(
     fun getQuiz() {
         viewModelScope.launch {
             _uiState.value = UIState.Loading
-            val data = quizRepositoryImpl.getQuiz(
+            val data = getQuizUseCase.invoke(
                 category.replace(" ", "_").lowercase(),
                 level.lowercase()
             )
