@@ -38,7 +38,6 @@ import kotlin.math.pow
 
 val small = 600.dp
 val normal = 840.dp
-var internet = mutableStateOf(true)
 var isLoadedUser = mutableStateOf(false)
 var isLoadedResults = mutableStateOf(false)
 var totalPoints = 0
