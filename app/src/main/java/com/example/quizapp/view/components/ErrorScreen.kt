@@ -1,6 +1,7 @@
 package com.example.quizapp.view.components
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -19,18 +20,21 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.quizapp.R
 import com.example.quizapp.view.theme.Purple40
+import com.example.quizapp.view.theme.PurpleGrey40
 import com.example.quizapp.view.theme.White
 
 @Composable
-fun ErrorScreen(errorMessage: Int, onClick: () -> Unit) {
+fun ErrorScreen(errorMessage: String, onClick: () -> Unit) {
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .background(PurpleGrey40),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
             style = MaterialTheme.typography.titleLarge,
-            text = stringResource(errorMessage),
+            text = errorMessage,
             color = White
         )
         Spacer(modifier = Modifier.padding(10.dp))

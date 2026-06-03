@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import com.example.quizapp.data.network.dto.QuizDTO
+import com.example.quizapp.domain.result.AppResult
 import com.example.quizapp.domain.usecase.GetQuizUseCase
 import com.example.quizapp.view.navigation.Destination
 import kotlinx.coroutines.Job
@@ -38,23 +39,31 @@ class QuizViewModel(
     sealed class UIState {
         data object Loading : UIState()
         data class Success(val quiz: List<QuizDTO>, val answers: ArrayList<String>) : UIState()
-        data class Error(val errorMessage: Int) : UIState()
+        data class Error(val errorMessage: String) : UIState()
     }
 
     fun getQuiz() {
         viewModelScope.launch {
             _uiState.value = UIState.Loading
-            val data = getQuizUseCase.invoke(
+            val result = getQuizUseCase.invoke(
                 category.replace(" ", "_").lowercase(),
                 level.lowercase()
             )
-            val answers: ArrayList<String> = ArrayList()
-            for (i in 0 until data.size) {
-                answers.add(data[i].correctAnswer)
-                answers.addAll(data[i].incorrectAnswers)
+            when(result) {
+                is AppResult.Error<*> -> {
+                    _uiState.value = UIState.Error(result.message.toString())
+                }
+                is AppResult.Success -> {
+                    val data = result.data
+                    val answers: ArrayList<String> = ArrayList()
+                    for (i in 0 until data.size) {
+                        answers.add(data[i].correctAnswer)
+                        answers.addAll(data[i].incorrectAnswers)
+                    }
+                    _uiState.value = UIState.Success(data, answers)
+                    timing()
+                }
             }
-            _uiState.value = UIState.Success(data, answers)
-            timing()
         }
     }
 

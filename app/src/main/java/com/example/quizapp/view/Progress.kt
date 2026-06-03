@@ -108,7 +108,7 @@ private fun Progress(
                 }
 
                 is ProgressViewModel.UIState.Error -> {
-                    ErrorScreen(uiState.errorMessage) { fetchUser() }
+                    ErrorScreen(stringResource(uiState.errorMessage)) { fetchUser() }
                 }
 
                 else -> {}
