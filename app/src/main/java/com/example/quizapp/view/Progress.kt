@@ -1,12 +1,8 @@
 package com.example.quizapp.view
 
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProgressIndicatorDefaults
@@ -23,8 +19,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.quizapp.R
 import com.example.quizapp.view.bottomBar.BottomNavigationBar
+import com.example.quizapp.view.components.ErrorScreen
 import com.example.quizapp.view.theme.Pink40
-import com.example.quizapp.view.theme.Purple40
 import com.example.quizapp.view.theme.PurpleGrey40
 import com.example.quizapp.view.theme.White
 import com.example.quizapp.viewModel.ProgressViewModel
@@ -112,39 +108,7 @@ private fun Progress(
                 }
 
                 is ProgressViewModel.UIState.Error -> {
-                    Column(
-                        modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(
-                            style = MaterialTheme.typography.titleLarge,
-                            text = stringResource(uiState.errorMessage),
-                            color = White
-                        )
-                        Spacer(modifier = Modifier.padding(10.dp))
-                        Button(
-                            onClick = { fetchUser() },
-                            shape = RoundedCornerShape(20.dp),
-                            border = BorderStroke(width = 2.dp, color = White),
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = Purple40,
-                                contentColor = Purple40,
-                                disabledContentColor = Purple40,
-                                disabledContainerColor = Purple40
-                            ),
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(start = 40.dp, end = 40.dp)
-                        ) {
-                            Text(
-                                text = stringResource(id = R.string.try_again),
-                                color = White,
-                                style = MaterialTheme.typography.labelMedium,
-                                modifier = Modifier.padding(10.dp)
-                            )
-                        }
-                    }
+                    ErrorScreen(uiState.errorMessage) { fetchUser() }
                 }
 
                 else -> {}

@@ -41,7 +41,7 @@ class QuizViewModel(
         data class Error(val errorMessage: Int) : UIState()
     }
 
-    private fun getQuiz() {
+    fun getQuiz() {
         viewModelScope.launch {
             _uiState.value = UIState.Loading
             val data = quizRepositoryImpl.getQuiz(

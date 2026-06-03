@@ -1,6 +1,5 @@
 package com.example.quizapp.view.quiz
 
-import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -14,14 +13,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.quizapp.R
 import com.example.quizapp.data.network.dto.QuizDTO
+import com.example.quizapp.view.components.ErrorScreen
 import com.example.quizapp.view.custom.*
 import com.example.quizapp.view.theme.Black
 import com.example.quizapp.view.theme.PurpleGrey40
@@ -32,7 +28,7 @@ import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
 @Composable
-fun StartQuiz(
+fun StartQuizRoute(
     navHostController: NavHostController,
     category: String,
     level: String,
@@ -56,8 +52,20 @@ fun StartQuiz(
             )
         }
     }
+    val retry = remember { { viewModel.getQuiz() } }
     val resetValues = remember { { viewModel.resetValues() } }
+    StartQuiz(uiState, quizState, correctAnswer, incorrectAnswer, resetValues, retry)
+}
 
+@Composable
+private fun StartQuiz(
+    uiState: QuizViewModel.UIState,
+    quizState: QuizViewModel.QuizState,
+    correctAnswer: (Int) -> Unit,
+    incorrectAnswer: (Int) -> Unit,
+    resetValues: () -> Unit,
+    retry: () -> Unit
+) {
     DisposableEffect(Unit) {
         onDispose {
             resetValues()
@@ -77,7 +85,7 @@ fun StartQuiz(
             }
 
             is QuizViewModel.UIState.Error -> {
-                Log.e("StartQuiz", "Error ${uiState.errorMessage}")
+                ErrorScreen(uiState.errorMessage) { retry() }
             }
 
             is QuizViewModel.UIState.Success -> {
@@ -102,19 +110,9 @@ private fun TopBar() {
         horizontalArrangement = Arrangement.Center
     ) {
         Text(
+            style = MaterialTheme.typography.titleLarge,
             text = stringResource(id = R.string.quiz),
-            color = White,
-            fontSize =
-                if (mediaQueryWidth() <= small) {
-                    35.sp
-                } else if (mediaQueryWidth() <= normal) {
-                    40.sp
-                } else {
-                    45.sp
-                },
-            fontFamily = FontFamily.SansSerif,
-            fontWeight = FontWeight.SemiBold,
-            textAlign = TextAlign.Center
+            color = White
         )
     }
 }
