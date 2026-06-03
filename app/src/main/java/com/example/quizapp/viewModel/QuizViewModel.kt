@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import com.example.quizapp.data.network.dto.QuizDTO
 import com.example.quizapp.domain.result.AppResult
+import com.example.quizapp.domain.usecase.FormatQuizUseCase
 import com.example.quizapp.domain.usecase.GetQuizUseCase
 import com.example.quizapp.view.navigation.Destination
 import kotlinx.coroutines.Job
@@ -15,6 +16,7 @@ import kotlinx.coroutines.launch
 
 class QuizViewModel(
     private val getQuizUseCase: GetQuizUseCase,
+    private val formatQuizUseCase: FormatQuizUseCase,
     val category: String,
     val level: String
 ) : ViewModel() {
@@ -55,11 +57,7 @@ class QuizViewModel(
                 }
                 is AppResult.Success -> {
                     val data = result.data
-                    val answers: ArrayList<String> = ArrayList()
-                    for (i in 0 until data.size) {
-                        answers.add(data[i].correctAnswer)
-                        answers.addAll(data[i].incorrectAnswers)
-                    }
+                    val answers = formatQuizUseCase.invoke(data)
                     _uiState.value = UIState.Success(data, answers)
                     timing()
                 }

@@ -7,6 +7,7 @@ import com.example.quizapp.data.repository.QuizRepositoryImpl
 import com.example.quizapp.data.repository.ResultsRepositoryImpl
 import com.example.quizapp.data.repository.UserRepositoryImpl
 import com.example.quizapp.domain.repository.QuizRepository
+import com.example.quizapp.domain.usecase.FormatQuizUseCase
 import com.example.quizapp.domain.usecase.GetQuizUseCase
 import com.example.quizapp.viewModel.ProgressViewModel
 import com.example.quizapp.viewModel.QuizViewModel
@@ -49,7 +50,7 @@ val repositoryModule = module {
 }
 
 val viewModelModule = module {
-    viewModel { QuizViewModel(get(), get(), get()) }
+    viewModel { QuizViewModel(get(), get(), get(), get()) }
     viewModel { ResultsViewModel(androidContext()) }
     viewModel { UserViewModel(get()) }
     viewModel { ProgressViewModel(get()) }
@@ -57,4 +58,5 @@ val viewModelModule = module {
 
 val useCaseModule = module {
     factory { GetQuizUseCase(get()) }
+    factory { FormatQuizUseCase() }
 }
