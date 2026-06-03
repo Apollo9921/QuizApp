@@ -3,10 +3,10 @@ package com.example.quizapp.viewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.quizapp.data.local.entity.UserEntity
-import com.example.quizapp.data.repository.UserRepositoryImpl
+import com.example.quizapp.domain.repository.UserRepository
 import kotlinx.coroutines.launch
 
-class UserViewModel(private val repository: UserRepositoryImpl): ViewModel() {
+class UserViewModel(private val repository: UserRepository): ViewModel() {
 
     fun createUser(user: UserEntity) {
         viewModelScope.launch {

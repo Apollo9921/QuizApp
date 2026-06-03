@@ -2,6 +2,7 @@ package com.example.quizapp.data.repository
 
 import com.example.quizapp.data.local.dao.UserDAO
 import com.example.quizapp.data.local.entity.UserEntity
+import com.example.quizapp.domain.repository.UserRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -9,9 +10,9 @@ import kotlinx.coroutines.withContext
 class UserRepositoryImpl(
     private val userDAO: UserDAO,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
-) {
+) : UserRepository {
 
-    suspend fun fetchUser(): Result<UserEntity> {
+    override suspend fun fetchUser(): Result<UserEntity> {
         return withContext(ioDispatcher) {
             try {
                 val result = userDAO.fetchUser()
@@ -22,19 +23,19 @@ class UserRepositoryImpl(
         }
     }
 
-    suspend fun createUser(user: UserEntity) {
+    override suspend fun createUser(user: UserEntity) {
         withContext(ioDispatcher) {
             userDAO.insertUser(user)
         }
     }
 
-    suspend fun updatePoints(totalPoints: Int, totalPointsPossible: Int, name: String) {
+    override suspend fun updatePoints(totalPoints: Int, totalPointsPossible: Int, name: String) {
         withContext(ioDispatcher) {
             userDAO.updatePoints(totalPoints, totalPointsPossible, name)
         }
     }
 
-    suspend fun updateBadge(badge: String, name: String) {
+    override suspend fun updateBadge(badge: String, name: String) {
         withContext(ioDispatcher) {
             userDAO.updateBadge(badge, name)
         }

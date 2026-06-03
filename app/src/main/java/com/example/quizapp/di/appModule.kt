@@ -7,6 +7,9 @@ import com.example.quizapp.data.repository.QuizRepositoryImpl
 import com.example.quizapp.data.repository.ResultsRepositoryImpl
 import com.example.quizapp.data.repository.UserRepositoryImpl
 import com.example.quizapp.domain.repository.QuizRepository
+import com.example.quizapp.domain.repository.UserRepository
+import com.example.quizapp.domain.usecase.FetchUserUseCase
+import com.example.quizapp.domain.usecase.FormatProgressPercentageUseCase
 import com.example.quizapp.domain.usecase.FormatQuizUseCase
 import com.example.quizapp.domain.usecase.GetQuizUseCase
 import com.example.quizapp.presentation.progress.ProgressViewModel
@@ -45,7 +48,7 @@ val networkModule = module {
 
 val repositoryModule = module {
     single { ResultsRepositoryImpl(get()) }
-    single { UserRepositoryImpl(get()) }
+    single<UserRepository> { UserRepositoryImpl(get()) }
     single<QuizRepository> { QuizRepositoryImpl(get()) }
 }
 
@@ -53,10 +56,12 @@ val viewModelModule = module {
     viewModel { QuizViewModel(get(), get(), get(), get()) }
     viewModel { ResultsViewModel(androidContext()) }
     viewModel { UserViewModel(get()) }
-    viewModel { ProgressViewModel(get()) }
+    viewModel { ProgressViewModel(get(), get()) }
 }
 
 val useCaseModule = module {
     factory { GetQuizUseCase(get()) }
     factory { FormatQuizUseCase() }
+    factory { FetchUserUseCase(get()) }
+    factory { FormatProgressPercentageUseCase() }
 }
