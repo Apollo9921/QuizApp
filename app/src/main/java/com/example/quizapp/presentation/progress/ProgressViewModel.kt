@@ -1,4 +1,4 @@
-package com.example.quizapp.viewModel
+package com.example.quizapp.presentation.progress
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

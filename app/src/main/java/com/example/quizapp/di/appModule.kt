@@ -9,8 +9,8 @@ import com.example.quizapp.data.repository.UserRepositoryImpl
 import com.example.quizapp.domain.repository.QuizRepository
 import com.example.quizapp.domain.usecase.FormatQuizUseCase
 import com.example.quizapp.domain.usecase.GetQuizUseCase
-import com.example.quizapp.viewModel.ProgressViewModel
-import com.example.quizapp.viewModel.QuizViewModel
+import com.example.quizapp.presentation.progress.ProgressViewModel
+import com.example.quizapp.presentation.quiz.QuizViewModel
 import com.example.quizapp.viewModel.ResultsViewModel
 import com.example.quizapp.viewModel.UserViewModel
 import io.ktor.client.HttpClient

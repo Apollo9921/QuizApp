@@ -1,4 +1,4 @@
-package com.example.quizapp.view
+package com.example.quizapp.presentation.progress
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
@@ -19,11 +19,11 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.quizapp.R
 import com.example.quizapp.view.bottomBar.BottomNavigationBar
-import com.example.quizapp.view.components.ErrorScreen
+import com.example.quizapp.presentation.components.ErrorScreen
 import com.example.quizapp.view.theme.Pink40
 import com.example.quizapp.view.theme.PurpleGrey40
 import com.example.quizapp.view.theme.White
-import com.example.quizapp.viewModel.ProgressViewModel
+import com.example.quizapp.presentation.progress.ProgressViewModel
 import org.koin.androidx.compose.koinViewModel
 
 @Composable

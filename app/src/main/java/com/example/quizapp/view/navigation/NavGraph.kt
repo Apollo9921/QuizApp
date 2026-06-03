@@ -10,7 +10,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.example.quizapp.view.ProgressRoute
+import com.example.quizapp.presentation.progress.ProgressRoute
 import com.example.quizapp.view.QuizRoute
 import com.example.quizapp.view.Results
 import com.example.quizapp.view.UserProfile
@@ -18,7 +18,7 @@ import com.example.quizapp.view.createUser.CreateUser
 import com.example.quizapp.view.onBoard.OnBoard
 import com.example.quizapp.view.quiz.LevelDifficulty
 import com.example.quizapp.view.quiz.QuizResult
-import com.example.quizapp.view.quiz.StartQuizRoute
+import com.example.quizapp.presentation.quiz.StartQuizRoute
 
 @Composable
 fun AnimationNav(navHostController: NavHostController, startDestination: String) {

@@ -1,4 +1,4 @@
-package com.example.quizapp.view.components
+package com.example.quizapp.presentation.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background

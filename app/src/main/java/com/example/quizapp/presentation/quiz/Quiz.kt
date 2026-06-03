@@ -1,4 +1,4 @@
-package com.example.quizapp.view.quiz
+package com.example.quizapp.presentation.quiz
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -17,12 +17,11 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.quizapp.R
 import com.example.quizapp.data.network.dto.QuizDTO
-import com.example.quizapp.view.components.ErrorScreen
+import com.example.quizapp.presentation.components.ErrorScreen
 import com.example.quizapp.view.custom.*
 import com.example.quizapp.view.theme.Black
 import com.example.quizapp.view.theme.PurpleGrey40
 import com.example.quizapp.view.theme.White
-import com.example.quizapp.viewModel.QuizViewModel
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
