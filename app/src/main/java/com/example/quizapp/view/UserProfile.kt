@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
@@ -46,11 +47,15 @@ import org.koin.androidx.compose.koinViewModel
 private lateinit var user: SnapshotStateList<UserEntity>
 private var badge = 0
 private var badgeLevel = 0
+
 @SuppressLint("StaticFieldLeak")
 private lateinit var context: Context
 
 @Composable
-fun UserProfile(navHostController: NavHostController, viewModel: UserViewModel = koinViewModel<UserViewModel>()) {
+fun UserProfile(
+    navHostController: NavHostController,
+    viewModel: UserViewModel = koinViewModel<UserViewModel>()
+) {
     Scaffold(
         bottomBar = { BottomNavigationBar(navHostController) }
     ) {
@@ -106,271 +111,159 @@ fun UserProfile(navHostController: NavHostController, viewModel: UserViewModel =
                 }
             if (user.isNotEmpty()) {
                 val painter = rememberAsyncImagePainter(
-                    model = ImageRequest.Builder(LocalContext.current)
+                    model = ImageRequest.Builder(context)
                         .data("https://api.dicebear.com/5.x/adventurer/png?seed=${user[0].name}&backgroundColor=transparent")
                         .placeholder(R.drawable.person)
                         .error(R.drawable.person)
                         .build()
                 )
-                ShowProfile(painter)
+                ShowProfile(user, painter)
             }
         }
     }
 }
 
 @Composable
-private fun ShowProfile(painter: AsyncImagePainter) {
+private fun ShowProfile(user: SnapshotStateList<UserEntity>, painter: AsyncImagePainter) {
     val percentage = (user[0].totalPoints * 100) / badgeLevel.toDouble()
-    Column(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Image(
-            painter = painter,
-            contentDescription = null,
+
+    // Determine screen size category once
+    val screenWidth = mediaQueryWidth()
+    val isSmall = screenWidth <= small
+    val isNormal = screenWidth <= normal
+
+    // Dynamic sizes based on screen width
+    val topPadding = if (isSmall) 220.dp else if (isNormal) 320.dp else 420.dp
+    val iconSize = if (isSmall) 48.dp else if (isNormal) 64.dp else 80.dp
+    val titleFontSize = if (isSmall) 28.sp else if (isNormal) 32.sp else 40.sp
+    val labelFontSize = if (isSmall) 20.sp else if (isNormal) 24.sp else 30.sp
+    val valueFontSize = if (isSmall) 18.sp else if (isNormal) 22.sp else 28.sp
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        // Avatar Header
+        Box(
             modifier = Modifier
-                .size(
-                    if (mediaQueryWidth() <= small) {
-                        250.dp
-                    } else if (mediaQueryWidth() <= normal) {
-                        350.dp
-                    } else {
-                        450.dp
-                    }
-                )
-        )
-    }
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(
-                start = 10.dp,
-                end = 10.dp,
-                top =
-                if (mediaQueryWidth() <= small) {
-                    220.dp
-                } else if (mediaQueryWidth() <= normal) {
-                    320.dp
-                } else {
-                    420.dp
-                }
+                .fillMaxWidth()
+                .height(topPadding),
+            contentAlignment = Alignment.Center
+        ) {
+            Image(
+                painter = painter,
+                contentDescription = "Profile Avatar",
+                modifier = Modifier.fillMaxSize(0.7f),
+                contentScale = ContentScale.Fit
             )
-            .clip(
-                RoundedCornerShape(
-                    topStart = 50.dp,
-                    topEnd = 50.dp
-                )
-            )
-            .background(White),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(20.dp)
-    ) {
-        item {
-            Spacer(modifier = Modifier.padding(20.dp))
-            Column {
+        }
+
+        // Details Sheet
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = topPadding - 40.dp) // Overlap slightly with avatar area
+                .clip(RoundedCornerShape(topStart = 40.dp, topEnd = 40.dp))
+                .background(White)
+                .padding(horizontal = 24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            item {
+                Spacer(modifier = Modifier.height(32.dp))
+
+                // User Name
                 Text(
                     text = user[0].name,
                     color = Black,
-                    fontSize =
-                    if (mediaQueryWidth() <= small) {
-                        30.sp
-                    } else if (mediaQueryWidth() <= normal) {
-                        35.sp
-                    } else {
-                        45.sp
-                    },
+                    fontSize = titleFontSize,
+                    fontWeight = FontWeight.ExtraBold,
                     fontFamily = FontFamily.SansSerif,
-                    fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 40.dp, end = 40.dp)
+                    textAlign = TextAlign.Center
                 )
-                Spacer(modifier = Modifier.padding(20.dp))
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(start = 20.dp, end = 20.dp),
-                    horizontalAlignment = Alignment.Start
-                ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.points),
-                            contentDescription = null,
-                            colorFilter = ColorFilter.tint(Black),
-                            modifier = Modifier
-                                .size(
-                                    if (mediaQueryWidth() <= small) {
-                                        60.dp
-                                    } else if (mediaQueryWidth() <= normal) {
-                                        80.dp
-                                    } else {
-                                        100.dp
-                                    }
-                                )
-                        )
-                        Spacer(modifier = Modifier.padding(5.dp))
-                        Text(
-                            text = stringResource(id = R.string.points),
-                            color = Black,
-                            fontSize =
-                            if (mediaQueryWidth() <= small) {
-                                35.sp
-                            } else if (mediaQueryWidth() <= normal) {
-                                45.sp
-                            } else {
-                                55.sp
-                            },
-                            fontFamily = FontFamily.SansSerif,
-                            fontWeight = FontWeight.Bold,
-                            textAlign = TextAlign.Center
-                        )
-                        Spacer(modifier = Modifier.padding(5.dp))
-                        Text(
-                            text = formatTotalCount(user[0].totalPoints.toFloat()),
-                            color = Black,
-                            fontSize =
-                            if (mediaQueryWidth() <= small) {
-                                35.sp
-                            } else if (mediaQueryWidth() <= normal) {
-                                45.sp
-                            } else {
-                                55.sp
-                            },
-                            fontFamily = FontFamily.SansSerif,
-                            textAlign = TextAlign.Center
-                        )
-                    }
-                    Spacer(modifier = Modifier.padding(10.dp))
-                    HorizontalDivider(
-                        color = Black,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(3.dp)
+
+                Spacer(modifier = Modifier.height(32.dp))
+
+                // Info Section
+                Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                    ProfileInfoRow(
+                        iconRes = R.drawable.points,
+                        label = stringResource(R.string.points),
+                        value = formatTotalCount(user[0].totalPoints.toFloat()),
+                        iconSize = iconSize,
+                        labelSize = labelFontSize,
+                        valueSize = valueFontSize
                     )
-                    Spacer(modifier = Modifier.padding(10.dp))
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.daily),
-                            contentDescription = null,
-                            colorFilter = ColorFilter.tint(Black),
-                            modifier = Modifier
-                                .size(
-                                    if (mediaQueryWidth() <= small) {
-                                        60.dp
-                                    } else if (mediaQueryWidth() <= normal) {
-                                        80.dp
-                                    } else {
-                                        100.dp
-                                    }
-                                )
-                        )
-                        Spacer(modifier = Modifier.padding(5.dp))
-                        Text(
-                            text = stringResource(id = R.string.progressPercentage),
-                            color = Black,
-                            fontSize =
-                            if (mediaQueryWidth() <= small) {
-                                35.sp
-                            } else if (mediaQueryWidth() <= normal) {
-                                45.sp
-                            } else {
-                                55.sp
-                            },
-                            fontFamily = FontFamily.SansSerif,
-                            fontWeight = FontWeight.Bold,
-                            textAlign = TextAlign.Center
-                        )
-                        Spacer(modifier = Modifier.padding(5.dp))
-                        Text(
-                            text = "${percentage.toInt()}%",
-                            color = Black,
-                            fontSize =
-                            if (mediaQueryWidth() <= small) {
-                                35.sp
-                            } else if (mediaQueryWidth() <= normal) {
-                                45.sp
-                            } else {
-                                55.sp
-                            },
-                            fontFamily = FontFamily.SansSerif,
-                            textAlign = TextAlign.Center
-                        )
-                    }
-                    Spacer(modifier = Modifier.padding(10.dp))
-                    HorizontalDivider(
-                        color = Black,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(3.dp)
+
+                    ProfileInfoRow(
+                        iconRes = R.drawable.daily,
+                        label = stringResource(R.string.progressPercentage),
+                        value = "${percentage.toInt()}%",
+                        iconSize = iconSize,
+                        labelSize = labelFontSize,
+                        valueSize = valueFontSize
                     )
-                    Spacer(modifier = Modifier.padding(10.dp))
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Image(
-                            painter = painterResource(id = badge),
-                            contentDescription = null,
-                            modifier = Modifier
-                                .size(
-                                    if (mediaQueryWidth() <= small) {
-                                        60.dp
-                                    } else if (mediaQueryWidth() <= normal) {
-                                        80.dp
-                                    } else {
-                                        100.dp
-                                    }
-                                )
-                        )
-                        Spacer(modifier = Modifier.padding(5.dp))
-                        Text(
-                            text = stringResource(id = R.string.badge),
-                            color = Black,
-                            fontSize =
-                            if (mediaQueryWidth() <= small) {
-                                35.sp
-                            } else if (mediaQueryWidth() <= normal) {
-                                45.sp
-                            } else {
-                                55.sp
-                            },
-                            fontFamily = FontFamily.SansSerif,
-                            fontWeight = FontWeight.Bold,
-                            textAlign = TextAlign.Center
-                        )
-                        Spacer(modifier = Modifier.padding(5.dp))
-                        Text(
-                            text = user[0].badge,
-                            color = Black,
-                            fontSize =
-                            if (mediaQueryWidth() <= small) {
-                                35.sp
-                            } else if (mediaQueryWidth() <= normal) {
-                                45.sp
-                            } else {
-                                55.sp
-                            },
-                            fontFamily = FontFamily.SansSerif,
-                            textAlign = TextAlign.Center,
-                            lineHeight =
-                            if (mediaQueryWidth() <= small) {
-                                35.sp
-                            } else if (mediaQueryWidth() <= normal) {
-                                45.sp
-                            } else {
-                                55.sp
-                            }
-                        )
-                    }
+
+                    ProfileInfoRow(
+                        iconRes = badge, // Global badge variable
+                        label = stringResource(R.string.badge),
+                        value = user[0].badge,
+                        iconSize = iconSize,
+                        labelSize = labelFontSize,
+                        valueSize = valueFontSize,
+                        showDivider = false
+                    )
                 }
+                Spacer(modifier = Modifier.height(40.dp))
             }
+        }
+    }
+}
+
+@Composable
+private fun ProfileInfoRow(
+    iconRes: Int,
+    label: String,
+    value: String,
+    iconSize: androidx.compose.ui.unit.Dp,
+    labelSize: androidx.compose.ui.unit.TextUnit,
+    valueSize: androidx.compose.ui.unit.TextUnit,
+    showDivider: Boolean = true
+) {
+    Column {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            Image(
+                painter = painterResource(id = iconRes),
+                contentDescription = null,
+                modifier = Modifier.size(iconSize),
+                // Only tint if it's not the badge (assuming badge is colorful)
+                colorFilter = if (iconRes != badge) ColorFilter.tint(Black) else null
+            )
+
+            Text(
+                text = label,
+                modifier = Modifier.weight(1f),
+                color = Black.copy(alpha = 0.6f),
+                fontSize = labelSize,
+                fontWeight = FontWeight.Medium
+            )
+
+            Text(
+                text = value,
+                color = Black,
+                fontSize = valueSize,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.End
+            )
+        }
+        if (showDivider) {
+            HorizontalDivider(
+                thickness = 1.dp,
+                color = Black.copy(alpha = 0.1f),
+                modifier = Modifier.padding(top = 8.dp)
+            )
         }
     }
 }
