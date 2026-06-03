@@ -32,7 +32,7 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.quizapp.R
 import com.example.quizapp.view.custom.*
 import com.example.quizapp.view.main.isSplashScreenOpen
-import com.example.quizapp.view.navigation.Destination
+import com.example.quizapp.presentation.navigation.Destination
 import com.example.quizapp.view.theme.Purple40
 import com.example.quizapp.view.theme.PurpleGrey40
 import com.example.quizapp.view.theme.White

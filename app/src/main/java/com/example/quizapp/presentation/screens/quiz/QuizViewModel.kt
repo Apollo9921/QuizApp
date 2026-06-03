@@ -1,4 +1,4 @@
-package com.example.quizapp.presentation.quiz
+package com.example.quizapp.presentation.screens.quiz
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -7,7 +7,7 @@ import com.example.quizapp.data.network.dto.QuizDTO
 import com.example.quizapp.domain.result.AppResult
 import com.example.quizapp.domain.usecase.FormatQuizUseCase
 import com.example.quizapp.domain.usecase.GetQuizUseCase
-import com.example.quizapp.view.navigation.Destination
+import com.example.quizapp.presentation.navigation.Destination
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow

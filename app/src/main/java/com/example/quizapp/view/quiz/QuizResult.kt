@@ -26,7 +26,7 @@ import com.example.quizapp.data.local.database.QuizDatabase
 import com.example.quizapp.view.custom.*
 import com.example.quizapp.view.main.userManager
 import com.example.quizapp.view.main.userName
-import com.example.quizapp.view.navigation.Destination
+import com.example.quizapp.presentation.navigation.Destination
 import com.example.quizapp.view.theme.Purple40
 import com.example.quizapp.view.theme.PurpleGrey40
 import com.example.quizapp.view.theme.White

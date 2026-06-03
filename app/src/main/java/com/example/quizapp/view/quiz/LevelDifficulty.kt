@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.quizapp.R
 import com.example.quizapp.view.custom.*
-import com.example.quizapp.view.navigation.Destination
+import com.example.quizapp.presentation.navigation.Destination
 import com.example.quizapp.view.theme.Black
 import com.example.quizapp.view.theme.Purple40
 import com.example.quizapp.view.theme.PurpleGrey40

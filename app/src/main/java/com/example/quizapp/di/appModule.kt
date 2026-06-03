@@ -12,8 +12,8 @@ import com.example.quizapp.domain.usecase.FetchUserUseCase
 import com.example.quizapp.domain.usecase.FormatProgressPercentageUseCase
 import com.example.quizapp.domain.usecase.FormatQuizUseCase
 import com.example.quizapp.domain.usecase.GetQuizUseCase
-import com.example.quizapp.presentation.progress.ProgressViewModel
-import com.example.quizapp.presentation.quiz.QuizViewModel
+import com.example.quizapp.presentation.screens.progress.ProgressViewModel
+import com.example.quizapp.presentation.screens.quiz.QuizViewModel
 import com.example.quizapp.viewModel.ResultsViewModel
 import com.example.quizapp.viewModel.UserViewModel
 import io.ktor.client.HttpClient

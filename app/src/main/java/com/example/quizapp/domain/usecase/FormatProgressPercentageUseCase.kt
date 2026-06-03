@@ -1,7 +1,7 @@
 package com.example.quizapp.domain.usecase
 
 import com.example.quizapp.data.local.entity.UserEntity
-import com.example.quizapp.presentation.progress.ProgressViewModel
+import com.example.quizapp.presentation.screens.progress.ProgressViewModel
 import com.example.quizapp.view.custom.badgesPoints
 
 class FormatProgressPercentageUseCase {

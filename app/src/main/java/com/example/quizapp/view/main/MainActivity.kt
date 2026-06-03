@@ -9,8 +9,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.quizapp.view.dataStore.UserManager
 import com.example.quizapp.view.dataStore.dataStoreUser
-import com.example.quizapp.view.navigation.AnimationNav
-import com.example.quizapp.view.navigation.Destination
+import com.example.quizapp.presentation.navigation.AnimationNav
+import com.example.quizapp.presentation.navigation.Destination
 import com.example.quizapp.view.theme.QuizAppTheme
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking

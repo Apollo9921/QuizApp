@@ -1,4 +1,4 @@
-package com.example.quizapp.presentation.quiz
+package com.example.quizapp.presentation.screens.quiz
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
