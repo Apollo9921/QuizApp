@@ -7,13 +7,17 @@ import com.example.quizapp.data.repository.QuizRepositoryImpl
 import com.example.quizapp.data.repository.ResultsRepositoryImpl
 import com.example.quizapp.data.repository.UserRepositoryImpl
 import com.example.quizapp.domain.repository.QuizRepository
+import com.example.quizapp.domain.repository.ResultsRepository
 import com.example.quizapp.domain.repository.UserRepository
 import com.example.quizapp.domain.usecase.FetchUserUseCase
 import com.example.quizapp.domain.usecase.FormatProgressPercentageUseCase
 import com.example.quizapp.domain.usecase.FormatQuizUseCase
 import com.example.quizapp.domain.usecase.GetQuizUseCase
+import com.example.quizapp.domain.usecase.UpdatePointsUseCase
+import com.example.quizapp.domain.usecase.UpdateResultsUseCase
 import com.example.quizapp.presentation.screens.progress.ProgressViewModel
 import com.example.quizapp.presentation.screens.quiz.QuizViewModel
+import com.example.quizapp.presentation.screens.quizResult.QuizResultViewModel
 import com.example.quizapp.viewModel.ResultsViewModel
 import com.example.quizapp.viewModel.UserViewModel
 import io.ktor.client.HttpClient
@@ -47,7 +51,7 @@ val networkModule = module {
 }
 
 val repositoryModule = module {
-    single { ResultsRepositoryImpl(get()) }
+    single<ResultsRepository> { ResultsRepositoryImpl(get(), get()) }
     single<UserRepository> { UserRepositoryImpl(get()) }
     single<QuizRepository> { QuizRepositoryImpl(get()) }
 }
@@ -57,6 +61,8 @@ val viewModelModule = module {
     viewModel { ResultsViewModel(androidContext()) }
     viewModel { UserViewModel(get()) }
     viewModel { ProgressViewModel(get(), get()) }
+    viewModel { QuizResultViewModel(get(), get(), get(), get(), get()) }
+
 }
 
 val useCaseModule = module {
@@ -64,4 +70,6 @@ val useCaseModule = module {
     factory { FormatQuizUseCase() }
     factory { FetchUserUseCase(get()) }
     factory { FormatProgressPercentageUseCase() }
+    factory { UpdateResultsUseCase(get()) }
+    factory { UpdatePointsUseCase(get()) }
 }

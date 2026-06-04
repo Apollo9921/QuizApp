@@ -15,18 +15,13 @@ class ResultsViewModel(application: Context): ViewModel() {
 
     init {
         val resultsDAO = QuizDatabase.getDatabase(application).resultsDao()
-        repository = ResultsRepositoryImpl(resultsDAO)
+        val userDAO = QuizDatabase.getDatabase(application).userDao()
+        repository = ResultsRepositoryImpl(resultsDAO, userDAO)
     }
 
     fun createCategory(results: ResultsEntity) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.createResults(results)
-        }
-    }
-
-    fun updateCategory(category: String, correctAnswers: Int, incorrectAnswers: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
-            repository.updateResults(category, correctAnswers, incorrectAnswers)
         }
     }
 

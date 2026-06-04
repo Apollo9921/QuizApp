@@ -17,8 +17,8 @@ import com.example.quizapp.view.UserProfile
 import com.example.quizapp.view.createUser.CreateUser
 import com.example.quizapp.view.onBoard.OnBoard
 import com.example.quizapp.view.quiz.LevelDifficulty
-import com.example.quizapp.view.quiz.QuizResult
 import com.example.quizapp.presentation.screens.quiz.StartQuizRoute
+import com.example.quizapp.presentation.screens.quizResult.QuizResultRoute
 
 @Composable
 fun AnimationNav(navHostController: NavHostController, startDestination: String) {
@@ -149,7 +149,7 @@ fun AnimationNav(navHostController: NavHostController, startDestination: String)
                 )
             }
         ) {
-            QuizResult(
+            QuizResultRoute(
                 navHostController = navHostController,
                 category = it.arguments?.getString("category")!!,
                 correctAnswers = it.arguments?.getInt("correctAnswers")!!,
