@@ -1,21 +1,11 @@
 package com.example.quizapp.view.custom
 
-import android.view.WindowManager
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.quizapp.R
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Surface
-import com.example.quizapp.presentation.core.PurpleGrey40
-import com.example.quizapp.presentation.core.White
 import kotlin.math.ln
 import kotlin.math.pow
 
@@ -85,34 +75,4 @@ fun formatTotalCount(count: Float): String {
         count / 1000.0.pow(exp.toDouble()),
         "kMGTPE"[exp - 1]
     )
-}
-
-@Composable
-fun Loading() {
-    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
-    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
-    Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = PurpleGrey40
-    ) {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            CircularProgressIndicator(
-                color = White,
-                strokeWidth = 3.dp,
-                modifier = Modifier.size(
-                    if (mediaQueryWidth() <= small) {
-                        100.dp
-                    } else if (mediaQueryWidth() <= normal) {
-                        150.dp
-                    } else {
-                        200.dp
-                    }
-                )
-            )
-        }
-    }
 }

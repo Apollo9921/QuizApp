@@ -18,6 +18,7 @@ import androidx.navigation.NavHostController
 import com.example.quizapp.R
 import com.example.quizapp.data.network.dto.QuizDTO
 import com.example.quizapp.presentation.components.ErrorScreen
+import com.example.quizapp.presentation.components.Loading
 import com.example.quizapp.view.custom.*
 import com.example.quizapp.presentation.core.Black
 import com.example.quizapp.presentation.core.PurpleGrey40
