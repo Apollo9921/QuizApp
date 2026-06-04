@@ -38,7 +38,7 @@ class MainActivity : ComponentActivity() {
                 if (isLoaded && userName.isNotBlank()) {
                     AnimationNav(
                         navHostController = navHostController,
-                        startDestination = Destination.Quiz.route
+                        startDestination = Destination.Categories.route
                     )
                 } else {
                     AnimationNav(

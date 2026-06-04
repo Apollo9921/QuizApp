@@ -1,7 +1,5 @@
 package com.example.quizapp.view
 
-import android.annotation.SuppressLint
-import android.content.Context
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -33,13 +31,10 @@ import com.example.quizapp.view.theme.Black
 import com.example.quizapp.view.theme.PurpleGrey40
 import com.example.quizapp.view.theme.White
 
-@SuppressLint("StaticFieldLeak")
-private lateinit var context: Context
-
 @Composable
-fun QuizRoute(navHostController: NavHostController) {
+fun CategoriesRoute(navHostController: NavHostController) {
     isSplashScreenOpen = false
-    context = LocalContext.current
+    val context = LocalContext.current
     val navigateToCategory = { it: Int ->
         navHostController.navigate(
             Destination.LevelDifficulty.passArgument(
@@ -49,13 +44,6 @@ fun QuizRoute(navHostController: NavHostController) {
             )
         )
     }
-    count = 0
-    isLoadedUser.value = false
-    isLoadedResults.value = false
-    totalPoints = 0
-    totalPointsPossible = 0
-    correctAnswersBefore = 0
-    incorrectAnswersBefore = 0
     val categoriesImages = listOf(
         R.drawable.book,
         R.drawable.movie,
@@ -69,7 +57,7 @@ fun QuizRoute(navHostController: NavHostController) {
         R.drawable.sports
     )
 
-    QuizScreen(
+    CategoriesScreen(
         navHostController = navHostController,
         navigateToCategory = navigateToCategory,
         categoriesImages = categoriesImages
@@ -77,7 +65,7 @@ fun QuizRoute(navHostController: NavHostController) {
 }
 
 @Composable
-private fun QuizScreen(
+private fun CategoriesScreen(
     navHostController: NavHostController,
     navigateToCategory: (Int) -> Unit,
     categoriesImages: List<Int>
@@ -89,6 +77,7 @@ private fun QuizScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .background(PurpleGrey40)
+                .safeDrawingPadding()
                 .padding(bottom = it.calculateBottomPadding())
         ) {
             LazyVerticalStaggeredGrid(

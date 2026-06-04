@@ -30,10 +30,6 @@ class ProgressViewModel(
         data class Error(val errorMessage: Int) : UIState()
     }
 
-    init {
-        fetchUser()
-    }
-
     fun fetchUser() {
         viewModelScope.launch {
             val result = fetchUserUseCase.invoke()

@@ -19,7 +19,7 @@ interface ResultsDAO {
     @Query("SELECT * FROM results_table WHERE category =:category")
     fun getSpecificCategory(category: String) : LiveData<ResultsEntity>
 
-    @Query("UPDATE results_table SET correctAnswers =:correctAnswers, incorrectAnswers =:incorrectAnswers WHERE category =:category")
-    fun updateResults(category: String, correctAnswers: Int, incorrectAnswers: Int)
+    @Query("UPDATE results_table SET correctAnswers = correctAnswers + :correctAnswers, incorrectAnswers = incorrectAnswers + :incorrectAnswers WHERE category = :category")
+    suspend fun updateResults(category: String, correctAnswers: Int, incorrectAnswers: Int)
 
 }

@@ -10,7 +10,7 @@ sealed class BottomNavigationItems(val title: Int, var icon: Int, var route: Str
         Destination.Progress.route
     )
 
-    object Quiz : BottomNavigationItems(R.string.quiz, R.drawable.quiz, Destination.Quiz.route)
+    object Quiz : BottomNavigationItems(R.string.quiz, R.drawable.quiz, Destination.Categories.route)
 
     object Results :
         BottomNavigationItems(R.string.results, R.drawable.results, Destination.Results.route)

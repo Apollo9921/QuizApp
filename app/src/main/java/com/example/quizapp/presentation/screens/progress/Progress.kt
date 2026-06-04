@@ -9,9 +9,8 @@ import androidx.compose.material3.ProgressIndicatorDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -32,6 +31,9 @@ fun ProgressRoute(
 ) {
     val uiState = viewModel.uiState.collectAsState().value
     val fetchUser = { viewModel.fetchUser() }
+    LaunchedEffect(Unit) {
+        fetchUser()
+    }
     Progress(
         uiState = uiState,
         fetchUser = fetchUser,
@@ -73,9 +75,9 @@ private fun Progress(
                 is ProgressViewModel.UIState.Success -> {
                     val totalPoints = uiState.userData.totalPoints
                     val badge = uiState.userData.badge
-                    val progress = remember { mutableStateOf(uiState.userData.percentage.toFloat()) }
+                    val progress = uiState.userData.percentage.toFloat()
                     val animatedProgress = animateFloatAsState(
-                        targetValue = progress.value,
+                        targetValue = progress,
                         animationSpec = ProgressIndicatorDefaults.ProgressAnimationSpec
                     ).value
 

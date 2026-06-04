@@ -20,8 +20,8 @@ interface UserDAO {
     @Query("SELECT * FROM user_table")
     fun fetchUserProfile() : LiveData<UserEntity>
 
-    @Query("UPDATE user_table SET totalPoints =:totalPoints, totalPointsPossible =:totalPointsPossible WHERE name =:name")
-    fun updatePoints(totalPoints: Int, totalPointsPossible: Int, name: String)
+    @Query("UPDATE user_table SET totalPoints = totalPoints + :totalPoints, totalPointsPossible = totalPointsPossible + :totalPointsPossible WHERE name =:name")
+    suspend fun updatePoints(totalPoints: Int, totalPointsPossible: Int, name: String)
 
     @Query("UPDATE user_table SET badge =:badge WHERE name =:name")
     fun updateBadge(badge: String, name: String)

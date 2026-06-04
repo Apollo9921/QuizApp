@@ -4,7 +4,7 @@ sealed class Destination(val route: String) {
     data object OnBoard: Destination(route = "onboard")
     data object CreateUser: Destination(route = "create_user")
     data object Progress: Destination(route = "progress")
-    data object Quiz: Destination(route = "quiz")
+    data object Categories: Destination(route = "categories")
     data object Results: Destination(route = "results")
     data object Profile: Destination(route = "profile")
     data object LevelDifficulty: Destination(route = "level_difficulty/{category}") {

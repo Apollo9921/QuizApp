@@ -9,7 +9,7 @@ class ResultsRepositoryImpl(private val resultsDAO: ResultsDAO) {
         resultsDAO.createResult(results)
     }
 
-    fun updateResults(category: String, correctAnswers: Int, incorrectAnswers: Int) {
+    suspend fun updateResults(category: String, correctAnswers: Int, incorrectAnswers: Int) {
         resultsDAO.updateResults(category, correctAnswers, incorrectAnswers)
     }
 

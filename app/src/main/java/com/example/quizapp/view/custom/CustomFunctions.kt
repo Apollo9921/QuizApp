@@ -38,13 +38,6 @@ import kotlin.math.pow
 
 val small = 600.dp
 val normal = 840.dp
-var isLoadedUser = mutableStateOf(false)
-var isLoadedResults = mutableStateOf(false)
-var totalPoints = 0
-var totalPointsPossible = 0
-var correctAnswersBefore = 0
-var incorrectAnswersBefore = 0
-var count = 0
 
 val onBoardingTitle = listOf(
     R.string.onBoard1,
