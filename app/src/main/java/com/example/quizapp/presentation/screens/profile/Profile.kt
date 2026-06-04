@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,13 +19,10 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
@@ -106,9 +104,6 @@ private fun ShowProfile(
     // Dynamic sizes based on screen width
     val topPadding = if (isSmall) 220.dp else if (isNormal) 320.dp else 420.dp
     val iconSize = if (isSmall) 48.dp else if (isNormal) 64.dp else 80.dp
-    val titleFontSize = if (isSmall) 28.sp else if (isNormal) 32.sp else 40.sp
-    val labelFontSize = if (isSmall) 20.sp else if (isNormal) 24.sp else 30.sp
-    val valueFontSize = if (isSmall) 18.sp else if (isNormal) 22.sp else 28.sp
 
     Box(modifier = Modifier.fillMaxSize()) {
         Box(
@@ -138,12 +133,10 @@ private fun ShowProfile(
                 Spacer(modifier = Modifier.height(32.dp))
 
                 Text(
+                    style = MaterialTheme.typography.titleLarge,
                     text = user.name,
                     color = Black,
-                    fontSize = titleFontSize,
-                    fontWeight = FontWeight.ExtraBold,
-                    fontFamily = FontFamily.SansSerif,
-                    textAlign = TextAlign.Center
+                    fontWeight = FontWeight.Bold,
                 )
 
                 Spacer(modifier = Modifier.height(32.dp))
@@ -153,18 +146,14 @@ private fun ShowProfile(
                         iconRes = R.drawable.points,
                         label = stringResource(R.string.points),
                         value = formatTotalCount(user.totalPoints.toFloat()),
-                        iconSize = iconSize,
-                        labelSize = labelFontSize,
-                        valueSize = valueFontSize
+                        iconSize = iconSize
                     )
 
                     ProfileInfoRow(
                         iconRes = R.drawable.daily,
                         label = stringResource(R.string.progressPercentage),
                         value = "${percentage.toInt()}%",
-                        iconSize = iconSize,
-                        labelSize = labelFontSize,
-                        valueSize = valueFontSize
+                        iconSize = iconSize
                     )
 
                     ProfileInfoRow(
@@ -172,8 +161,6 @@ private fun ShowProfile(
                         label = stringResource(R.string.badge),
                         value = user.badge,
                         iconSize = iconSize,
-                        labelSize = labelFontSize,
-                        valueSize = valueFontSize,
                         showDivider = false
                     )
                 }
@@ -189,8 +176,6 @@ private fun ProfileInfoRow(
     label: String,
     value: String,
     iconSize: Dp,
-    labelSize: TextUnit,
-    valueSize: TextUnit,
     showDivider: Boolean = true
 ) {
     Column {
@@ -208,18 +193,18 @@ private fun ProfileInfoRow(
             )
 
             Text(
+                style = MaterialTheme.typography.labelMedium,
                 text = label,
                 modifier = Modifier.weight(1f),
                 color = Black.copy(alpha = 0.6f),
-                fontSize = labelSize,
-                fontWeight = FontWeight.Medium
+                fontWeight = FontWeight.Medium,
+                textAlign = TextAlign.Start
             )
 
             Text(
+                style = MaterialTheme.typography.labelSmall,
                 text = value,
                 color = Black,
-                fontSize = valueSize,
-                fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.End
             )
         }
