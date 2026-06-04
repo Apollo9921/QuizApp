@@ -40,19 +40,19 @@ import com.example.quizapp.R
 import com.example.quizapp.data.local.database.QuizDatabase
 import com.example.quizapp.data.local.entity.ResultsEntity
 import com.example.quizapp.data.local.entity.UserEntity
-import com.example.quizapp.view.bottomBar.BottomNavigationBar
+import com.example.quizapp.presentation.components.BottomNavigationBar
 import com.example.quizapp.view.custom.*
-import com.example.quizapp.view.theme.Black
-import com.example.quizapp.view.theme.Blue
-import com.example.quizapp.view.theme.DarkGreen
-import com.example.quizapp.view.theme.Green
-import com.example.quizapp.view.theme.Orange
-import com.example.quizapp.view.theme.Pink40
-import com.example.quizapp.view.theme.Purple40
-import com.example.quizapp.view.theme.PurpleGrey40
-import com.example.quizapp.view.theme.Red
-import com.example.quizapp.view.theme.White
-import com.example.quizapp.view.theme.Yellow
+import com.example.quizapp.presentation.core.Black
+import com.example.quizapp.presentation.core.Blue
+import com.example.quizapp.presentation.core.DarkGreen
+import com.example.quizapp.presentation.core.Green
+import com.example.quizapp.presentation.core.Orange
+import com.example.quizapp.presentation.core.Pink40
+import com.example.quizapp.presentation.core.Purple40
+import com.example.quizapp.presentation.core.PurpleGrey40
+import com.example.quizapp.presentation.core.Red
+import com.example.quizapp.presentation.core.White
+import com.example.quizapp.presentation.core.Yellow
 
 private lateinit var user: SnapshotStateList<UserEntity>
 private lateinit var results: SnapshotStateList<ResultsEntity>

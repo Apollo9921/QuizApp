@@ -1,4 +1,4 @@
-package com.example.quizapp.view.bottomBar
+package com.example.quizapp.presentation.components
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -10,9 +10,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.example.quizapp.view.theme.Black
-import com.example.quizapp.view.theme.Purple40
-import com.example.quizapp.view.theme.White
+import com.example.quizapp.presentation.navigation.BottomNavigationItems
+import com.example.quizapp.presentation.core.Black
+import com.example.quizapp.presentation.core.Purple40
+import com.example.quizapp.presentation.core.White
 
 @Composable
 fun BottomNavigationBar(navController: NavController) {

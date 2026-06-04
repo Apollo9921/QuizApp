@@ -23,13 +23,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.quizapp.R
-import com.example.quizapp.view.bottomBar.BottomNavigationBar
+import com.example.quizapp.presentation.components.BottomNavigationBar
 import com.example.quizapp.view.custom.*
-import com.example.quizapp.view.main.isSplashScreenOpen
+import com.example.quizapp.presentation.isSplashScreenOpen
 import com.example.quizapp.presentation.navigation.Destination
-import com.example.quizapp.view.theme.Black
-import com.example.quizapp.view.theme.PurpleGrey40
-import com.example.quizapp.view.theme.White
+import com.example.quizapp.presentation.core.Black
+import com.example.quizapp.presentation.core.PurpleGrey40
+import com.example.quizapp.presentation.core.White
 
 @Composable
 fun CategoriesRoute(navHostController: NavHostController) {

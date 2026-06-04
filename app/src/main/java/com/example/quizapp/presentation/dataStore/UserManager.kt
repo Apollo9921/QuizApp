@@ -1,4 +1,4 @@
-package com.example.quizapp.view.dataStore
+package com.example.quizapp.presentation.dataStore
 
 import android.content.Context
 import androidx.datastore.core.DataStore

@@ -14,7 +14,8 @@ import com.example.quizapp.R
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Surface
-import com.example.quizapp.view.theme.*
+import com.example.quizapp.presentation.core.PurpleGrey40
+import com.example.quizapp.presentation.core.White
 import kotlin.math.ln
 import kotlin.math.pow
 

@@ -1,7 +1,6 @@
-package com.example.quizapp.view.bottomBar
+package com.example.quizapp.presentation.navigation
 
 import com.example.quizapp.R
-import com.example.quizapp.presentation.navigation.Destination
 
 sealed class BottomNavigationItems(val title: Int, var icon: Int, var route: String) {
     object Progress : BottomNavigationItems(

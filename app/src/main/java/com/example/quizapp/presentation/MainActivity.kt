@@ -1,4 +1,4 @@
-package com.example.quizapp.view.main
+package com.example.quizapp.presentation
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -7,11 +7,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.example.quizapp.view.dataStore.UserManager
-import com.example.quizapp.view.dataStore.dataStoreUser
+import com.example.quizapp.presentation.dataStore.UserManager
+import com.example.quizapp.presentation.dataStore.dataStoreUser
 import com.example.quizapp.presentation.navigation.AnimationNav
 import com.example.quizapp.presentation.navigation.Destination
-import com.example.quizapp.view.theme.QuizAppTheme
+import com.example.quizapp.presentation.core.QuizAppTheme
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 

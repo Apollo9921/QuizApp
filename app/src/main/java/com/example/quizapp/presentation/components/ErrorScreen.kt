@@ -19,9 +19,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.quizapp.R
-import com.example.quizapp.view.theme.Purple40
-import com.example.quizapp.view.theme.PurpleGrey40
-import com.example.quizapp.view.theme.White
+import com.example.quizapp.presentation.core.Purple40
+import com.example.quizapp.presentation.core.PurpleGrey40
+import com.example.quizapp.presentation.core.White
 
 @Composable
 fun ErrorScreen(errorMessage: String, onClick: () -> Unit) {

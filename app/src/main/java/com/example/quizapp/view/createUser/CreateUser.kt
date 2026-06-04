@@ -27,12 +27,12 @@ import com.example.quizapp.R
 import com.example.quizapp.data.local.entity.ResultsEntity
 import com.example.quizapp.data.local.entity.UserEntity
 import com.example.quizapp.view.custom.*
-import com.example.quizapp.view.main.userManager
+import com.example.quizapp.presentation.userManager
 import com.example.quizapp.presentation.navigation.Destination
-import com.example.quizapp.view.theme.Black
-import com.example.quizapp.view.theme.Purple40
-import com.example.quizapp.view.theme.PurpleGrey40
-import com.example.quizapp.view.theme.White
+import com.example.quizapp.presentation.core.Black
+import com.example.quizapp.presentation.core.Purple40
+import com.example.quizapp.presentation.core.PurpleGrey40
+import com.example.quizapp.presentation.core.White
 import com.example.quizapp.viewModel.ResultsViewModel
 import com.example.quizapp.viewModel.UserViewModel
 import kotlinx.coroutines.runBlocking

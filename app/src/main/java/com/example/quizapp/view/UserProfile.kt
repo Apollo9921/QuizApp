@@ -35,12 +35,12 @@ import coil.request.ImageRequest
 import com.example.quizapp.R
 import com.example.quizapp.data.local.database.QuizDatabase
 import com.example.quizapp.data.local.entity.UserEntity
-import com.example.quizapp.view.bottomBar.BottomNavigationBar
+import com.example.quizapp.presentation.components.BottomNavigationBar
 import com.example.quizapp.view.custom.*
-import com.example.quizapp.view.main.userName
-import com.example.quizapp.view.theme.Black
-import com.example.quizapp.view.theme.PurpleGrey40
-import com.example.quizapp.view.theme.White
+import com.example.quizapp.presentation.userName
+import com.example.quizapp.presentation.core.Black
+import com.example.quizapp.presentation.core.PurpleGrey40
+import com.example.quizapp.presentation.core.White
 import com.example.quizapp.viewModel.UserViewModel
 import org.koin.androidx.compose.koinViewModel
 
