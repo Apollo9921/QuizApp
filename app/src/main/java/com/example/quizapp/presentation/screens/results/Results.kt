@@ -1,4 +1,4 @@
-package com.example.quizapp.view
+package com.example.quizapp.presentation.screens.results
 
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
@@ -29,12 +29,9 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.quizapp.R
 import com.example.quizapp.data.local.database.QuizDatabase
@@ -139,19 +136,9 @@ private fun ShowResults() {
             horizontalArrangement = Arrangement.Center
         ) {
             Text(
+                style = MaterialTheme.typography.titleLarge,
                 text = stringResource(id = R.string.results),
-                color = White,
-                fontSize =
-                    if (mediaQueryWidth() <= small) {
-                        35.sp
-                    } else if (mediaQueryWidth() <= normal) {
-                        40.sp
-                    } else {
-                        45.sp
-                    },
-                fontFamily = FontFamily.SansSerif,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center
+                color = White
             )
         }
         Row(
@@ -159,22 +146,13 @@ private fun ShowResults() {
             horizontalArrangement = Arrangement.Center
         ) {
             Text(
+                style = MaterialTheme.typography.labelMedium,
                 text = stringResource(
                     id = R.string.totalAndTotalPossiblePoints,
                     formatTotalCount(user[0].totalPoints.toFloat()),
                     formatTotalCount(user[0].totalPointsPossible.toFloat())
                 ),
-                color = White,
-                fontSize =
-                    if (mediaQueryWidth() <= small) {
-                        25.sp
-                    } else if (mediaQueryWidth() <= normal) {
-                        30.sp
-                    } else {
-                        35.sp
-                    },
-                fontFamily = FontFamily.SansSerif,
-                textAlign = TextAlign.Center
+                color = White
             )
         }
         Spacer(modifier = Modifier.padding(20.dp))
