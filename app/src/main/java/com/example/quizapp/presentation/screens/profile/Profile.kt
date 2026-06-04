@@ -1,7 +1,5 @@
-package com.example.quizapp.view
+package com.example.quizapp.presentation.screens.profile
 
-import android.annotation.SuppressLint
-import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -11,21 +9,20 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -33,29 +30,38 @@ import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.example.quizapp.R
-import com.example.quizapp.data.local.database.QuizDatabase
 import com.example.quizapp.data.local.entity.UserEntity
 import com.example.quizapp.presentation.components.BottomNavigationBar
 import com.example.quizapp.view.custom.*
-import com.example.quizapp.presentation.userName
 import com.example.quizapp.presentation.core.Black
 import com.example.quizapp.presentation.core.PurpleGrey40
 import com.example.quizapp.presentation.core.White
-import com.example.quizapp.viewModel.UserViewModel
 import org.koin.androidx.compose.koinViewModel
 
-private lateinit var user: SnapshotStateList<UserEntity>
-private var badge = 0
-private var badgeLevel = 0
+@Composable
+fun ProfileRoute(
+    navHostController: NavHostController,
+    viewModel: ProfileViewModel = koinViewModel<ProfileViewModel>()
+) {
+    val context = LocalContext.current
+    val uiState = viewModel.uiState.collectAsState().value
+    val badgeState = viewModel.badgeState.collectAsState().value
+    val fetchUser = { viewModel.fetchUser(context) }
 
-@SuppressLint("StaticFieldLeak")
-private lateinit var context: Context
+    ProfileScreen(navHostController, uiState, badgeState, fetchUser)
+}
 
 @Composable
-fun UserProfile(
+private fun ProfileScreen(
     navHostController: NavHostController,
-    viewModel: UserViewModel = koinViewModel<UserViewModel>()
+    uiState: ProfileViewModel.UIState,
+    badgeState: ProfileViewModel.Badge,
+    fetchUser: () -> Unit
 ) {
+    LaunchedEffect(Unit) {
+        fetchUser()
+    }
+
     Scaffold(
         bottomBar = { BottomNavigationBar(navHostController) }
     ) {
@@ -65,67 +71,32 @@ fun UserProfile(
                 .background(PurpleGrey40)
                 .padding(bottom = it.calculateBottomPadding())
         ) {
-            user = remember { mutableStateListOf() }
-            context = LocalContext.current
-            QuizDatabase.getDatabase(context)
-                .userDao().fetchUserProfile()
-                .observe(LocalLifecycleOwner.current) {
-                    for (i in badgesPoints.indices) {
-                        if (it.totalPoints <= badgesPoints[i]) {
-                            badgeLevel = badgesPoints[i]
-                            break
-                        }
-                    }
-                    when (it.badge) {
-                        context.resources.getString(R.string.newbie) -> {
-                            badge = badges[0]
-                        }
-
-                        context.resources.getString(R.string.intermediate) -> {
-                            badge = badges[1]
-                        }
-
-                        context.resources.getString(R.string.advanced) -> {
-                            badge = badges[2]
-                        }
-
-                        context.resources.getString(R.string.legend) -> {
-                            badge = badges[3]
-                        }
-                    }
-                    for (i in badgesPoints.indices) {
-                        if (it.totalPoints > badgesPoints[i] && badge == badges[i]) {
-                            if (i < badgesPoints.size - 1) {
-                                viewModel.updateBadge(
-                                    context.getString(badgesDescription[i + 1]),
-                                    userName
-                                )
-                                break
-                            }
-                        }
-                    }
-                    if (user.isNotEmpty()) {
-                        user.clear()
-                    }
-                    user.add(it)
+            when (uiState) {
+                is ProfileViewModel.UIState.Success -> {
+                    val user = uiState.user
+                    val painter = rememberAsyncImagePainter(
+                        model = ImageRequest.Builder(LocalContext.current)
+                            .data("https://api.dicebear.com/5.x/adventurer/png?seed=${user.name}&backgroundColor=transparent")
+                            .placeholder(R.drawable.person)
+                            .error(R.drawable.person)
+                            .build()
+                    )
+                    ShowProfile(user, painter, badgeState)
                 }
-            if (user.isNotEmpty()) {
-                val painter = rememberAsyncImagePainter(
-                    model = ImageRequest.Builder(context)
-                        .data("https://api.dicebear.com/5.x/adventurer/png?seed=${user[0].name}&backgroundColor=transparent")
-                        .placeholder(R.drawable.person)
-                        .error(R.drawable.person)
-                        .build()
-                )
-                ShowProfile(user, painter)
+
+                else -> {}
             }
         }
     }
 }
 
 @Composable
-private fun ShowProfile(user: SnapshotStateList<UserEntity>, painter: AsyncImagePainter) {
-    val percentage = (user[0].totalPoints * 100) / badgeLevel.toDouble()
+private fun ShowProfile(
+    user: UserEntity,
+    painter: AsyncImagePainter,
+    badgeState: ProfileViewModel.Badge
+) {
+    val percentage = (user.totalPoints * 100) / badgeState.badgeLevel.toDouble()
 
     // Determine screen size category once
     val screenWidth = mediaQueryWidth()
@@ -140,7 +111,6 @@ private fun ShowProfile(user: SnapshotStateList<UserEntity>, painter: AsyncImage
     val valueFontSize = if (isSmall) 18.sp else if (isNormal) 22.sp else 28.sp
 
     Box(modifier = Modifier.fillMaxSize()) {
-        // Avatar Header
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -155,11 +125,10 @@ private fun ShowProfile(user: SnapshotStateList<UserEntity>, painter: AsyncImage
             )
         }
 
-        // Details Sheet
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = topPadding - 40.dp) // Overlap slightly with avatar area
+                .padding(top = topPadding - 40.dp)
                 .clip(RoundedCornerShape(topStart = 40.dp, topEnd = 40.dp))
                 .background(White)
                 .padding(horizontal = 24.dp),
@@ -168,9 +137,8 @@ private fun ShowProfile(user: SnapshotStateList<UserEntity>, painter: AsyncImage
             item {
                 Spacer(modifier = Modifier.height(32.dp))
 
-                // User Name
                 Text(
-                    text = user[0].name,
+                    text = user.name,
                     color = Black,
                     fontSize = titleFontSize,
                     fontWeight = FontWeight.ExtraBold,
@@ -180,12 +148,11 @@ private fun ShowProfile(user: SnapshotStateList<UserEntity>, painter: AsyncImage
 
                 Spacer(modifier = Modifier.height(32.dp))
 
-                // Info Section
                 Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
                     ProfileInfoRow(
                         iconRes = R.drawable.points,
                         label = stringResource(R.string.points),
-                        value = formatTotalCount(user[0].totalPoints.toFloat()),
+                        value = formatTotalCount(user.totalPoints.toFloat()),
                         iconSize = iconSize,
                         labelSize = labelFontSize,
                         valueSize = valueFontSize
@@ -201,9 +168,9 @@ private fun ShowProfile(user: SnapshotStateList<UserEntity>, painter: AsyncImage
                     )
 
                     ProfileInfoRow(
-                        iconRes = badge, // Global badge variable
+                        iconRes = badgeState.badge,
                         label = stringResource(R.string.badge),
-                        value = user[0].badge,
+                        value = user.badge,
                         iconSize = iconSize,
                         labelSize = labelFontSize,
                         valueSize = valueFontSize,
@@ -221,9 +188,9 @@ private fun ProfileInfoRow(
     iconRes: Int,
     label: String,
     value: String,
-    iconSize: androidx.compose.ui.unit.Dp,
-    labelSize: androidx.compose.ui.unit.TextUnit,
-    valueSize: androidx.compose.ui.unit.TextUnit,
+    iconSize: Dp,
+    labelSize: TextUnit,
+    valueSize: TextUnit,
     showDivider: Boolean = true
 ) {
     Column {
@@ -238,8 +205,6 @@ private fun ProfileInfoRow(
                 painter = painterResource(id = iconRes),
                 contentDescription = null,
                 modifier = Modifier.size(iconSize),
-                // Only tint if it's not the badge (assuming badge is colorful)
-                colorFilter = if (iconRes != badge) ColorFilter.tint(Black) else null
             )
 
             Text(
