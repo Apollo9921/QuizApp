@@ -16,7 +16,7 @@ import com.example.quizapp.presentation.screens.profile.ProfileRoute
 import com.example.quizapp.view.Results
 import com.example.quizapp.view.createUser.CreateUser
 import com.example.quizapp.view.onBoard.OnBoard
-import com.example.quizapp.view.quiz.LevelDifficulty
+import com.example.quizapp.presentation.screens.quizLevel.LevelDifficulty
 import com.example.quizapp.presentation.screens.quiz.StartQuizRoute
 import com.example.quizapp.presentation.screens.quizResult.QuizResultRoute
 

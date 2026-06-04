@@ -72,12 +72,6 @@ val categories = listOf(
     R.string.sportAndLeisure
 )
 
-val levelsDifficulty = listOf(
-    R.string.easy,
-    R.string.medium,
-    R.string.hard
-)
-
 @Composable
 fun mediaQueryWidth(): Dp {
     return LocalContext.current.resources.displayMetrics.widthPixels.dp / LocalDensity.current.density
