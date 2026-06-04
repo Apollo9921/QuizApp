@@ -10,7 +10,7 @@ class ResultsRepositoryImpl(
     private val userDAO: UserDAO
 ) : ResultsRepository {
 
-    override suspend fun createResults(results: ResultsEntity) {
+    override suspend fun insertResults(results: ResultsEntity) {
         resultsDAO.createResult(results)
     }
 

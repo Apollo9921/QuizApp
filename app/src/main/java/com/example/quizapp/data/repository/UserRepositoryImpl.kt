@@ -23,7 +23,7 @@ class UserRepositoryImpl(
         }
     }
 
-    override suspend fun createUser(user: UserEntity) {
+    override suspend fun insertUser(user: UserEntity) {
         withContext(ioDispatcher) {
             userDAO.insertUser(user)
         }
