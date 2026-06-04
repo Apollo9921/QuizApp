@@ -17,17 +17,16 @@ class QuizResultViewModel(
     val incorrectAnswers: Int
 ) : ViewModel() {
 
-    var userName: String = ""
+    private var userName: String = ""
+    private val pointsPossible: Int = 25
+
     var total: Int = 5
     var pointsReceived = mutableIntStateOf(0)
-    var pointsPossible: Int = 0
 
     init {
         viewModelScope.launch {
             userName = userManager.userName.first().toString()
-            var total = correctAnswers + incorrectAnswers
             pointsReceived.intValue = correctAnswers * 5
-            pointsPossible = total * 5
             updateResults()
             updatePoints()
         }
