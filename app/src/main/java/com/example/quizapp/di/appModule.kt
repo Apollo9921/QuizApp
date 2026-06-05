@@ -26,6 +26,7 @@ import com.example.quizapp.presentation.screens.progress.ProgressViewModel
 import com.example.quizapp.presentation.screens.quiz.QuizViewModel
 import com.example.quizapp.presentation.screens.quizResult.QuizResultViewModel
 import com.example.quizapp.presentation.screens.createUser.CreateUserViewModel
+import com.google.firebase.auth.FirebaseAuth
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.android.Android
 import kotlinx.coroutines.Dispatchers
@@ -54,6 +55,7 @@ val localModule = module {
 val networkModule = module {
     single { Instance }
     single { HttpClient(Android) }
+    single { FirebaseAuth.getInstance() }
 }
 
 val repositoryModule = module {
