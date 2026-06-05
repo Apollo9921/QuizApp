@@ -38,7 +38,6 @@ import com.example.quizapp.data.local.database.QuizDatabase
 import com.example.quizapp.data.local.entity.ResultsEntity
 import com.example.quizapp.data.local.entity.UserEntity
 import com.example.quizapp.presentation.components.BottomNavigationBar
-import com.example.quizapp.view.custom.*
 import com.example.quizapp.presentation.core.Black
 import com.example.quizapp.presentation.core.Blue
 import com.example.quizapp.presentation.core.DarkGreen
@@ -50,6 +49,11 @@ import com.example.quizapp.presentation.core.PurpleGrey40
 import com.example.quizapp.presentation.core.Red
 import com.example.quizapp.presentation.core.White
 import com.example.quizapp.presentation.core.Yellow
+import com.example.quizapp.presentation.utils.categories
+import com.example.quizapp.presentation.utils.formatTotalCount
+import com.example.quizapp.presentation.utils.mediaQueryWidth
+import com.example.quizapp.presentation.utils.normal
+import com.example.quizapp.presentation.utils.small
 
 private lateinit var user: SnapshotStateList<UserEntity>
 private lateinit var results: SnapshotStateList<ResultsEntity>

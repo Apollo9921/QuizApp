@@ -1,8 +1,8 @@
 package com.example.quizapp.domain.usecase
 
 import com.example.quizapp.data.local.entity.UserEntity
-import com.example.quizapp.view.custom.badges
-import com.example.quizapp.view.custom.badgesPoints
+import com.example.quizapp.presentation.utils.badges
+import com.example.quizapp.presentation.utils.badgesPoints
 
 class FetchBadgeUseCase {
     operator fun invoke(data: UserEntity, badge: Int): Int {

@@ -3,7 +3,7 @@ package com.example.quizapp.domain.usecase
 import android.content.Context
 import com.example.quizapp.data.local.entity.UserEntity
 import com.example.quizapp.domain.repository.UserRepository
-import com.example.quizapp.view.custom.badgesDescription
+import com.example.quizapp.presentation.utils.badgesDescription
 
 class InsertUserUseCase(
     private val repository: UserRepository

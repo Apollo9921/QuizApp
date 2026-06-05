@@ -3,7 +3,7 @@ package com.example.quizapp.domain.usecase
 import android.content.Context
 import com.example.quizapp.R
 import com.example.quizapp.data.local.entity.UserEntity
-import com.example.quizapp.view.custom.badges
+import com.example.quizapp.presentation.utils.badges
 
 class FetchBadgeImageUseCase {
     operator fun invoke(data: UserEntity, context: Context): Int {

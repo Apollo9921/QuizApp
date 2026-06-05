@@ -3,7 +3,7 @@ package com.example.quizapp.domain.usecase
 import android.content.Context
 import com.example.quizapp.data.local.entity.ResultsEntity
 import com.example.quizapp.domain.repository.ResultsRepository
-import com.example.quizapp.view.custom.categories
+import com.example.quizapp.presentation.utils.categories
 
 class InsertResultsUseCase(
     private val repository: ResultsRepository

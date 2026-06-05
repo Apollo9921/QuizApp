@@ -30,10 +30,13 @@ import coil.request.ImageRequest
 import com.example.quizapp.R
 import com.example.quizapp.data.local.entity.UserEntity
 import com.example.quizapp.presentation.components.BottomNavigationBar
-import com.example.quizapp.view.custom.*
 import com.example.quizapp.presentation.core.Black
 import com.example.quizapp.presentation.core.PurpleGrey40
 import com.example.quizapp.presentation.core.White
+import com.example.quizapp.presentation.utils.formatTotalCount
+import com.example.quizapp.presentation.utils.mediaQueryWidth
+import com.example.quizapp.presentation.utils.normal
+import com.example.quizapp.presentation.utils.small
 import org.koin.androidx.compose.koinViewModel
 
 @Composable

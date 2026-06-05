@@ -1,4 +1,4 @@
-package com.example.quizapp.view.custom
+package com.example.quizapp.presentation.utils
 
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
