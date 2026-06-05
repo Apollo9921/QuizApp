@@ -9,11 +9,14 @@ import com.example.quizapp.domain.usecase.FetchBadgeLevelUseCase
 import com.example.quizapp.domain.usecase.FetchUserUseCase
 import com.example.quizapp.domain.usecase.FetchBadgeUseCase
 import com.example.quizapp.domain.usecase.UpdateBadgeUseCase
-import com.example.quizapp.presentation.userName
+import com.example.quizapp.presentation.dataStore.UserManager
+import com.example.quizapp.presentation.dataStore.dataStoreUser
 import com.example.quizapp.view.custom.badgesDescription
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlin.toString
 
 class ProfileViewModel(
     private val fetchUserUseCase: FetchUserUseCase,
@@ -41,6 +44,8 @@ class ProfileViewModel(
 
     fun fetchUser(context: Context) {
         viewModelScope.launch {
+            val userManager = UserManager(dataStore = context.dataStoreUser)
+            val userName = userManager.userName.first().toString()
             val result = fetchUserUseCase.invoke()
             if (result.isSuccess) {
                 val data = result.getOrThrow()

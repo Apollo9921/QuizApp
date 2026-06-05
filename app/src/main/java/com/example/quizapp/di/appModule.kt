@@ -66,7 +66,7 @@ val viewModelModule = module {
     viewModel { QuizViewModel(get(), get(), get(), get()) }
     viewModel { CreateUserViewModel(get(), get()) }
     viewModel { ProgressViewModel(get(), get()) }
-    viewModel { QuizResultViewModel(get(), get(), get(), get(), get()) }
+    viewModel { QuizResultViewModel(get(), get(), get(), get(), get(), androidContext()) }
     viewModel { ProfileViewModel(get(), get(), get(), get(), get()) }
 
 }

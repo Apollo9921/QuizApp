@@ -6,8 +6,9 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import com.example.quizapp.domain.usecase.InsertResultsUseCase
 import com.example.quizapp.domain.usecase.InsertUserUseCase
+import com.example.quizapp.presentation.dataStore.UserManager
+import com.example.quizapp.presentation.dataStore.dataStoreUser
 import com.example.quizapp.presentation.navigation.Destination
-import com.example.quizapp.presentation.userManager
 import kotlinx.coroutines.launch
 
 class CreateUserViewModel(
@@ -17,6 +18,7 @@ class CreateUserViewModel(
 
     fun startCreation(context: Context, name: String, navHostController: NavHostController) {
         viewModelScope.launch {
+            val userManager = UserManager(dataStore = context.dataStoreUser)
             insertUserUseCase.invoke(context, name)
             insertResultsUseCase.invoke(context)
             userManager.storeToDataStore(true, name)

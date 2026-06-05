@@ -12,22 +12,6 @@ import kotlin.math.pow
 val small = 600.dp
 val normal = 840.dp
 
-val onBoardingTitle = listOf(
-    R.string.onBoard1,
-    R.string.onBoard2,
-    R.string.onBoard3,
-    R.string.onBoard4,
-    R.string.onBoard5,
-)
-
-val onBoardingAnimation = listOf(
-    R.raw.welcome,
-    R.raw.questions,
-    R.raw.results,
-    R.raw.badges,
-    R.raw.start,
-)
-
 val badges = listOf(
     R.drawable.newbie,
     R.drawable.intermediate,

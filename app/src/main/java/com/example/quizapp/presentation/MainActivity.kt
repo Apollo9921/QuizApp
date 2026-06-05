@@ -16,9 +16,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 
 var isSplashScreenOpen = true
-lateinit var userManager: UserManager
-private var isLoaded = false
-var userName = ""
 
 class MainActivity : ComponentActivity() {
 
@@ -31,7 +28,9 @@ class MainActivity : ComponentActivity() {
         }
         setContent {
             QuizAppTheme {
-                userManager = UserManager(dataStore = LocalContext.current.dataStoreUser)
+                var isLoaded = false
+                var userName = ""
+                val userManager = UserManager(dataStore = LocalContext.current.dataStoreUser)
                 runBlocking { isLoaded = userManager.userFlow.first() }
                 runBlocking { userName = userManager.userName.first().toString() }
                 navHostController = rememberNavController()
