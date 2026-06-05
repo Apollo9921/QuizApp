@@ -32,7 +32,7 @@ fun LoginRoute(
 ) {
     val onLoginClick =
         { email: String, password: String -> viewModel.loginWithEmail(email, password) }
-    val onGoogleSignInClick = { viewModel.startSignInByGoogle() }
+    val onGoogleSignInClick = { viewModel.startSignInByGoogle(navHostController) }
 
     LoginScreen(
         onLoginClick = onLoginClick,

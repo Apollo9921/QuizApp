@@ -2,8 +2,10 @@ package com.example.quizapp.presentation.screens.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavHostController
 import com.example.quizapp.domain.repository.AuthRepository
 import com.example.quizapp.domain.repository.GoogleAuthService
+import com.example.quizapp.presentation.navigation.Destination
 import kotlinx.coroutines.launch
 
 class LoginViewModel(
@@ -17,12 +19,12 @@ class LoginViewModel(
         }
     }
 
-    fun startSignInByGoogle() {
+    fun startSignInByGoogle(navHostController: NavHostController) {
         viewModelScope.launch {
             val result = googleAuthService.getGoogleIdToken()
             result.fold(
                 onSuccess = { idToken ->
-                    signInWithGoogle(idToken)
+                    signInWithGoogle(idToken, navHostController)
                 },
                 onFailure = {
 
@@ -31,9 +33,18 @@ class LoginViewModel(
         }
     }
 
-    private fun signInWithGoogle(idToken: String) {
+    private fun signInWithGoogle(idToken: String, navHostController: NavHostController) {
         viewModelScope.launch {
-            authRepository.signInWithGoogle(idToken)
+            val result = authRepository.signInWithGoogle(idToken)
+            result.fold(
+                onSuccess = {
+                    navHostController.popBackStack()
+                    navHostController.navigate(Destination.CreateUser.route)
+                },
+                onFailure = {
+
+                }
+            )
         }
     }
 
