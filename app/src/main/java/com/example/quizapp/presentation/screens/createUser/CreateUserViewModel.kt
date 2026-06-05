@@ -34,7 +34,7 @@ class CreateUserViewModel(
             val result = saveUserToRemoteUseCase.invoke(context, name)
             when(result) {
                 is AppResult.Error<*> -> {
-
+                    //TODO HANDLE ERROR MESSAGE
                 }
                 is AppResult.Success<*> -> {
                     navHostController.popBackStack()
