@@ -28,7 +28,7 @@ import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.example.quizapp.R
-import com.example.quizapp.data.local.entity.UserEntity
+import com.example.quizapp.domain.model.user.User
 import com.example.quizapp.presentation.components.BottomNavigationBar
 import com.example.quizapp.presentation.core.Black
 import com.example.quizapp.presentation.core.PurpleGrey40
@@ -93,7 +93,7 @@ private fun ProfileScreen(
 
 @Composable
 private fun ShowProfile(
-    user: UserEntity,
+    user: User,
     painter: AsyncImagePainter,
     badgeState: ProfileViewModel.Badge
 ) {

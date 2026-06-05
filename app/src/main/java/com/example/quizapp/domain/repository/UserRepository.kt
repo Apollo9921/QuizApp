@@ -1,10 +1,10 @@
 package com.example.quizapp.domain.repository
 
-import com.example.quizapp.data.local.entity.UserEntity
+import com.example.quizapp.domain.model.user.User
 
 interface UserRepository {
-    suspend fun fetchUser(): Result<UserEntity>
-    suspend fun insertUser(user: UserEntity)
+    suspend fun fetchUser(): Result<User>
+    suspend fun insertUser(user: User)
     suspend fun updatePoints(totalPoints: Int, totalPointsPossible: Int, name: String)
     suspend fun updateBadge(badge: String, name: String)
 }

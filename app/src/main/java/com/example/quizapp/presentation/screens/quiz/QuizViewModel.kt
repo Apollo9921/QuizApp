@@ -3,7 +3,7 @@ package com.example.quizapp.presentation.screens.quiz
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
-import com.example.quizapp.data.network.dto.QuizDTO
+import com.example.quizapp.domain.model.quiz.Quiz
 import com.example.quizapp.domain.result.AppResult
 import com.example.quizapp.domain.usecase.FormatQuizUseCase
 import com.example.quizapp.domain.usecase.GetQuizUseCase
@@ -40,7 +40,7 @@ class QuizViewModel(
 
     sealed class UIState {
         data object Loading : UIState()
-        data class Success(val quiz: List<QuizDTO>, val answers: ArrayList<String>) : UIState()
+        data class Success(val quiz: List<Quiz>, val answers: ArrayList<String>) : UIState()
         data class Error(val errorMessage: String) : UIState()
     }
 

@@ -3,7 +3,7 @@ package com.example.quizapp.presentation.screens.profile
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.quizapp.data.local.entity.UserEntity
+import com.example.quizapp.domain.model.user.User
 import com.example.quizapp.domain.usecase.FetchBadgeImageUseCase
 import com.example.quizapp.domain.usecase.FetchBadgeLevelUseCase
 import com.example.quizapp.domain.usecase.FetchUserUseCase
@@ -39,7 +39,7 @@ class ProfileViewModel(
 
     sealed class UIState {
         data object Idle : UIState()
-        data class Success(val user: UserEntity) : UIState()
+        data class Success(val user: User) : UIState()
     }
 
     fun fetchUser(context: Context) {

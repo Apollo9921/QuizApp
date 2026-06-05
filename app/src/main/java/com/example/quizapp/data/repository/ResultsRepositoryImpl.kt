@@ -2,7 +2,8 @@ package com.example.quizapp.data.repository
 
 import com.example.quizapp.data.local.dao.ResultsDAO
 import com.example.quizapp.data.local.dao.UserDAO
-import com.example.quizapp.data.local.entity.ResultsEntity
+import com.example.quizapp.data.mapper.toResultsEntity
+import com.example.quizapp.domain.model.results.Results
 import com.example.quizapp.domain.repository.ResultsRepository
 
 class ResultsRepositoryImpl(
@@ -10,8 +11,8 @@ class ResultsRepositoryImpl(
     private val userDAO: UserDAO
 ) : ResultsRepository {
 
-    override suspend fun insertResults(results: ResultsEntity) {
-        resultsDAO.createResult(results)
+    override suspend fun insertResults(results: Results) {
+        resultsDAO.createResult(results.toResultsEntity())
     }
 
     override suspend fun updatePoints(

@@ -1,7 +1,9 @@
 package com.example.quizapp.data.repository
 
 import com.example.quizapp.data.local.dao.UserDAO
-import com.example.quizapp.data.local.entity.UserEntity
+import com.example.quizapp.data.mapper.toUser
+import com.example.quizapp.data.mapper.toUserEntity
+import com.example.quizapp.domain.model.user.User
 import com.example.quizapp.domain.repository.UserRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -12,20 +14,20 @@ class UserRepositoryImpl(
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : UserRepository {
 
-    override suspend fun fetchUser(): Result<UserEntity> {
+    override suspend fun fetchUser(): Result<User> {
         return withContext(ioDispatcher) {
             try {
                 val result = userDAO.fetchUser()
-                Result.success(result)
+                Result.success(result.toUser())
             } catch (e: Exception) {
                 Result.failure(e)
             }
         }
     }
 
-    override suspend fun insertUser(user: UserEntity) {
+    override suspend fun insertUser(user: User) {
         withContext(ioDispatcher) {
-            userDAO.insertUser(user)
+            userDAO.insertUser(user.toUserEntity())
         }
     }
 

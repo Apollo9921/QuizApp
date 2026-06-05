@@ -1,8 +1,10 @@
 package com.example.quizapp.data.repository
 
 import com.example.quizapp.BuildConfig
+import com.example.quizapp.data.mapper.toQuiz
 import com.example.quizapp.data.network.dto.QuizDTO
 import com.example.quizapp.data.network.instance.Instance
+import com.example.quizapp.domain.model.quiz.Quiz
 import com.example.quizapp.domain.repository.QuizRepository
 import com.example.quizapp.domain.result.AppResult
 import io.ktor.client.call.body
@@ -23,7 +25,7 @@ class QuizRepositoryImpl(private val instance: Instance) : QuizRepository {
         category: String,
         level: String,
         limit: Int
-    ): AppResult<List<QuizDTO>> {
+    ): AppResult<List<Quiz>> {
         return try {
             val response: List<QuizDTO> = instance.httpClient.get {
                 url("${BuildConfig.BASE_URL}questions")
@@ -33,7 +35,7 @@ class QuizRepositoryImpl(private val instance: Instance) : QuizRepository {
                 parameter("difficulties", level)
             }.body()
 
-            AppResult.Success(response)
+            AppResult.Success(response.map { it.toQuiz() })
 
         } catch (_: HttpRequestTimeoutException) {
             AppResult.Error("Request timed out. Please try again.")

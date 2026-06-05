@@ -3,7 +3,7 @@ package com.example.quizapp.presentation.screens.progress
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.quizapp.R
-import com.example.quizapp.data.local.entity.UserEntity
+import com.example.quizapp.domain.model.user.User
 import com.example.quizapp.domain.usecase.FetchUserUseCase
 import com.example.quizapp.domain.usecase.FormatProgressPercentageUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,7 +26,7 @@ class ProgressViewModel(
 
     sealed class UIState {
         data object Idle : UIState()
-        data class Success(val user: UserEntity, val userData: UserData) : UIState()
+        data class Success(val user: User, val userData: UserData) : UIState()
         data class Error(val errorMessage: Int) : UIState()
     }
 

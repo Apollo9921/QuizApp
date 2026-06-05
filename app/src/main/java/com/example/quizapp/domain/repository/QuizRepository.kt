@@ -1,6 +1,6 @@
 package com.example.quizapp.domain.repository
 
-import com.example.quizapp.data.network.dto.QuizDTO
+import com.example.quizapp.domain.model.quiz.Quiz
 import com.example.quizapp.domain.result.AppResult
 
 interface QuizRepository {
@@ -8,5 +8,5 @@ interface QuizRepository {
         category: String,
         level: String,
         limit: Int = 5
-    ): AppResult<List<QuizDTO>>
+    ): AppResult<List<Quiz>>
 }

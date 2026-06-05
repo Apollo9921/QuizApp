@@ -2,11 +2,11 @@ package com.example.quizapp.domain.usecase
 
 import android.content.Context
 import com.example.quizapp.R
-import com.example.quizapp.data.local.entity.UserEntity
+import com.example.quizapp.domain.model.user.User
 import com.example.quizapp.presentation.utils.badges
 
 class FetchBadgeImageUseCase {
-    operator fun invoke(data: UserEntity, context: Context): Int {
+    operator fun invoke(data: User, context: Context): Int {
         when (data.badge) {
             context.resources.getString(R.string.newbie) -> {
                 return badges[0]
