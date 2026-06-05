@@ -3,9 +3,13 @@ package com.example.quizapp.di
 import androidx.room.Room
 import com.example.quizapp.data.local.database.QuizDatabase
 import com.example.quizapp.data.network.instance.Instance
+import com.example.quizapp.data.repository.AuthRepositoryImpl
+import com.example.quizapp.data.repository.GoogleAuthServiceImpl
 import com.example.quizapp.data.repository.QuizRepositoryImpl
 import com.example.quizapp.data.repository.ResultsRepositoryImpl
 import com.example.quizapp.data.repository.UserRepositoryImpl
+import com.example.quizapp.domain.repository.AuthRepository
+import com.example.quizapp.domain.repository.GoogleAuthService
 import com.example.quizapp.domain.repository.QuizRepository
 import com.example.quizapp.domain.repository.ResultsRepository
 import com.example.quizapp.domain.repository.UserRepository
@@ -26,6 +30,7 @@ import com.example.quizapp.presentation.screens.progress.ProgressViewModel
 import com.example.quizapp.presentation.screens.quiz.QuizViewModel
 import com.example.quizapp.presentation.screens.quizResult.QuizResultViewModel
 import com.example.quizapp.presentation.screens.createUser.CreateUserViewModel
+import com.example.quizapp.presentation.screens.login.LoginViewModel
 import com.google.firebase.auth.FirebaseAuth
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.android.Android
@@ -62,6 +67,8 @@ val repositoryModule = module {
     single<ResultsRepository> { ResultsRepositoryImpl(get(), get()) }
     single<UserRepository> { UserRepositoryImpl(get()) }
     single<QuizRepository> { QuizRepositoryImpl(get()) }
+    single<AuthRepository> { AuthRepositoryImpl(get()) }
+    single<GoogleAuthService> { GoogleAuthServiceImpl(androidContext()) }
 }
 
 val viewModelModule = module {
@@ -70,6 +77,7 @@ val viewModelModule = module {
     viewModel { ProgressViewModel(get(), get()) }
     viewModel { QuizResultViewModel(get(), get(), get(), get(), get(), androidContext()) }
     viewModel { ProfileViewModel(get(), get(), get(), get(), get()) }
+    viewModel { LoginViewModel(get(), get()) }
 
 }
 

@@ -16,6 +16,7 @@ import com.example.quizapp.presentation.screens.createUser.CreateUserRoute
 import com.example.quizapp.presentation.screens.profile.ProfileRoute
 import com.example.quizapp.presentation.screens.results.Results
 import com.example.quizapp.presentation.screens.boarding.OnBoard
+import com.example.quizapp.presentation.screens.login.LoginRoute
 import com.example.quizapp.presentation.screens.quizLevel.LevelDifficulty
 import com.example.quizapp.presentation.screens.quiz.StartQuizRoute
 import com.example.quizapp.presentation.screens.quizResult.QuizResultRoute
@@ -39,6 +40,23 @@ fun AnimationNav(navHostController: NavHostController, startDestination: String)
             }
         ) {
             OnBoard(navHostController = navHostController)
+        }
+        composable(
+            route = Destination.Login.route,
+            enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Left,
+                    animationSpec = tween(700)
+                )
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Right,
+                    animationSpec = tween(700)
+                )
+            }
+        ) {
+            LoginRoute(navHostController)
         }
         composable(
             route = Destination.CreateUser.route,
