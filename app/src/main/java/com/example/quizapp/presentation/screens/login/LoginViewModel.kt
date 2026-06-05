@@ -33,7 +33,7 @@ class LoginViewModel(
 
     private fun signInWithGoogle(idToken: String) {
         viewModelScope.launch {
-            authRepository.registerWithGoogle(idToken)
+            authRepository.signInWithGoogle(idToken)
         }
     }
 

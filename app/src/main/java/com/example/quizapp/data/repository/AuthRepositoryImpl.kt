@@ -22,7 +22,7 @@ class AuthRepositoryImpl(private val auth: FirebaseAuth) : AuthRepository {
         }
     }
 
-    override suspend fun registerWithGoogle(idToken: String): Result<Unit> {
+    override suspend fun signInWithGoogle(idToken: String): Result<Unit> {
         return try {
             val credential = GoogleAuthProvider.getCredential(idToken, null)
             val result = auth.signInWithCredential(credential).await()
