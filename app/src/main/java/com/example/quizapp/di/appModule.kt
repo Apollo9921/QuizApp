@@ -26,6 +26,7 @@ import com.example.quizapp.domain.usecase.SaveUserToRemoteUseCase
 import com.example.quizapp.domain.usecase.UpdateBadgeUseCase
 import com.example.quizapp.domain.usecase.UpdatePointsUseCase
 import com.example.quizapp.domain.usecase.UpdateResultsUseCase
+import com.example.quizapp.domain.usecase.UpdateUserToRemoteUseCase
 import com.example.quizapp.presentation.screens.profile.ProfileViewModel
 import com.example.quizapp.presentation.screens.progress.ProgressViewModel
 import com.example.quizapp.presentation.screens.quiz.QuizViewModel
@@ -78,7 +79,7 @@ val viewModelModule = module {
     viewModel { QuizViewModel(get(), get(), get(), get()) }
     viewModel { CreateUserViewModel(get(), get(), get()) }
     viewModel { ProgressViewModel(get(), get()) }
-    viewModel { QuizResultViewModel(get(), get(), get(), get(), get(), androidContext()) }
+    viewModel { QuizResultViewModel(get(), get(), get(), get(), get(), get(), get()) }
     viewModel { ProfileViewModel(get(), get(), get(), get(), get()) }
     viewModel { LoginViewModel(get(), get()) }
 
@@ -98,4 +99,5 @@ val useCaseModule = module {
     factory { InsertResultsUseCase(get()) }
     factory { InsertUserUseCase(get()) }
     factory { SaveUserToRemoteUseCase(get()) }
+    factory { UpdateUserToRemoteUseCase(get()) }
 }

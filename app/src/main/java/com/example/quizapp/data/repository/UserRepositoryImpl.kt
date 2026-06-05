@@ -8,6 +8,7 @@ import com.example.quizapp.domain.model.user.User
 import com.example.quizapp.domain.repository.UserRepository
 import com.example.quizapp.domain.result.AppResult
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -68,6 +69,50 @@ class UserRepositoryImpl(
                     val resultRef = userRef.collection("results").document(result.category)
                     batch.set(resultRef, result)
                 }
+
+                batch.commit().await()
+                AppResult.Success(Unit)
+
+            } catch (e: Exception) {
+                AppResult.Error(e)
+            }
+        }
+    }
+
+    override suspend fun updateUserAndResults(
+        user: User,
+        results: Results
+    ): AppResult<Unit> {
+        return withContext(ioDispatcher) {
+            val currentUser = FirebaseAuth.getInstance().currentUser
+
+            if (currentUser == null) {
+                return@withContext AppResult.Error(Exception("Firestore impedido: Utilizador não está autenticado no Firebase Auth."))
+            }
+
+            val userId = currentUser.uid
+
+            try {
+                val userRef = firestore.collection("users").document(userId)
+                val resultRef = userRef.collection("results").document(results.category)
+
+                val batch = firestore.batch()
+
+                batch.update(
+                    userRef,
+                    "totalPoints", FieldValue.increment(user.totalPoints.toLong()),
+                    "totalPointsPossible", FieldValue.increment(user.totalPointsPossible.toLong())
+                )
+
+                batch.set(
+                    resultRef,
+                    mapOf(
+                        "correctAnswers" to FieldValue.increment(results.correctAnswers.toLong()),
+                        "incorrectAnswers" to FieldValue.increment(results.incorrectAnswers.toLong()),
+                        "category" to results.category
+                    ),
+                    com.google.firebase.firestore.SetOptions.merge()
+                )
 
                 batch.commit().await()
                 AppResult.Success(Unit)
