@@ -35,7 +35,8 @@ fun CreateUserRoute(
     viewModel: CreateUserViewModel = koinViewModel<CreateUserViewModel>()
 ) {
     val context = LocalContext.current
-    val startCreation = { name: String -> viewModel.startCreation(context, name, navHostController) }
+    val startCreation =
+        { name: String -> viewModel.startCreation(context, name, navHostController) }
 
     CreateUser(startCreation)
 }
@@ -50,67 +51,63 @@ private fun CreateUser(startCreation: (String) -> Unit) {
             .error(R.drawable.person)
             .build()
     )
-    Box(
+    Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(PurpleGrey40)
+            .background(PurpleGrey40),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Image(
-                painter = painter,
-                contentDescription = null,
-                modifier = Modifier.fillMaxSize(0.7f),
-                contentScale = ContentScale.Fit
-            )
-            Spacer(modifier = Modifier.padding(10.dp))
-            TextField(
-                value = name.value,
-                onValueChange = {
-                    name.value = it
-                },
-                singleLine = true,
-                shape = RoundedCornerShape(20.dp),
-                placeholder = {
-                    Text(
-                        style = MaterialTheme.typography.labelSmall,
-                        text = stringResource(id = R.string.insertName),
-                        color = Black
-                    )
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 40.dp, end = 40.dp)
-            )
-            Spacer(modifier = Modifier.padding(10.dp))
-            Button(
-                onClick = {
-                    if (name.value.isNotBlank()) {
-                        startCreation(name.value)
-                    }
-                },
-                shape = RoundedCornerShape(20.dp),
-                border = BorderStroke(width = 2.dp, color = White),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Purple40,
-                    contentColor = Purple40,
-                    disabledContentColor = Purple40,
-                    disabledContainerColor = Purple40
-                ),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 40.dp, end = 40.dp)
-            ) {
+        Image(
+            painter = painter,
+            contentDescription = null,
+            modifier = Modifier.aspectRatio(1.2f),
+            contentScale = ContentScale.Fit
+        )
+        Spacer(modifier = Modifier.padding(10.dp))
+        TextField(
+            value = name.value,
+            onValueChange = {
+                name.value = it
+            },
+            singleLine = true,
+            shape = RoundedCornerShape(20.dp),
+            placeholder = {
                 Text(
-                    style = MaterialTheme.typography.labelMedium,
-                    text = stringResource(id = R.string.createUser),
-                    color = White,
-                    modifier = Modifier.padding(10.dp)
+                    style = MaterialTheme.typography.labelSmall,
+                    text = stringResource(id = R.string.insertName),
+                    color = Black
                 )
-            }
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 40.dp, end = 40.dp)
+        )
+        Spacer(modifier = Modifier.padding(10.dp))
+        Button(
+            onClick = {
+                if (name.value.isNotBlank()) {
+                    startCreation(name.value)
+                }
+            },
+            shape = RoundedCornerShape(20.dp),
+            border = BorderStroke(width = 2.dp, color = White),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Purple40,
+                contentColor = Purple40,
+                disabledContentColor = Purple40,
+                disabledContainerColor = Purple40
+            ),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 40.dp, end = 40.dp)
+        ) {
+            Text(
+                style = MaterialTheme.typography.labelMedium,
+                text = stringResource(id = R.string.createUser),
+                color = White,
+                modifier = Modifier.padding(10.dp)
+            )
         }
     }
 }

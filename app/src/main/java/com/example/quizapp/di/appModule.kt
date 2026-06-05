@@ -22,6 +22,7 @@ import com.example.quizapp.domain.usecase.FormatQuizUseCase
 import com.example.quizapp.domain.usecase.GetQuizUseCase
 import com.example.quizapp.domain.usecase.InsertResultsUseCase
 import com.example.quizapp.domain.usecase.InsertUserUseCase
+import com.example.quizapp.domain.usecase.SaveUserToRemoteUseCase
 import com.example.quizapp.domain.usecase.UpdateBadgeUseCase
 import com.example.quizapp.domain.usecase.UpdatePointsUseCase
 import com.example.quizapp.domain.usecase.UpdateResultsUseCase
@@ -31,9 +32,8 @@ import com.example.quizapp.presentation.screens.quiz.QuizViewModel
 import com.example.quizapp.presentation.screens.quizResult.QuizResultViewModel
 import com.example.quizapp.presentation.screens.createUser.CreateUserViewModel
 import com.example.quizapp.presentation.screens.login.LoginViewModel
-import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.firestore
+import com.google.firebase.firestore.FirebaseFirestore
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.android.Android
 import kotlinx.coroutines.Dispatchers
@@ -63,12 +63,12 @@ val networkModule = module {
     single { Instance }
     single { HttpClient(Android) }
     single { FirebaseAuth.getInstance() }
-    single { Firebase.firestore }
+    single { FirebaseFirestore.getInstance() }
 }
 
 val repositoryModule = module {
     single<ResultsRepository> { ResultsRepositoryImpl(get(), get()) }
-    single<UserRepository> { UserRepositoryImpl(get()) }
+    single<UserRepository> { UserRepositoryImpl(get(), get()) }
     single<QuizRepository> { QuizRepositoryImpl(get()) }
     single<AuthRepository> { AuthRepositoryImpl(get()) }
     single<GoogleAuthService> { GoogleAuthServiceImpl(androidContext()) }
@@ -76,7 +76,7 @@ val repositoryModule = module {
 
 val viewModelModule = module {
     viewModel { QuizViewModel(get(), get(), get(), get()) }
-    viewModel { CreateUserViewModel(get(), get()) }
+    viewModel { CreateUserViewModel(get(), get(), get()) }
     viewModel { ProgressViewModel(get(), get()) }
     viewModel { QuizResultViewModel(get(), get(), get(), get(), get(), androidContext()) }
     viewModel { ProfileViewModel(get(), get(), get(), get(), get()) }
@@ -97,4 +97,5 @@ val useCaseModule = module {
     factory { UpdateBadgeUseCase(get()) }
     factory { InsertResultsUseCase(get()) }
     factory { InsertUserUseCase(get()) }
+    factory { SaveUserToRemoteUseCase(get()) }
 }
