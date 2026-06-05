@@ -134,4 +134,5 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-auth'
     implementation "com.google.android.libraries.identity.googleid:googleid:1.2.0"
+    implementation("com.google.firebase:firebase-firestore")
 }

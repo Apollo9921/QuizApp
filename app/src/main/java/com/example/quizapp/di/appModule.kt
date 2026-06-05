@@ -31,7 +31,9 @@ import com.example.quizapp.presentation.screens.quiz.QuizViewModel
 import com.example.quizapp.presentation.screens.quizResult.QuizResultViewModel
 import com.example.quizapp.presentation.screens.createUser.CreateUserViewModel
 import com.example.quizapp.presentation.screens.login.LoginViewModel
+import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.firestore
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.android.Android
 import kotlinx.coroutines.Dispatchers
@@ -61,6 +63,7 @@ val networkModule = module {
     single { Instance }
     single { HttpClient(Android) }
     single { FirebaseAuth.getInstance() }
+    single { Firebase.firestore }
 }
 
 val repositoryModule = module {
