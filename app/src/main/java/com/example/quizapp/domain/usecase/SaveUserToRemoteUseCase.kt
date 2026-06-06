@@ -9,9 +9,10 @@ import com.example.quizapp.presentation.utils.badgesDescription
 import com.example.quizapp.presentation.utils.categories
 
 class SaveUserToRemoteUseCase(
+    private val context: Context,
     private val repository: UserRepository
 ) {
-    suspend operator fun invoke(context: Context, name: String): AppResult<Unit> {
+    suspend operator fun invoke(name: String): AppResult<Unit> {
         val user = User(
             name = name,
             totalPoints = 0,

@@ -159,4 +159,44 @@ class UserRepositoryImpl(
             }
         }
     }
+
+    override suspend fun fetchUserFromRemote(): AppResult<User> {
+        return withContext(ioDispatcher) {
+            try {
+                val userId = FirebaseAuth.getInstance().currentUser?.uid
+                    ?: return@withContext AppResult.Error(Exception("User Not Authenticated"))
+
+                val document = firestore.collection("users").document(userId).get().await()
+                val user = document.toObject(User::class.java)
+
+                if (user != null) {
+                    AppResult.Success(user)
+                } else {
+                    AppResult.Error(Exception("User Document Not Found"))
+                }
+            } catch (e: Exception) {
+                AppResult.Error(e)
+            }
+        }
+    }
+
+    override suspend fun fetchResultsFromRemote(): AppResult<List<Results>> {
+        return withContext(ioDispatcher) {
+            try {
+                val userId = FirebaseAuth.getInstance().currentUser?.uid
+                    ?: return@withContext AppResult.Error(Exception("User Not Authenticated"))
+
+                val snapshot = firestore.collection("users")
+                    .document(userId)
+                    .collection("results")
+                    .get()
+                    .await()
+
+                val resultsList = snapshot.toObjects(Results::class.java)
+                AppResult.Success(resultsList)
+            } catch (e: Exception) {
+                AppResult.Error(e)
+            }
+        }
+    }
 }

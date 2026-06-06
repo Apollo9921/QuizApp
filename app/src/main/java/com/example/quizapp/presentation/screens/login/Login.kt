@@ -32,7 +32,13 @@ fun LoginRoute(
     viewModel: LoginViewModel = koinViewModel<LoginViewModel>()
 ) {
     val onLoginClick =
-        { email: String, password: String -> viewModel.loginWithEmail(email, password) }
+        { email: String, password: String ->
+            viewModel.loginWithEmail(
+                email,
+                password,
+                navHostController
+            )
+        }
     val onGoogleSignInClick = { viewModel.startSignInByGoogle(navHostController) }
     val navigateToRegister = { navHostController.navigate(Destination.Register.route) }
 

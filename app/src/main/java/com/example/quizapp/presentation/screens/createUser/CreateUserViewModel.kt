@@ -19,19 +19,18 @@ class CreateUserViewModel(
 
     fun startCreation(context: Context, name: String, navHostController: NavHostController) {
         viewModelScope.launch {
-            insertUserUseCase.invoke(context, name)
-            insertResultsUseCase.invoke(context)
-            saveUserAndResults(context, name, navHostController)
+            insertUserUseCase.invoke(name)
+            insertResultsUseCase.invoke()
+            saveUserAndResults(name, navHostController)
         }
     }
 
     private fun saveUserAndResults(
-        context: Context,
         name: String,
         navHostController: NavHostController
     ) {
         viewModelScope.launch {
-            val result = saveUserToRemoteUseCase.invoke(context, name)
+            val result = saveUserToRemoteUseCase.invoke(name)
             when(result) {
                 is AppResult.Error<*> -> {
                     //TODO HANDLE ERROR MESSAGE

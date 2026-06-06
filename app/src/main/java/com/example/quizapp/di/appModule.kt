@@ -21,7 +21,9 @@ import com.example.quizapp.domain.usecase.FetchUserUseCase
 import com.example.quizapp.domain.usecase.FormatProgressPercentageUseCase
 import com.example.quizapp.domain.usecase.FormatQuizUseCase
 import com.example.quizapp.domain.usecase.GetQuizUseCase
+import com.example.quizapp.domain.usecase.InsertResultLocally
 import com.example.quizapp.domain.usecase.InsertResultsUseCase
+import com.example.quizapp.domain.usecase.InsertUserLocally
 import com.example.quizapp.domain.usecase.InsertUserUseCase
 import com.example.quizapp.domain.usecase.PostUserUseCase
 import com.example.quizapp.domain.usecase.SaveUserToRemoteUseCase
@@ -75,7 +77,7 @@ val repositoryModule = module {
     single<ResultsRepository> { ResultsRepositoryImpl(get(), get()) }
     single<UserRepository> { UserRepositoryImpl(get(), get(), get()) }
     single<QuizRepository> { QuizRepositoryImpl(get()) }
-    single<AuthRepository> { AuthRepositoryImpl(get()) }
+    single<AuthRepository> { AuthRepositoryImpl(get(), get()) }
     single<GoogleAuthService> { GoogleAuthServiceImpl(androidContext()) }
 }
 
@@ -85,7 +87,7 @@ val viewModelModule = module {
     viewModel { ProgressViewModel(get(), get()) }
     viewModel { QuizResultViewModel(get(), get(), get(), get(), get(), get(), get()) }
     viewModel { ProfileViewModel(get(), get(), get(), get(), get()) }
-    viewModel { LoginViewModel(get(), get()) }
+    viewModel { LoginViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { RegisterViewModel(get()) }
 
 }
@@ -101,9 +103,11 @@ val useCaseModule = module {
     factory { FetchBadgeLevelUseCase() }
     factory { FetchBadgeUseCase() }
     factory { UpdateBadgeUseCase(get()) }
-    factory { InsertResultsUseCase(get()) }
-    factory { InsertUserUseCase(get()) }
-    factory { SaveUserToRemoteUseCase(get()) }
+    factory { InsertResultsUseCase(androidContext(), get()) }
+    factory { InsertUserUseCase(androidContext(), get()) }
+    factory { SaveUserToRemoteUseCase(androidContext(), get()) }
     factory { UpdateUserToRemoteUseCase(get()) }
     factory { PostUserUseCase(get()) }
+    factory { InsertResultLocally(get()) }
+    factory { InsertUserLocally(get()) }
 }

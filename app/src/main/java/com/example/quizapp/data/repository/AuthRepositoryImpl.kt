@@ -3,9 +3,17 @@ package com.example.quizapp.data.repository
 import com.example.quizapp.domain.repository.AuthRepository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 
-class AuthRepositoryImpl(private val auth: FirebaseAuth) : AuthRepository {
+class AuthRepositoryImpl(
+    private val firestore: FirebaseFirestore,
+    private val auth: FirebaseAuth,
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
+) : AuthRepository {
     override suspend fun registerWithEmail(
         email: String,
         password: String
@@ -49,6 +57,24 @@ class AuthRepositoryImpl(private val auth: FirebaseAuth) : AuthRepository {
             }
         } catch (e: Exception) {
             Result.failure(e)
+        }
+    }
+
+    override suspend fun checkIfUserExists(): Result<Boolean> {
+        return withContext(ioDispatcher) {
+            try {
+                val userId = auth.currentUser?.uid
+                    ?: return@withContext Result.failure(Exception("User Not Authenticated"))
+
+                val document = firestore.collection("users")
+                    .document(userId)
+                    .get()
+                    .await()
+
+                Result.success(document.exists())
+            } catch (e: Exception) {
+                Result.failure(e)
+            }
         }
     }
 }
