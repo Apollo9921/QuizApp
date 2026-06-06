@@ -1,56 +1,38 @@
-package com.example.quizapp.presentation.screens.login
+package com.example.quizapp.presentation.screens.register
 
 import androidx.compose.foundation.background
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.compose.ui.viewinterop.AndroidView
-import androidx.navigation.NavHostController
 import com.example.quizapp.presentation.core.PurpleGrey40
 import com.example.quizapp.presentation.core.White
-import com.example.quizapp.presentation.navigation.Destination
-import com.google.android.gms.common.SignInButton
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun LoginRoute(
-    navHostController: NavHostController,
-    viewModel: LoginViewModel = koinViewModel<LoginViewModel>()
+fun RegisterRoute(
+    onNavigateBack: () -> Unit,
+    viewModel: RegisterViewModel = koinViewModel()
 ) {
-    val onLoginClick =
-        { email: String, password: String -> viewModel.loginWithEmail(email, password) }
-    val onGoogleSignInClick = { viewModel.startSignInByGoogle(navHostController) }
-    val navigateToRegister = { navHostController.navigate(Destination.Register.route) }
-
-    LoginScreen(
-        onLoginClick = onLoginClick,
-        onGoogleSignInClick = onGoogleSignInClick,
-        navigateToRegister = navigateToRegister
-    )
-}
-
-@Composable
-private fun LoginScreen(
-    onLoginClick: (String, String) -> Unit,
-    onGoogleSignInClick: () -> Unit,
-    navigateToRegister: () -> Unit
-) {
+    val state = viewModel.uiState.collectAsState().value
+    var passwordVisible by remember { mutableStateOf(false) }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var confirmPassword by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier
@@ -61,23 +43,13 @@ private fun LoginScreen(
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = "Welcome Back",
             style = MaterialTheme.typography.headlineLarge,
-            fontWeight = FontWeight.Bold,
-            color = White
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Text(
-            text = "Login to your account",
-            style = MaterialTheme.typography.labelMedium,
+            text = "Create Account",
             color = White
         )
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        // Email Field
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
@@ -103,7 +75,6 @@ private fun LoginScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Password Field
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
@@ -111,6 +82,41 @@ private fun LoginScreen(
                 Text(
                     style = MaterialTheme.typography.labelSmall,
                     text = "Password",
+                    color = White
+                )
+            },
+            leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null, tint = White) },
+            modifier = Modifier.fillMaxWidth(),
+            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+            trailingIcon = {
+                IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                    Icon(
+                        imageVector = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
+                        contentDescription = null,
+                        tint = White
+                    )
+                }
+            },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+            singleLine = true,
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = White,
+                unfocusedBorderColor = White.copy(alpha = 0.7f),
+                cursorColor = White,
+                focusedTextColor = White,
+                unfocusedTextColor = White
+            )
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        OutlinedTextField(
+            value = confirmPassword,
+            onValueChange = { confirmPassword = it },
+            label = {
+                Text(
+                    style = MaterialTheme.typography.labelSmall,
+                    text = "Confirm Password",
                     color = White
                 )
             },
@@ -130,62 +136,46 @@ private fun LoginScreen(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Login Button
+        if (state is RegisterViewModel.UIState.Error) {
+            Text(
+                text = stringResource(state.message),
+                color = MaterialTheme.colorScheme.error,
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
+        }
+
         Button(
-            onClick = { onLoginClick(email, password) },
+            onClick = {
+                viewModel.onRegisterClick(
+                    email,
+                    password,
+                    confirmPassword,
+                    onNavigateBack
+                )
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(50.dp),
-            shape = RoundedCornerShape(8.dp)
+            enabled = state !is RegisterViewModel.UIState.Loading
         ) {
-            Text(
-                style = MaterialTheme.typography.labelMedium,
-                text = "Login",
-                fontSize = 16.sp
-            )
-        }
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        // Divider
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            HorizontalDivider(modifier = Modifier.weight(1f))
-            Text(
-                text = " OR ",
-                modifier = Modifier.padding(horizontal = 8.dp),
-                style = MaterialTheme.typography.bodySmall,
-                color = White
-            )
-            HorizontalDivider(modifier = Modifier.weight(1f))
-        }
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        // Google Sign-In Button
-        AndroidView(
-            modifier = Modifier
-                .wrapContentWidth()
-                .padding(top = 16.dp),
-            factory = { context ->
-                SignInButton(context).apply {
-                    setSize(SignInButton.SIZE_WIDE)
-                    setColorScheme(SignInButton.COLOR_LIGHT)
-                    setOnClickListener {
-                        onGoogleSignInClick()
-                    }
-                }
+            if (state is RegisterViewModel.UIState.Loading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(24.dp),
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
+            } else {
+                Text(
+                    style = MaterialTheme.typography.labelMedium,
+                    text = "Register",
+                    color = White
+                )
             }
-        )
+        }
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-        TextButton(onClick = { navigateToRegister() }) {
+        TextButton(onClick = onNavigateBack) {
             Text(
                 style = MaterialTheme.typography.labelSmall,
-                text = "Don't have an account? Sign Up",
+                text = "Already have an account? Do Login",
                 color = White
             )
         }

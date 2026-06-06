@@ -23,6 +23,7 @@ import com.example.quizapp.domain.usecase.FormatQuizUseCase
 import com.example.quizapp.domain.usecase.GetQuizUseCase
 import com.example.quizapp.domain.usecase.InsertResultsUseCase
 import com.example.quizapp.domain.usecase.InsertUserUseCase
+import com.example.quizapp.domain.usecase.PostUserUseCase
 import com.example.quizapp.domain.usecase.SaveUserToRemoteUseCase
 import com.example.quizapp.domain.usecase.UpdateBadgeUseCase
 import com.example.quizapp.domain.usecase.UpdatePointsUseCase
@@ -34,6 +35,7 @@ import com.example.quizapp.presentation.screens.quiz.QuizViewModel
 import com.example.quizapp.presentation.screens.quizResult.QuizResultViewModel
 import com.example.quizapp.presentation.screens.createUser.CreateUserViewModel
 import com.example.quizapp.presentation.screens.login.LoginViewModel
+import com.example.quizapp.presentation.screens.register.RegisterViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import io.ktor.client.HttpClient
@@ -84,6 +86,7 @@ val viewModelModule = module {
     viewModel { QuizResultViewModel(get(), get(), get(), get(), get(), get(), get()) }
     viewModel { ProfileViewModel(get(), get(), get(), get(), get()) }
     viewModel { LoginViewModel(get(), get()) }
+    viewModel { RegisterViewModel(get()) }
 
 }
 
@@ -102,4 +105,5 @@ val useCaseModule = module {
     factory { InsertUserUseCase(get()) }
     factory { SaveUserToRemoteUseCase(get()) }
     factory { UpdateUserToRemoteUseCase(get()) }
+    factory { PostUserUseCase(get()) }
 }

@@ -20,6 +20,7 @@ import com.example.quizapp.presentation.screens.login.LoginRoute
 import com.example.quizapp.presentation.screens.quizLevel.LevelDifficulty
 import com.example.quizapp.presentation.screens.quiz.StartQuizRoute
 import com.example.quizapp.presentation.screens.quizResult.QuizResultRoute
+import com.example.quizapp.presentation.screens.register.RegisterRoute
 
 @Composable
 fun AnimationNav(navHostController: NavHostController, startDestination: String) {
@@ -57,6 +58,23 @@ fun AnimationNav(navHostController: NavHostController, startDestination: String)
             }
         ) {
             LoginRoute(navHostController)
+        }
+        composable(
+            route = Destination.Register.route,
+            enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Left,
+                    animationSpec = tween(700)
+                )
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Right,
+                    animationSpec = tween(700)
+                )
+            }
+        ) {
+            RegisterRoute(onNavigateBack = { navHostController.navigateUp() })
         }
         composable(
             route = Destination.CreateUser.route,

@@ -27,7 +27,7 @@ class LoginViewModel(
                     signInWithGoogle(idToken, navHostController)
                 },
                 onFailure = {
-
+                    //TODO HANDLE ERROR
                 }
             )
         }
@@ -42,7 +42,7 @@ class LoginViewModel(
                     navHostController.navigate(Destination.CreateUser.route)
                 },
                 onFailure = {
-
+                    //TODO HANDLE ERROR
                 }
             )
         }
