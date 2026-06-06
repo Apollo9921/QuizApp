@@ -1,8 +1,15 @@
 package com.example.quizapp.data.repository
 
+import androidx.work.BackoffPolicy
+import androidx.work.Constraints
+import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.workDataOf
 import com.example.quizapp.data.local.dao.UserDAO
 import com.example.quizapp.data.mapper.toUser
 import com.example.quizapp.data.mapper.toUserEntity
+import com.example.quizapp.data.worker.UpdateUserWorker
 import com.example.quizapp.domain.model.results.Results
 import com.example.quizapp.domain.model.user.User
 import com.example.quizapp.domain.repository.UserRepository
@@ -14,12 +21,37 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import java.net.UnknownHostException
+import java.util.concurrent.TimeUnit
 
 class UserRepositoryImpl(
     private val userDAO: UserDAO,
     private val firestore: FirebaseFirestore,
+    private val workManager: WorkManager,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : UserRepository {
+
+    private fun scheduleUpdateWorker(user: User, results: Results) {
+        val data = workDataOf(
+            "totalPoints" to user.totalPoints,
+            "totalPointsPossible" to user.totalPointsPossible,
+            "category" to results.category,
+            "correct" to results.correctAnswers,
+            "incorrect" to results.incorrectAnswers
+        )
+
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .build()
+
+        val updateRequest = OneTimeWorkRequestBuilder<UpdateUserWorker>()
+            .setInputData(data)
+            .setConstraints(constraints)
+            .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 1, TimeUnit.MINUTES)
+            .build()
+
+        workManager.enqueue(updateRequest)
+    }
 
     override suspend fun fetchUser(): Result<User> {
         return withContext(ioDispatcher) {
@@ -118,7 +150,12 @@ class UserRepositoryImpl(
                 AppResult.Success(Unit)
 
             } catch (e: Exception) {
-                AppResult.Error(e)
+                if (e is UnknownHostException || e.cause is UnknownHostException) {
+                    scheduleUpdateWorker(user, results)
+                    AppResult.Success(Unit)
+                } else {
+                    AppResult.Error(e)
+                }
             }
         }
     }

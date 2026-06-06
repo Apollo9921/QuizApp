@@ -1,6 +1,7 @@
 package com.example.quizapp.di
 
 import androidx.room.Room
+import androidx.work.WorkManager
 import com.example.quizapp.data.local.database.QuizDatabase
 import com.example.quizapp.data.network.instance.Instance
 import com.example.quizapp.data.repository.AuthRepositoryImpl
@@ -65,11 +66,12 @@ val networkModule = module {
     single { HttpClient(Android) }
     single { FirebaseAuth.getInstance() }
     single { FirebaseFirestore.getInstance() }
+    single { WorkManager.getInstance(androidContext()) }
 }
 
 val repositoryModule = module {
     single<ResultsRepository> { ResultsRepositoryImpl(get(), get()) }
-    single<UserRepository> { UserRepositoryImpl(get(), get()) }
+    single<UserRepository> { UserRepositoryImpl(get(), get(), get()) }
     single<QuizRepository> { QuizRepositoryImpl(get()) }
     single<AuthRepository> { AuthRepositoryImpl(get()) }
     single<GoogleAuthService> { GoogleAuthServiceImpl(androidContext()) }
