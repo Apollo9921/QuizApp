@@ -28,42 +28,29 @@ class QuizResultViewModel(
     var pointsReceived = mutableIntStateOf(0)
 
     init {
-        viewModelScope.launch {
-            //TODO IMPROVE LOGIC
-            val user = fetchUserUseCase.invoke()
-            userName = user.getOrThrow().name
-            pointsReceived.intValue = correctAnswers * 5
-            updateResults()
-            updatePoints()
-            updateToFireStore()
-        }
+        saveQuizProcess()
     }
 
-    private fun updateResults() {
+    private fun saveQuizProcess() {
         viewModelScope.launch {
-            updateResultsUseCase.invoke(
-                category = category,
-                correctAnswers = correctAnswers,
-                incorrectAnswers = incorrectAnswers
-            )
-        }
-    }
+            try {
+                pointsReceived.intValue = correctAnswers * 5
 
-    private fun updatePoints() {
-        viewModelScope.launch {
-            updatePointsUseCase.invoke(
-                userName = userName ?: return@launch,
-                pointsReceived = pointsReceived.intValue,
-                pointsPossible = pointsPossible
-            )
-        }
-    }
+                val userResult = fetchUserUseCase.invoke()
+                val userLocal = userResult.getOrThrow()
+                userName = userLocal.name
 
-    private fun updateToFireStore() {
-        viewModelScope.launch {
-            val user = User(userName ?: return@launch, pointsReceived.intValue, pointsPossible, "")
-            val results = Results(category, correctAnswers, incorrectAnswers)
-            updateUserToRemoteUseCase.invoke(user, results)
+                updateResultsUseCase.invoke(category, correctAnswers, incorrectAnswers)
+                updatePointsUseCase.invoke(userLocal.name, pointsReceived.intValue, pointsPossible)
+
+                val userRemote = User(userLocal.name, pointsReceived.intValue, pointsPossible, "")
+                val resultsRemote = Results(category, correctAnswers, incorrectAnswers)
+
+                updateUserToRemoteUseCase.invoke(userRemote, resultsRemote)
+
+            } catch (_: Exception) {
+
+            }
         }
     }
 }
