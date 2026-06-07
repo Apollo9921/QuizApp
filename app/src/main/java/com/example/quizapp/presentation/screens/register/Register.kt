@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import com.example.quizapp.presentation.core.PurpleGrey40
 import com.example.quizapp.presentation.core.White
 import org.koin.androidx.compose.koinViewModel
+import com.example.quizapp.R
 
 @Composable
 fun RegisterRoute(
@@ -44,7 +45,7 @@ fun RegisterRoute(
     ) {
         Text(
             style = MaterialTheme.typography.headlineLarge,
-            text = "Create Account",
+            text = stringResource(R.string.create_account),
             color = White
         )
 
@@ -56,7 +57,7 @@ fun RegisterRoute(
             label = {
                 Text(
                     style = MaterialTheme.typography.labelSmall,
-                    text = "Email",
+                    text = stringResource(R.string.email_field),
                     color = White
                 )
             },
@@ -81,7 +82,7 @@ fun RegisterRoute(
             label = {
                 Text(
                     style = MaterialTheme.typography.labelSmall,
-                    text = "Password",
+                    text = stringResource(R.string.password_field),
                     color = White
                 )
             },
@@ -116,7 +117,7 @@ fun RegisterRoute(
             label = {
                 Text(
                     style = MaterialTheme.typography.labelSmall,
-                    text = "Confirm Password",
+                    text = stringResource(R.string.confirm_password_field),
                     color = White
                 )
             },
@@ -166,7 +167,7 @@ fun RegisterRoute(
             } else {
                 Text(
                     style = MaterialTheme.typography.labelMedium,
-                    text = "Register",
+                    text = stringResource(R.string.register),
                     color = White
                 )
             }
@@ -175,7 +176,7 @@ fun RegisterRoute(
         TextButton(onClick = onNavigateBack) {
             Text(
                 style = MaterialTheme.typography.labelSmall,
-                text = "Already have an account? Do Login",
+                text = stringResource(R.string.have_an_account),
                 color = White
             )
         }

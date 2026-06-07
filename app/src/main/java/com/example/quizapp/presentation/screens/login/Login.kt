@@ -26,6 +26,7 @@ import com.example.quizapp.presentation.core.White
 import com.example.quizapp.presentation.navigation.Destination
 import com.google.android.gms.common.SignInButton
 import org.koin.androidx.compose.koinViewModel
+import com.example.quizapp.R
 
 @Composable
 fun LoginRoute(
@@ -71,7 +72,7 @@ private fun LoginScreen(
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = "Welcome Back",
+            text = stringResource(R.string.greeting),
             style = MaterialTheme.typography.headlineLarge,
             fontWeight = FontWeight.Bold,
             color = White
@@ -80,21 +81,20 @@ private fun LoginScreen(
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = "Login to your account",
+            text = stringResource(R.string.login_to_account),
             style = MaterialTheme.typography.labelMedium,
             color = White
         )
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        // Email Field
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
             label = {
                 Text(
                     style = MaterialTheme.typography.labelSmall,
-                    text = "Email",
+                    text = stringResource(R.string.email_field),
                     color = White
                 )
             },
@@ -113,14 +113,13 @@ private fun LoginScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Password Field
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
             label = {
                 Text(
                     style = MaterialTheme.typography.labelSmall,
-                    text = "Password",
+                    text = stringResource(R.string.password_field),
                     color = White
                 )
             },
@@ -164,7 +163,7 @@ private fun LoginScreen(
             } else {
                 Text(
                     style = MaterialTheme.typography.labelMedium,
-                    text = "Login",
+                    text = stringResource(R.string.login_btn),
                     fontSize = 16.sp
                 )
             }
@@ -178,7 +177,7 @@ private fun LoginScreen(
         ) {
             HorizontalDivider(modifier = Modifier.weight(1f))
             Text(
-                text = " OR ",
+                text = stringResource(R.string.another_option),
                 modifier = Modifier.padding(horizontal = 8.dp),
                 style = MaterialTheme.typography.bodySmall,
                 color = White
@@ -208,7 +207,7 @@ private fun LoginScreen(
         TextButton(onClick = { navigateToRegister() }) {
             Text(
                 style = MaterialTheme.typography.labelSmall,
-                text = "Don't have an account? Sign Up",
+                text = stringResource(R.string.do_not_have_account),
                 color = White
             )
         }

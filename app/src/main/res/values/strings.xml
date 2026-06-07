@@ -57,4 +57,15 @@
     <string name="login_failed">Login failed</string>
     <string name="invalid_credential">Invalid credential type</string>
     <string name="user_no_authenticated">User Not Authenticated</string>
+    <string name="greeting">Welcome Back</string>
+    <string name="login_to_account">Login to your account</string>
+    <string name="email_field">Email</string>
+    <string name="password_field">Password</string>
+    <string name="login_btn">Login</string>
+    <string name="another_option"> OR </string>
+    <string name="do_not_have_account">Don\'t have an account? Sign Up</string>
+    <string name="create_account">Create Account</string>
+    <string name="confirm_password_field">Confirm Password</string>
+    <string name="register">Register</string>
+    <string name="have_an_account">Already have an account? Do Login</string>
 </resources>
