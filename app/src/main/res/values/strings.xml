@@ -54,4 +54,7 @@
     <string name="server_down">Server is currently down.</string>
     <string name="unexpected_error">An unexpected error occurred</string>
     <string name="no_category_or_level_defined">No category or level defined</string>
+    <string name="login_failed">Login failed</string>
+    <string name="invalid_credential">Invalid credential type</string>
+    <string name="user_no_authenticated">User Not Authenticated</string>
 </resources>

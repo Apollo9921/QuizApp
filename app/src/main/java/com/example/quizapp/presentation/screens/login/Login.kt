@@ -13,6 +13,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -31,6 +32,7 @@ fun LoginRoute(
     navHostController: NavHostController,
     viewModel: LoginViewModel = koinViewModel<LoginViewModel>()
 ) {
+    val state = viewModel.uiState.collectAsState().value
     val onLoginClick =
         { email: String, password: String ->
             viewModel.loginWithEmail(
@@ -43,6 +45,7 @@ fun LoginRoute(
     val navigateToRegister = { navHostController.navigate(Destination.Register.route) }
 
     LoginScreen(
+        state = state,
         onLoginClick = onLoginClick,
         onGoogleSignInClick = onGoogleSignInClick,
         navigateToRegister = navigateToRegister
@@ -51,6 +54,7 @@ fun LoginRoute(
 
 @Composable
 private fun LoginScreen(
+    state: LoginViewModel.UIState,
     onLoginClick: (String, String) -> Unit,
     onGoogleSignInClick: () -> Unit,
     navigateToRegister: () -> Unit
@@ -136,24 +140,38 @@ private fun LoginScreen(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Login Button
+        if (state is LoginViewModel.UIState.Error) {
+            Text(
+                text = stringResource(state.message),
+                color = MaterialTheme.colorScheme.error,
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
+        }
+
         Button(
             onClick = { onLoginClick(email, password) },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(50.dp),
-            shape = RoundedCornerShape(8.dp)
+            shape = RoundedCornerShape(8.dp),
+            enabled = state !is LoginViewModel.UIState.Loading
         ) {
-            Text(
-                style = MaterialTheme.typography.labelMedium,
-                text = "Login",
-                fontSize = 16.sp
-            )
+            if (state is LoginViewModel.UIState.Loading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(24.dp),
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
+            } else {
+                Text(
+                    style = MaterialTheme.typography.labelMedium,
+                    text = "Login",
+                    fontSize = 16.sp
+                )
+            }
         }
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Divider
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth()
@@ -170,7 +188,6 @@ private fun LoginScreen(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Google Sign-In Button
         AndroidView(
             modifier = Modifier
                 .wrapContentWidth()

@@ -6,7 +6,9 @@ import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
 import androidx.credentials.exceptions.NoCredentialException
 import com.example.quizapp.BuildConfig
+import com.example.quizapp.R
 import com.example.quizapp.domain.repository.GoogleAuthService
+import com.example.quizapp.domain.result.AppResult
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 
@@ -14,7 +16,7 @@ class GoogleAuthServiceImpl(
     private val context: Context
 ) : GoogleAuthService {
 
-    override suspend fun getGoogleIdToken(): Result<String> {
+    override suspend fun getGoogleIdToken(): AppResult<String> {
         val credentialManager = CredentialManager.create(context)
 
         return try {
@@ -22,18 +24,18 @@ class GoogleAuthServiceImpl(
         } catch (_: NoCredentialException) {
             try {
                 executeGetCredential(credentialManager, filterAuthorized = false)
-            } catch (e: Exception) {
-                Result.failure(e)
+            } catch (_: Exception) {
+                AppResult.Error(R.string.something_went_wrong)
             }
-        } catch (e: Exception) {
-            Result.failure(e)
+        } catch (_: Exception) {
+            AppResult.Error(R.string.unexpected_error)
         }
     }
 
     private suspend fun executeGetCredential(
         credentialManager: CredentialManager,
         filterAuthorized: Boolean
-    ): Result<String> {
+    ): AppResult<String> {
         val request = configureGoogleSignIn(filterAuthorized)
         val result = credentialManager.getCredential(
             request = request,
@@ -45,9 +47,9 @@ class GoogleAuthServiceImpl(
             credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL
         ) {
             val googleCredential = GoogleIdTokenCredential.createFrom(credential.data)
-            Result.success(googleCredential.idToken)
+            AppResult.Success(googleCredential.idToken)
         } else {
-            Result.failure(Exception("Invalid credential type"))
+            AppResult.Error(R.string.invalid_credential)
         }
     }
 

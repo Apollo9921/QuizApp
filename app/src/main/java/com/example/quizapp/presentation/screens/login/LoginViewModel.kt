@@ -13,6 +13,8 @@ import com.example.quizapp.domain.usecase.InsertUserLocally
 import com.example.quizapp.domain.usecase.InsertUserUseCase
 import com.example.quizapp.domain.usecase.SaveUserToRemoteUseCase
 import com.example.quizapp.presentation.navigation.Destination
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class LoginViewModel(
@@ -46,71 +48,90 @@ class LoginViewModel(
         }
     }
 
+    private val _uiState = MutableStateFlow<UIState>(UIState.Idle)
+    val uiState = _uiState.asStateFlow()
+
+    sealed class UIState {
+        data object Idle: UIState()
+        data object Loading: UIState()
+        data class Error(val message: Int): UIState()
+    }
+
     fun loginWithEmail(email: String, password: String, navHostController: NavHostController) {
         viewModelScope.launch {
+            _uiState.value = UIState.Loading
             val result = authRepository.loginWithEmail(email, password)
-            result.fold(
-                onSuccess = {
-                    checkIfUserExists(navHostController)
-                },
-                onFailure = {
-                    //TODO HANDLE ERROR
+            when(result) {
+                is AppResult.Error<*> -> {
+                    _uiState.value = UIState.Error(message = result.message as Int)
                 }
-            )
+                is AppResult.Success<*> -> {
+                    checkIfUserExists(navHostController)
+                }
+            }
         }
     }
 
     fun startSignInByGoogle(navHostController: NavHostController) {
         viewModelScope.launch {
             val result = googleAuthService.getGoogleIdToken()
-            result.fold(
-                onSuccess = { idToken ->
-                    signInWithGoogle(idToken, navHostController)
-                },
-                onFailure = {
-                    //TODO HANDLE ERROR
+            when(result) {
+                is AppResult.Error<*> -> {
+                    _uiState.value = UIState.Error(message = result.message as Int)
                 }
-            )
+                is AppResult.Success<*> -> {
+                    signInWithGoogle(result.data.toString(), navHostController)
+                }
+            }
         }
     }
 
     private fun signInWithGoogle(idToken: String, navHostController: NavHostController) {
         viewModelScope.launch {
             val result = authRepository.signInWithGoogle(idToken)
-            result.fold(
-                onSuccess = {
-                    checkIfUserExists(navHostController)
-                },
-                onFailure = {
-                    //TODO HANDLE ERROR
+            when(result) {
+                is AppResult.Error<*> -> {
+                    _uiState.value = UIState.Error(message = result.message as Int)
                 }
-            )
+                is AppResult.Success<*> -> {
+                    checkIfUserExists(navHostController)
+                }
+            }
         }
     }
 
     private fun checkIfUserExists(navHostController: NavHostController) {
         viewModelScope.launch {
-            val exists = authRepository.checkIfUserExists().getOrDefault(false)
-            if (exists) {
-                val remoteUserResult = userRepository.fetchUserFromRemote()
-                if (remoteUserResult is AppResult.Success) {
-                    insertUserLocally.invoke(remoteUserResult.data)
+            val result = authRepository.checkIfUserExists()
+            when(result) {
+                is AppResult.Error<*> -> {
+                    _uiState.value = UIState.Error(message = result.message as Int)
                 }
+                is AppResult.Success<*> -> {
+                    val exists = result.data as Boolean
+                    if (exists) {
+                        val remoteUserResult = userRepository.fetchUserFromRemote()
+                        if (remoteUserResult is AppResult.Success) {
+                            insertUserLocally.invoke(remoteUserResult.data)
+                        }
 
-                val remoteResults = userRepository.fetchResultsFromRemote()
-                if (remoteResults is AppResult.Success) {
-                    remoteResults.data.forEach { result ->
-                        insertResultLocally.invoke(result)
+                        val remoteResults = userRepository.fetchResultsFromRemote()
+                        if (remoteResults is AppResult.Success) {
+                            remoteResults.data.forEach { result ->
+                                insertResultLocally.invoke(result)
+                            }
+                        }
+
+                        _uiState.value = UIState.Idle
+                        navHostController.popBackStack()
+                        navHostController.navigate(Destination.Categories.route)
+                    } else {
+                        val randomName = generateRandomName()
+                        insertUserUseCase.invoke(randomName)
+                        insertResultsUseCase.invoke()
+                        saveUserAndResults(randomName, navHostController)
                     }
                 }
-
-                navHostController.popBackStack()
-                navHostController.navigate(Destination.Categories.route)
-            } else {
-                val randomName = generateRandomName()
-                insertUserUseCase.invoke(randomName)
-                insertResultsUseCase.invoke()
-                saveUserAndResults(randomName, navHostController)
             }
         }
     }
@@ -123,14 +144,14 @@ class LoginViewModel(
             val result = saveUserToRemoteUseCase.invoke(name)
             when(result) {
                 is AppResult.Error<*> -> {
-                    //TODO HANDLE ERROR MESSAGE
+                    _uiState.value = UIState.Error(message = result.message as Int)
                 }
                 is AppResult.Success<*> -> {
+                    _uiState.value = UIState.Idle
                     navHostController.popBackStack()
                     navHostController.navigate(Destination.Categories.route)
                 }
             }
         }
     }
-
 }

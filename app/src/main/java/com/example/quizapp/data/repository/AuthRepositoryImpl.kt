@@ -27,55 +27,55 @@ class AuthRepositoryImpl(
             } else {
                 AppResult.Error(R.string.register_failure)
             }
-        } catch (e: Exception) {
-            AppResult.Error(e.message)
+        } catch (_: Exception) {
+            AppResult.Error(R.string.unexpected_error)
         }
     }
 
-    override suspend fun signInWithGoogle(idToken: String): Result<Unit> {
+    override suspend fun signInWithGoogle(idToken: String): AppResult<Unit> {
         return try {
             val credential = GoogleAuthProvider.getCredential(idToken, null)
             val result = auth.signInWithCredential(credential).await()
             if (result.user != null) {
-                Result.success(Unit)
+                AppResult.Success(Unit)
             } else {
-                Result.failure(Exception("Registration failed"))
+                AppResult.Error(R.string.register_failure)
             }
-        } catch (e: Exception) {
-            Result.failure(e)
+        } catch (_: Exception) {
+            AppResult.Error(R.string.unexpected_error)
         }
     }
 
     override suspend fun loginWithEmail(
         email: String,
         password: String
-    ): Result<Unit> {
+    ): AppResult<Unit> {
         return try {
             val result = auth.signInWithEmailAndPassword(email, password).await()
             if (result.user != null) {
-                Result.success(Unit)
+                AppResult.Success(Unit)
             } else {
-                Result.failure(Exception("Login failed"))
+                AppResult.Error(R.string.login_failed)
             }
-        } catch (e: Exception) {
-            Result.failure(e)
+        } catch (_: Exception) {
+            AppResult.Error(R.string.unexpected_error)
         }
     }
 
-    override suspend fun checkIfUserExists(): Result<Boolean> {
+    override suspend fun checkIfUserExists(): AppResult<Boolean> {
         return withContext(ioDispatcher) {
             try {
                 val userId = auth.currentUser?.uid
-                    ?: return@withContext Result.failure(Exception("User Not Authenticated"))
+                    ?: return@withContext AppResult.Error(R.string.user_no_authenticated)
 
                 val document = firestore.collection("users")
                     .document(userId)
                     .get()
                     .await()
 
-                Result.success(document.exists())
-            } catch (e: Exception) {
-                Result.failure(e)
+                AppResult.Success(document.exists())
+            } catch (_: Exception) {
+                AppResult.Error(R.string.unexpected_error)
             }
         }
     }
