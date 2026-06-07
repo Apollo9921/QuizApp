@@ -1,58 +1,56 @@
 package com.example.quizapp.presentation.screens.quizResult
 
-import android.content.Context
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.quizapp.domain.model.results.Results
+import com.example.quizapp.domain.model.user.User
+import com.example.quizapp.domain.usecase.FetchUserUseCase
 import com.example.quizapp.domain.usecase.UpdatePointsUseCase
 import com.example.quizapp.domain.usecase.UpdateResultsUseCase
-import com.example.quizapp.presentation.dataStore.UserManager
-import com.example.quizapp.presentation.dataStore.dataStoreUser
-import kotlinx.coroutines.flow.first
+import com.example.quizapp.domain.usecase.UpdateUserToRemoteUseCase
 import kotlinx.coroutines.launch
 
 class QuizResultViewModel(
     private val updateResultsUseCase: UpdateResultsUseCase,
     private val updatePointsUseCase: UpdatePointsUseCase,
+    private val updateUserToRemoteUseCase: UpdateUserToRemoteUseCase,
+    private val fetchUserUseCase: FetchUserUseCase,
     val category: String,
     val correctAnswers: Int,
-    val incorrectAnswers: Int,
-    val context: Context
+    val incorrectAnswers: Int
 ) : ViewModel() {
 
-    private var userName: String = ""
+    private var userName: String? = null
     private val pointsPossible: Int = 25
 
     var total: Int = 5
     var pointsReceived = mutableIntStateOf(0)
 
     init {
-        viewModelScope.launch {
-            val userManager = UserManager(dataStore = context.dataStoreUser)
-            userName = userManager.userName.first().toString()
-            pointsReceived.intValue = correctAnswers * 5
-            updateResults()
-            updatePoints()
-        }
+        saveQuizProcess()
     }
 
-    private fun updateResults() {
+    private fun saveQuizProcess() {
         viewModelScope.launch {
-            updateResultsUseCase.invoke(
-                category = category,
-                correctAnswers = correctAnswers,
-                incorrectAnswers = incorrectAnswers
-            )
-        }
-    }
+            try {
+                pointsReceived.intValue = correctAnswers * 5
 
-    private fun updatePoints() {
-        viewModelScope.launch {
-            updatePointsUseCase.invoke(
-                userName = userName,
-                pointsReceived = pointsReceived.intValue,
-                pointsPossible = pointsPossible
-            )
+                val userResult = fetchUserUseCase.invoke()
+                val userLocal = userResult.getOrThrow()
+                userName = userLocal.name
+
+                updateResultsUseCase.invoke(category, correctAnswers, incorrectAnswers)
+                updatePointsUseCase.invoke(userLocal.name, pointsReceived.intValue, pointsPossible)
+
+                val userRemote = User(userLocal.name, pointsReceived.intValue, pointsPossible, "")
+                val resultsRemote = Results(category, correctAnswers, incorrectAnswers)
+
+                updateUserToRemoteUseCase.invoke(userRemote, resultsRemote)
+
+            } catch (_: Exception) {
+
+            }
         }
     }
 }

@@ -6,9 +6,10 @@ import com.example.quizapp.domain.repository.UserRepository
 import com.example.quizapp.presentation.utils.badgesDescription
 
 class InsertUserUseCase(
+    private val context: Context,
     private val repository: UserRepository
 ) {
-    suspend operator fun invoke(context: Context, name: String) {
+    suspend operator fun invoke(name: String) {
         val user = User(
             name = name,
             totalPoints = 0,

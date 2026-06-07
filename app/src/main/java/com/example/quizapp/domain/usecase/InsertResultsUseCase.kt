@@ -6,9 +6,10 @@ import com.example.quizapp.domain.repository.ResultsRepository
 import com.example.quizapp.presentation.utils.categories
 
 class InsertResultsUseCase(
+    private val context: Context,
     private val repository: ResultsRepository
 ) {
-    suspend operator fun invoke(context: Context) {
+    suspend operator fun invoke() {
         for (i in categories.indices) {
             val results = Results(
                 category = context.resources.getString(categories[i]),

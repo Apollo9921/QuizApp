@@ -41,7 +41,7 @@ class QuizViewModel(
     sealed class UIState {
         data object Loading : UIState()
         data class Success(val quiz: List<Quiz>, val answers: ArrayList<String>) : UIState()
-        data class Error(val errorMessage: String) : UIState()
+        data class Error(val errorMessage: Int) : UIState()
     }
 
     fun getQuiz() {
@@ -53,7 +53,7 @@ class QuizViewModel(
             )
             when(result) {
                 is AppResult.Error<*> -> {
-                    _uiState.value = UIState.Error(result.message.toString())
+                    _uiState.value = UIState.Error(result.message as Int)
                 }
                 is AppResult.Success -> {
                     val data = result.data

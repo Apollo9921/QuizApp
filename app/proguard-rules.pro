@@ -26,3 +26,8 @@
 
 # @Serializable and @Polymorphic are used at runtime for polymorphic serialization.
 -keepattributes RuntimeVisibleAnnotations,AnnotationDefault
+
+-keep class com.google.android.libraries.identity.googleid.** { *; }
+-dontwarn com.google.android.libraries.identity.googleid.**
+
+-keep class androidx.credentials.** { *; }

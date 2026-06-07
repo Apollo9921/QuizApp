@@ -147,7 +147,7 @@ fun OnBoard(navHostController: NavHostController) {
                     Button(
                         onClick = {
                             navHostController.popBackStack()
-                            navHostController.navigate(Destination.CreateUser.route)
+                            navHostController.navigate(Destination.Login.route)
                         },
                         shape = RoundedCornerShape(20.dp),
                         border = BorderStroke(width = 2.dp, color = White),
