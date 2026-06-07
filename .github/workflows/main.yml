@@ -24,7 +24,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Create local.properties
-        run: echo "MAPS_API_KEY=${{ secrets.MAPS_API_KEY }}" > local.properties
+        run: echo "GOOGLE_SERVER_CLIENT_ID=${{ secrets.GOOGLE_SERVER_CLIENT_ID }}" > local.properties
 
       - name: Run Unit Tests
         run: ./gradlew testDebugUnitTest
