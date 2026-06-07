@@ -1,6 +1,7 @@
 package com.example.quizapp.data.repository
 
 import com.example.quizapp.BuildConfig
+import com.example.quizapp.R
 import com.example.quizapp.data.mapper.toQuiz
 import com.example.quizapp.data.network.dto.QuizDTO
 import com.example.quizapp.data.network.instance.Instance
@@ -38,19 +39,19 @@ class QuizRepositoryImpl(private val instance: Instance) : QuizRepository {
             AppResult.Success(response.map { it.toQuiz() })
 
         } catch (_: HttpRequestTimeoutException) {
-            AppResult.Error("Request timed out. Please try again.")
+            AppResult.Error(R.string.request_timeout)
         } catch (_: ConnectTimeoutException) {
-            AppResult.Error("Check your internet connection.")
+            AppResult.Error(R.string.no_internet_connection)
         } catch (_: IOException) {
-            AppResult.Error("Network error occurred. Are you offline?")
+            AppResult.Error(R.string.network_error)
         } catch (_: RedirectResponseException) {
-            AppResult.Error("Server redirect error.")
+            AppResult.Error(R.string.server_error)
         } catch (_: ClientRequestException) {
-            AppResult.Error("Invalid request")
+            AppResult.Error(R.string.invalid_request)
         } catch (_: ServerResponseException) {
-            AppResult.Error("Server is currently down.")
+            AppResult.Error(R.string.server_down)
         } catch (_: Exception) {
-            AppResult.Error("An unexpected error occurred")
+            AppResult.Error(R.string.unexpected_error)
         }
     }
 }

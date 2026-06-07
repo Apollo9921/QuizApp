@@ -35,7 +35,6 @@ import com.example.quizapp.presentation.screens.profile.ProfileViewModel
 import com.example.quizapp.presentation.screens.progress.ProgressViewModel
 import com.example.quizapp.presentation.screens.quiz.QuizViewModel
 import com.example.quizapp.presentation.screens.quizResult.QuizResultViewModel
-import com.example.quizapp.presentation.screens.createUser.CreateUserViewModel
 import com.example.quizapp.presentation.screens.login.LoginViewModel
 import com.example.quizapp.presentation.screens.register.RegisterViewModel
 import com.google.firebase.auth.FirebaseAuth
@@ -83,7 +82,6 @@ val repositoryModule = module {
 
 val viewModelModule = module {
     viewModel { QuizViewModel(get(), get(), get(), get()) }
-    viewModel { CreateUserViewModel(get(), get(), get()) }
     viewModel { ProgressViewModel(get(), get()) }
     viewModel { QuizResultViewModel(get(), get(), get(), get(), get(), get(), get()) }
     viewModel { ProfileViewModel(get(), get(), get(), get(), get()) }

@@ -1,6 +1,8 @@
 package com.example.quizapp.domain.usecase
 
+import com.example.quizapp.R
 import com.example.quizapp.domain.repository.AuthRepository
+import com.example.quizapp.domain.result.AppResult
 
 class PostUserUseCase(
     private val repository: AuthRepository
@@ -9,20 +11,19 @@ class PostUserUseCase(
         email: String,
         password: String,
         confirmPassword: String
-    ): Result<Unit> {
-        //TODO SAVE ERROR MESSAGES ON STRINGS.XML
+    ): AppResult<Unit> {
         if (email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
-            return Result.failure(Exception("There are empty fields"))
+            return AppResult.Error(R.string.empty_fields)
         }
         val emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$".toRegex()
         if (!emailRegex.matches(email)) {
-            return Result.failure(Exception("Invalid Email Format"))
+            return AppResult.Error(R.string.invalid_email_format)
         }
         if (password.length < 6) {
-            return Result.failure(Exception("Password must contain at least 6 characters"))
+            return AppResult.Error(R.string.password_length)
         }
         if (password != confirmPassword) {
-            return Result.failure(Exception("Passwords do not match"))
+            return AppResult.Error(R.string.password_mismatch)
         }
         return repository.registerWithEmail(email, password)
     }

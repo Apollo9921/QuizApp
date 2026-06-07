@@ -12,7 +12,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.quizapp.presentation.screens.progress.ProgressRoute
 import com.example.quizapp.presentation.screens.categories.CategoriesRoute
-import com.example.quizapp.presentation.screens.createUser.CreateUserRoute
 import com.example.quizapp.presentation.screens.profile.ProfileRoute
 import com.example.quizapp.presentation.screens.results.Results
 import com.example.quizapp.presentation.screens.boarding.OnBoard
@@ -75,23 +74,6 @@ fun AnimationNav(navHostController: NavHostController, startDestination: String)
             }
         ) {
             RegisterRoute(onNavigateBack = { navHostController.navigateUp() })
-        }
-        composable(
-            route = Destination.CreateUser.route,
-            enterTransition = {
-                slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Left,
-                    animationSpec = tween(700)
-                )
-            },
-            exitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Right,
-                    animationSpec = tween(700)
-                )
-            }
-        ) {
-            CreateUserRoute(navHostController)
         }
         composable(route = Destination.Progress.route) {
             ProgressRoute(navHostController = navHostController)

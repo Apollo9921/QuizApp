@@ -1,6 +1,8 @@
 package com.example.quizapp.data.repository
 
+import com.example.quizapp.R
 import com.example.quizapp.domain.repository.AuthRepository
+import com.example.quizapp.domain.result.AppResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
@@ -17,16 +19,16 @@ class AuthRepositoryImpl(
     override suspend fun registerWithEmail(
         email: String,
         password: String
-    ): Result<Unit> {
+    ): AppResult<Unit> {
         return try {
             val result = auth.createUserWithEmailAndPassword(email, password).await()
             if (result.user != null) {
-                Result.success(Unit)
+                AppResult.Success(Unit)
             } else {
-                Result.failure(Exception("Registration failed"))
+                AppResult.Error(R.string.register_failure)
             }
         } catch (e: Exception) {
-            Result.failure(e)
+            AppResult.Error(e.message)
         }
     }
 
