@@ -49,10 +49,7 @@ class QuizViewModel(
         viewModelScope.launch {
             try {
                 _uiState.value = UIState.Loading
-                val result = getQuizUseCase.invoke(
-                    category.replace(" ", "_").lowercase(),
-                    level.lowercase()
-                )
+                val result = getQuizUseCase.invoke(category, level)
 
                 when (result) {
                     is AppResult.Error<*> -> {
