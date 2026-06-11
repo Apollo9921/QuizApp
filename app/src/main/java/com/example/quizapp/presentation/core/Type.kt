@@ -32,6 +32,13 @@ fun getTypography(): Typography {
             fontSize = textSizeByScreen(16.sp),
             letterSpacing = 0.5.sp,
             textAlign = TextAlign.Center
+        ),
+        displaySmall = TextStyle(
+            fontFamily = FontFamily.SansSerif,
+            fontWeight = FontWeight.Medium,
+            fontSize = textSizeByScreen(13.sp),
+            letterSpacing = 0.5.sp,
+            textAlign = TextAlign.Center
         )
     )
 }
