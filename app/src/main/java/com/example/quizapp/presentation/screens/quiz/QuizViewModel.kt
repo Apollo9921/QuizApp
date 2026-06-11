@@ -3,7 +3,8 @@ package com.example.quizapp.presentation.screens.quiz
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
-import com.example.quizapp.domain.model.quiz.Quiz
+import com.example.quizapp.R
+import com.example.quizapp.data.network.dto.TranslatedQuizResult
 import com.example.quizapp.domain.result.AppResult
 import com.example.quizapp.domain.usecase.FormatQuizUseCase
 import com.example.quizapp.domain.usecase.GetQuizUseCase
@@ -40,27 +41,33 @@ class QuizViewModel(
 
     sealed class UIState {
         data object Loading : UIState()
-        data class Success(val quiz: List<Quiz>, val answers: ArrayList<String>) : UIState()
+        data class Success(val quiz: List<TranslatedQuizResult>) : UIState()
         data class Error(val errorMessage: Int) : UIState()
     }
 
     fun getQuiz() {
         viewModelScope.launch {
-            _uiState.value = UIState.Loading
-            val result = getQuizUseCase.invoke(
-                category.replace(" ", "_").lowercase(),
-                level.lowercase()
-            )
-            when(result) {
-                is AppResult.Error<*> -> {
-                    _uiState.value = UIState.Error(result.message as Int)
+            try {
+                _uiState.value = UIState.Loading
+                val result = getQuizUseCase.invoke(
+                    category.replace(" ", "_").lowercase(),
+                    level.lowercase()
+                )
+
+                when (result) {
+                    is AppResult.Error<*> -> {
+                        _uiState.value = UIState.Error(result.message as Int)
+                    }
+
+                    is AppResult.Success -> {
+                        val translatedQuiz = formatQuizUseCase.invoke(result.data)
+                        _uiState.value = UIState.Success(translatedQuiz)
+                        timing()
+                    }
                 }
-                is AppResult.Success -> {
-                    val data = result.data
-                    val answers = formatQuizUseCase.invoke(data)
-                    _uiState.value = UIState.Success(data, answers)
-                    timing()
-                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                _uiState.value = UIState.Error(R.string.unexpected_error)
             }
         }
     }
