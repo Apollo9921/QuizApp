@@ -49,7 +49,6 @@ import com.example.quizapp.presentation.core.PurpleGrey40
 import com.example.quizapp.presentation.core.Red
 import com.example.quizapp.presentation.core.White
 import com.example.quizapp.presentation.core.Yellow
-import com.example.quizapp.presentation.utils.categories
 import com.example.quizapp.presentation.utils.formatTotalCount
 import com.example.quizapp.presentation.utils.mediaQueryWidth
 import com.example.quizapp.presentation.utils.normal
@@ -58,6 +57,19 @@ import com.example.quizapp.presentation.utils.small
 private lateinit var user: SnapshotStateList<UserEntity>
 private lateinit var results: SnapshotStateList<ResultsEntity>
 private lateinit var data: Map<String, Int>
+
+private val categories = listOf(
+    R.string.artsAndLiterature_translatable,
+    R.string.filmAndTV_translatable,
+    R.string.foodAndDrink_translatable,
+    R.string.generalKnowledge_translatable,
+    R.string.geography_translatable,
+    R.string.history_translatable,
+    R.string.music_translatable,
+    R.string.science_translatable,
+    R.string.societyAndCulture_translatable,
+    R.string.sportAndLeisure_translatable
+)
 
 @Composable
 fun Results(navHostController: NavHostController) {
