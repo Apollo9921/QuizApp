@@ -10,9 +10,9 @@ import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import java.util.Locale
 
-class CloudQuizTranslatorImpl: CloudQuizTranslator {
-
-    private val functions = FirebaseFunctions.getInstance()
+class CloudQuizTranslatorImpl(
+    private val functions: FirebaseFunctions
+): CloudQuizTranslator {
 
     override suspend fun translateQuizBlock(
         rawQuestions: List<CloudQuizInputItem>
@@ -21,7 +21,7 @@ class CloudQuizTranslatorImpl: CloudQuizTranslator {
         val currentLanguage = AppCompatDelegate.getApplicationLocales()[0]?.language
             ?: Locale.getDefault().language
 
-        if (currentLanguage == "en") {
+        if (currentLanguage != "pt" && currentLanguage != "es") {
             return@withContext rawQuestions.map {
                 TranslatedQuizResult(
                     question = it.question,
