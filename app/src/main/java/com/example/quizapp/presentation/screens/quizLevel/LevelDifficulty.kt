@@ -25,9 +25,9 @@ import com.example.quizapp.presentation.core.White
 fun LevelDifficulty(navHostController: NavHostController, category: String) {
     val context = LocalContext.current
     val levelsDifficulty = listOf(
-        R.string.easy,
-        R.string.medium,
-        R.string.hard
+        R.string.easy_translatable,
+        R.string.medium_translatable,
+        R.string.hard_translatable
     )
     val level = remember { mutableStateOf("") }
     val (selectedOption, onOptionSelected) = remember { mutableIntStateOf(levelsDifficulty[0]) }

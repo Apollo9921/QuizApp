@@ -8,8 +8,6 @@
     <string name="back">Back</string>
     <string name="next">Next</string>
     <string name="getStarted">Get Started</string>
-    <string name="insertName">Insert your name:</string>
-    <string name="createUser">Create</string>
     <string name="newbie">Newbie</string>
     <string name="intermediate">Intermediate</string>
     <string name="advanced">Advanced</string>
@@ -22,19 +20,32 @@
     <string name="progressPercentage">Progress:</string>
     <string name="badge">Badge:</string>
     <string name="totalAndTotalPossiblePoints">%1$s / %2$s possible points</string>
-    <string name="artsAndLiterature">Arts and Literature</string>
-    <string name="filmAndTV">Film and TV</string>
-    <string name="foodAndDrink">Food and Drink</string>
-    <string name="generalKnowledge">General Knowledge</string>
-    <string name="geography">Geography</string>
-    <string name="history">History</string>
-    <string name="music">Music</string>
-    <string name="science">Science</string>
-    <string name="societyAndCulture">Society and Culture</string>
-    <string name="sportAndLeisure">Sport and Leisure</string>
-    <string name="easy">Easy</string>
-    <string name="medium">Medium</string>
-    <string name="hard">Hard</string>
+    <string name="artsAndLiterature" translatable="false">Arts and Literature</string>
+    <string name="filmAndTV" translatable="false">Film and TV</string>
+    <string name="foodAndDrink" translatable="false">Food and Drink</string>
+    <string name="generalKnowledge" translatable="false">General Knowledge</string>
+    <string name="geography" translatable="false">Geography</string>
+    <string name="history" translatable="false">History</string>
+    <string name="music" translatable="false">Music</string>
+    <string name="science" translatable="false">Science</string>
+    <string name="societyAndCulture" translatable="false">Society and Culture</string>
+    <string name="sportAndLeisure" translatable="false">Sport and Leisure</string>
+    <string name="easy" translatable="false">Easy</string>
+    <string name="medium" translatable="false">Medium</string>
+    <string name="hard" translatable="false">Hard</string>
+    <string name="artsAndLiterature_translatable">Arts and Literature</string>
+    <string name="filmAndTV_translatable">Film and TV</string>
+    <string name="foodAndDrink_translatable">Food and Drink</string>
+    <string name="generalKnowledge_translatable">General Knowledge</string>
+    <string name="geography_translatable">Geography</string>
+    <string name="history_translatable">History</string>
+    <string name="music_translatable">Music</string>
+    <string name="science_translatable">Science</string>
+    <string name="societyAndCulture_translatable">Society and Culture</string>
+    <string name="sportAndLeisure_translatable">Sport and Leisure</string>
+    <string name="easy_translatable">Easy</string>
+    <string name="medium_translatable">Medium</string>
+    <string name="hard_translatable">Hard</string>
     <string name="chooseLevel">Choose Level of Difficulty</string>
     <string name="error">Something went wrong, please try again later</string>
     <string name="pointsReceived">You received %1$d points</string>
@@ -68,4 +79,5 @@
     <string name="confirm_password_field">Confirm Password</string>
     <string name="register">Register</string>
     <string name="have_an_account">Already have an account? Do Login</string>
+    <string name="loading_translations">Please wait, we are loading the translations!</string>
 </resources>

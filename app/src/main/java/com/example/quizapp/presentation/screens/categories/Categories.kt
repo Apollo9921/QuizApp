@@ -29,10 +29,21 @@ import com.example.quizapp.presentation.navigation.Destination
 import com.example.quizapp.presentation.core.Black
 import com.example.quizapp.presentation.core.PurpleGrey40
 import com.example.quizapp.presentation.core.White
-import com.example.quizapp.presentation.utils.categories
 
 @Composable
 fun CategoriesRoute(navHostController: NavHostController) {
+    val categories = listOf(
+        R.string.artsAndLiterature_translatable,
+        R.string.filmAndTV_translatable,
+        R.string.foodAndDrink_translatable,
+        R.string.generalKnowledge_translatable,
+        R.string.geography_translatable,
+        R.string.history_translatable,
+        R.string.music_translatable,
+        R.string.science_translatable,
+        R.string.societyAndCulture_translatable,
+        R.string.sportAndLeisure_translatable
+    )
     isSplashScreenOpen = false
     val context = LocalContext.current
     val navigateToCategory = { it: Int ->
@@ -60,7 +71,8 @@ fun CategoriesRoute(navHostController: NavHostController) {
     CategoriesScreen(
         navHostController = navHostController,
         navigateToCategory = navigateToCategory,
-        categoriesImages = categoriesImages
+        categoriesImages = categoriesImages,
+        categories = categories
     )
 }
 
@@ -68,7 +80,8 @@ fun CategoriesRoute(navHostController: NavHostController) {
 private fun CategoriesScreen(
     navHostController: NavHostController,
     navigateToCategory: (Int) -> Unit,
-    categoriesImages: List<Int>
+    categoriesImages: List<Int>,
+    categories: List<Int>
 ) {
     Scaffold(
         bottomBar = { BottomNavigationBar(navHostController) }
@@ -117,7 +130,7 @@ private fun CategoriesScreen(
                                 text = stringResource(id = categories[it]),
                                 color = Black,
                                 style = MaterialTheme.typography.labelMedium,
-                                modifier = Modifier.padding(top = 8.dp)
+                                modifier = Modifier.padding(horizontal = 4.dp, vertical = 4.dp)
                             )
                         }
                     }
