@@ -80,7 +80,7 @@ private fun StartQuiz(
     ) { pv ->
         when (uiState) {
             QuizViewModel.UIState.Loading -> {
-                Loading()
+                Loading(message = stringResource(R.string.loading_translations))
             }
 
             is QuizViewModel.UIState.Error -> {
