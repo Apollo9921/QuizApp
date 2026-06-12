@@ -19,8 +19,8 @@ class ProgressViewModel(
     val uiState = _uiState.asStateFlow()
 
     data class UserData(
-        var totalPoints: Int = 0,
-        var badge: Int = 0,
+        var currentPoints: Int = 0,
+        var maxPoints: Int = 0,
         var percentage: Double = 0.0
     )
 

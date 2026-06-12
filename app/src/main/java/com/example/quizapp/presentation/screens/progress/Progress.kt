@@ -73,8 +73,8 @@ private fun Progress(
         ) {
             when (uiState) {
                 is ProgressViewModel.UIState.Success -> {
-                    val totalPoints = uiState.userData.totalPoints
-                    val badge = uiState.userData.badge
+                    val currentPoints = uiState.userData.currentPoints
+                    val maxPoints = uiState.userData.maxPoints
                     val progress = uiState.userData.percentage.toFloat()
                     val animatedProgress = animateFloatAsState(
                         targetValue = progress,
@@ -92,11 +92,11 @@ private fun Progress(
                         ) {
                             Text(
                                 style = MaterialTheme.typography.titleLarge,
-                                text = "${totalPoints}/${badge}",
+                                text = "${currentPoints}/${maxPoints}",
                                 color = White
                             )
                             CircularProgressIndicator(
-                                progress = animatedProgress,
+                                progress = { animatedProgress },
                                 color = White,
                                 trackColor = Pink40,
                                 strokeWidth = 20.dp,
