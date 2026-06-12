@@ -167,4 +167,7 @@ dependencies {
 
     // Icons
     implementation("androidx.compose.material:material-icons-extended")
+
+    // Firebase Cloud
+    implementation("com.google.firebase:firebase-functions-ktx:21.0.0")
 }

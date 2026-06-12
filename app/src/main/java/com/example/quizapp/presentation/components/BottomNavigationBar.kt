@@ -47,7 +47,7 @@ fun BottomNavigationBar(navController: NavController) {
                 },
                 label = {
                     Text(
-                        style = MaterialTheme.typography.labelSmall,
+                        style = MaterialTheme.typography.displaySmall,
                         text = stringResource(item.title)
                     )
                 },

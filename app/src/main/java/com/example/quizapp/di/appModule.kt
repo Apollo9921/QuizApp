@@ -5,11 +5,13 @@ import androidx.work.WorkManager
 import com.example.quizapp.data.local.database.QuizDatabase
 import com.example.quizapp.data.network.instance.Instance
 import com.example.quizapp.data.repository.AuthRepositoryImpl
+import com.example.quizapp.data.repository.CloudQuizTranslatorImpl
 import com.example.quizapp.data.repository.GoogleAuthServiceImpl
 import com.example.quizapp.data.repository.QuizRepositoryImpl
 import com.example.quizapp.data.repository.ResultsRepositoryImpl
 import com.example.quizapp.data.repository.UserRepositoryImpl
 import com.example.quizapp.domain.repository.AuthRepository
+import com.example.quizapp.domain.repository.CloudQuizTranslator
 import com.example.quizapp.domain.repository.GoogleAuthService
 import com.example.quizapp.domain.repository.QuizRepository
 import com.example.quizapp.domain.repository.ResultsRepository
@@ -39,6 +41,7 @@ import com.example.quizapp.presentation.screens.login.LoginViewModel
 import com.example.quizapp.presentation.screens.register.RegisterViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.functions.FirebaseFunctions
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.android.Android
 import kotlinx.coroutines.Dispatchers
@@ -69,6 +72,7 @@ val networkModule = module {
     single { HttpClient(Android) }
     single { FirebaseAuth.getInstance() }
     single { FirebaseFirestore.getInstance() }
+    single { FirebaseFunctions.getInstance() }
     single { WorkManager.getInstance(androidContext()) }
 }
 
@@ -78,6 +82,7 @@ val repositoryModule = module {
     single<QuizRepository> { QuizRepositoryImpl(get()) }
     single<AuthRepository> { AuthRepositoryImpl(get(), get()) }
     single<GoogleAuthService> { GoogleAuthServiceImpl(androidContext()) }
+    single<CloudQuizTranslator> { CloudQuizTranslatorImpl(get()) }
 }
 
 val viewModelModule = module {
@@ -91,8 +96,8 @@ val viewModelModule = module {
 }
 
 val useCaseModule = module {
-    factory { GetQuizUseCase(get()) }
-    factory { FormatQuizUseCase() }
+    factory { GetQuizUseCase(get(), androidContext()) }
+    factory { FormatQuizUseCase(get()) }
     factory { FetchUserUseCase(get()) }
     factory { FormatProgressPercentageUseCase() }
     factory { UpdateResultsUseCase(get()) }

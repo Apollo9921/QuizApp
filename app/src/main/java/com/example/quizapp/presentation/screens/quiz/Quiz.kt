@@ -16,7 +16,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.quizapp.R
-import com.example.quizapp.domain.model.quiz.Quiz
+import com.example.quizapp.data.network.dto.TranslatedQuizResult
 import com.example.quizapp.presentation.components.ErrorScreen
 import com.example.quizapp.presentation.components.Loading
 import com.example.quizapp.presentation.core.Black
@@ -80,7 +80,7 @@ private fun StartQuiz(
     ) { pv ->
         when (uiState) {
             QuizViewModel.UIState.Loading -> {
-                Loading()
+                Loading(message = stringResource(R.string.loading_translations))
             }
 
             is QuizViewModel.UIState.Error -> {
@@ -120,7 +120,7 @@ private fun TopBar() {
 @Composable
 private fun ShowQuiz(
     it: PaddingValues,
-    data: List<Quiz>,
+    data: List<TranslatedQuizResult>,
     correctAnswer: (Int) -> Unit,
     incorrectAnswer: (Int) -> Unit,
     quizState: QuizViewModel.QuizState
@@ -157,7 +157,7 @@ private fun ShowQuiz(
                 modifier = Modifier.fillMaxSize()
             ) {
                 Text(
-                    text = currentQuestion.question.text,
+                    text = currentQuestion.question,
                     color = White,
                     style = MaterialTheme.typography.labelMedium,
                     modifier = Modifier.padding(16.dp)
