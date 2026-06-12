@@ -132,6 +132,7 @@ class UserRepositoryImpl(
 
                 batch.update(
                     userRef,
+                    "badge", user.badge,
                     "totalPoints", FieldValue.increment(user.totalPoints.toLong()),
                     "totalPointsPossible", FieldValue.increment(user.totalPointsPossible.toLong())
                 )

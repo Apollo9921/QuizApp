@@ -15,6 +15,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -44,10 +45,9 @@ fun ProfileRoute(
     navHostController: NavHostController,
     viewModel: ProfileViewModel = koinViewModel<ProfileViewModel>()
 ) {
-    val context = LocalContext.current
     val uiState = viewModel.uiState.collectAsState().value
     val badgeState = viewModel.badgeState.collectAsState().value
-    val fetchUser = { viewModel.fetchUser(context) }
+    val fetchUser = { viewModel.fetchUser() }
 
     ProfileScreen(navHostController, uiState, badgeState, fetchUser)
 }
@@ -99,12 +99,10 @@ private fun ShowProfile(
 ) {
     val percentage = (user.totalPoints * 100) / badgeState.badgeLevel.toDouble()
 
-    // Determine screen size category once
     val screenWidth = mediaQueryWidth()
     val isSmall = screenWidth <= small
     val isNormal = screenWidth <= normal
 
-    // Dynamic sizes based on screen width
     val topPadding = if (isSmall) 220.dp else if (isNormal) 320.dp else 420.dp
     val iconSize = if (isSmall) 48.dp else if (isNormal) 64.dp else 80.dp
 
@@ -146,21 +144,21 @@ private fun ShowProfile(
 
                 Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
                     ProfileInfoRow(
-                        iconRes = R.drawable.points,
+                        iconRes = painterResource(id = R.drawable.points),
                         label = stringResource(R.string.points),
                         value = formatTotalCount(user.totalPoints.toFloat()),
                         iconSize = iconSize
                     )
 
                     ProfileInfoRow(
-                        iconRes = R.drawable.daily,
+                        iconRes = painterResource(id = R.drawable.daily),
                         label = stringResource(R.string.progressPercentage),
                         value = "${percentage.toInt()}%",
                         iconSize = iconSize
                     )
 
                     ProfileInfoRow(
-                        iconRes = badgeState.badge,
+                        iconRes = painterResource(id = badgeState.badge),
                         label = stringResource(R.string.badge),
                         value = user.badge,
                         iconSize = iconSize,
@@ -175,7 +173,7 @@ private fun ShowProfile(
 
 @Composable
 private fun ProfileInfoRow(
-    iconRes: Int,
+    iconRes: Painter,
     label: String,
     value: String,
     iconSize: Dp,
@@ -190,7 +188,7 @@ private fun ProfileInfoRow(
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Image(
-                painter = painterResource(id = iconRes),
+                painter = iconRes,
                 contentDescription = null,
                 modifier = Modifier.size(iconSize),
             )

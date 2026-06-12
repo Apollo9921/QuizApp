@@ -6,9 +6,11 @@ import androidx.lifecycle.viewModelScope
 import com.example.quizapp.domain.model.results.Results
 import com.example.quizapp.domain.model.user.User
 import com.example.quizapp.domain.usecase.FetchUserUseCase
+import com.example.quizapp.domain.usecase.UpdateBadgeUseCase
 import com.example.quizapp.domain.usecase.UpdatePointsUseCase
 import com.example.quizapp.domain.usecase.UpdateResultsUseCase
 import com.example.quizapp.domain.usecase.UpdateUserToRemoteUseCase
+import com.example.quizapp.domain.util.PlayerLevel
 import kotlinx.coroutines.launch
 
 class QuizResultViewModel(
@@ -16,6 +18,7 @@ class QuizResultViewModel(
     private val updatePointsUseCase: UpdatePointsUseCase,
     private val updateUserToRemoteUseCase: UpdateUserToRemoteUseCase,
     private val fetchUserUseCase: FetchUserUseCase,
+    private val updateBadgeUseCase: UpdateBadgeUseCase,
     val category: String,
     val correctAnswers: Int,
     val incorrectAnswers: Int
@@ -43,7 +46,11 @@ class QuizResultViewModel(
                 updateResultsUseCase.invoke(category, correctAnswers, incorrectAnswers)
                 updatePointsUseCase.invoke(userLocal.name, pointsReceived.intValue, pointsPossible)
 
-                val userRemote = User(userLocal.name, pointsReceived.intValue, pointsPossible, "")
+
+                val badge = PlayerLevel.getLevelByPoints(userResult.getOrThrow().totalPoints).badgeName
+                updateBadgeUseCase.invoke(badge, userName ?: "")
+
+                val userRemote = User(userLocal.name, pointsReceived.intValue, pointsPossible, badge)
                 val resultsRemote = Results(category, correctAnswers, incorrectAnswers)
 
                 updateUserToRemoteUseCase.invoke(userRemote, resultsRemote)

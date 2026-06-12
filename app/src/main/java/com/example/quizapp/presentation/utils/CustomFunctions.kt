@@ -12,13 +12,6 @@ import kotlin.math.pow
 val small = 600.dp
 val normal = 840.dp
 
-val badges = listOf(
-    R.drawable.newbie,
-    R.drawable.intermediate,
-    R.drawable.adavanced,
-    R.drawable.legend
-)
-
 val badgesDescription = listOf(
     R.string.newbie,
     R.string.intermediate,

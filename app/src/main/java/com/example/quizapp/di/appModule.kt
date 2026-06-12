@@ -17,7 +17,6 @@ import com.example.quizapp.domain.repository.QuizRepository
 import com.example.quizapp.domain.repository.ResultsRepository
 import com.example.quizapp.domain.repository.UserRepository
 import com.example.quizapp.domain.usecase.FetchBadgeImageUseCase
-import com.example.quizapp.domain.usecase.FetchBadgeLevelUseCase
 import com.example.quizapp.domain.usecase.FetchBadgeUseCase
 import com.example.quizapp.domain.usecase.FetchUserUseCase
 import com.example.quizapp.domain.usecase.FormatProgressPercentageUseCase
@@ -88,8 +87,8 @@ val repositoryModule = module {
 val viewModelModule = module {
     viewModel { QuizViewModel(get(), get(), get(), get()) }
     viewModel { ProgressViewModel(get(), get()) }
-    viewModel { QuizResultViewModel(get(), get(), get(), get(), get(), get(), get()) }
-    viewModel { ProfileViewModel(get(), get(), get(), get(), get()) }
+    viewModel { QuizResultViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
+    viewModel { ProfileViewModel(get(), get(), get()) }
     viewModel { LoginViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { RegisterViewModel(get()) }
 
@@ -103,7 +102,6 @@ val useCaseModule = module {
     factory { UpdateResultsUseCase(get()) }
     factory { UpdatePointsUseCase(get()) }
     factory { FetchBadgeImageUseCase() }
-    factory { FetchBadgeLevelUseCase() }
     factory { FetchBadgeUseCase() }
     factory { UpdateBadgeUseCase(get()) }
     factory { InsertResultsUseCase(androidContext(), get()) }
