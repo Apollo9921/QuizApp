@@ -130,7 +130,7 @@ private fun CategoriesScreen(
                                 text = stringResource(id = categories[it]),
                                 color = Black,
                                 style = MaterialTheme.typography.labelMedium,
-                                modifier = Modifier.padding(top = 8.dp)
+                                modifier = Modifier.padding(horizontal = 4.dp, vertical = 4.dp)
                             )
                         }
                     }
