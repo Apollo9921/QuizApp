@@ -15,6 +15,7 @@ import com.example.quizapp.presentation.screens.categories.CategoriesRoute
 import com.example.quizapp.presentation.screens.profile.ProfileRoute
 import com.example.quizapp.presentation.screens.results.Results
 import com.example.quizapp.presentation.screens.boarding.OnBoard
+import com.example.quizapp.presentation.screens.leaderboard.LeaderboardRoute
 import com.example.quizapp.presentation.screens.login.LoginRoute
 import com.example.quizapp.presentation.screens.quizLevel.LevelDifficulty
 import com.example.quizapp.presentation.screens.quiz.StartQuizRoute
@@ -80,6 +81,9 @@ fun AnimationNav(navHostController: NavHostController, startDestination: String)
         }
         composable(route = Destination.Categories.route) {
             CategoriesRoute(navHostController = navHostController)
+        }
+        composable(route = Destination.Leaderboard.route) {
+            LeaderboardRoute(navHostController = navHostController)
         }
         composable(route = Destination.Results.route) {
             Results(navHostController = navHostController)

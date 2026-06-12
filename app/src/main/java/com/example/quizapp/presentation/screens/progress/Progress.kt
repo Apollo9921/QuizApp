@@ -1,8 +1,12 @@
 package com.example.quizapp.presentation.screens.progress
 
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProgressIndicatorDefaults
@@ -20,8 +24,10 @@ import com.example.quizapp.R
 import com.example.quizapp.presentation.components.BottomNavigationBar
 import com.example.quizapp.presentation.components.ErrorScreen
 import com.example.quizapp.presentation.core.Pink40
+import com.example.quizapp.presentation.core.Purple40
 import com.example.quizapp.presentation.core.PurpleGrey40
 import com.example.quizapp.presentation.core.White
+import com.example.quizapp.presentation.navigation.Destination
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -31,12 +37,14 @@ fun ProgressRoute(
 ) {
     val uiState = viewModel.uiState.collectAsState().value
     val fetchUser = { viewModel.fetchUser() }
+    val navigateToLeaderboard = { navHostController.navigate(Destination.Leaderboard.route) }
     LaunchedEffect(Unit) {
         fetchUser()
     }
     Progress(
         uiState = uiState,
         fetchUser = fetchUser,
+        navigateToLeaderboard = navigateToLeaderboard,
         navHostController = navHostController
     )
 }
@@ -45,6 +53,7 @@ fun ProgressRoute(
 private fun Progress(
     uiState: ProgressViewModel.UIState,
     fetchUser: () -> Unit,
+    navigateToLeaderboard: () -> Unit,
     navHostController: NavHostController
 ) {
     Scaffold(
@@ -53,6 +62,7 @@ private fun Progress(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(PurpleGrey40)
+                    .safeDrawingPadding()
                     .padding(20.dp),
                 horizontalArrangement = Arrangement.Center
             ) {
@@ -69,6 +79,7 @@ private fun Progress(
             modifier = Modifier
                 .fillMaxSize()
                 .background(PurpleGrey40)
+                .safeDrawingPadding()
                 .padding(bottom = it.calculateBottomPadding())
         ) {
             when (uiState) {
@@ -81,29 +92,45 @@ private fun Progress(
                         animationSpec = ProgressIndicatorDefaults.ProgressAnimationSpec
                     ).value
 
-                    Column(
+                    Box(
                         modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
+                        contentAlignment = Alignment.Center
                     ) {
-                        Box(
+                        CircularProgressIndicator(
+                            progress = { animatedProgress },
+                            color = White,
+                            trackColor = Pink40,
+                            strokeWidth = 20.dp,
+                            modifier = Modifier
+                                .fillMaxSize(0.8f)
+                                .aspectRatio(1f)
+                        )
+                        Column(
                             modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.Center
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             Text(
                                 style = MaterialTheme.typography.titleLarge,
                                 text = "${currentPoints}/${maxPoints}",
                                 color = White
                             )
-                            CircularProgressIndicator(
-                                progress = { animatedProgress },
-                                color = White,
-                                trackColor = Pink40,
-                                strokeWidth = 20.dp,
+                            Button(
+                                onClick = { navigateToLeaderboard() },
+                                shape = RoundedCornerShape(20.dp),
+                                border = BorderStroke(width = 2.dp, color = White),
+                                colors = ButtonDefaults.buttonColors(containerColor = Purple40),
                                 modifier = Modifier
-                                    .fillMaxSize(0.7f)
-                                    .aspectRatio(1f)
-                            )
+                                    .fillMaxWidth(0.5f)
+                                    .wrapContentHeight()
+                                    .padding(top = 8.dp)
+                            ) {
+                                Text(
+                                    style = MaterialTheme.typography.labelMedium,
+                                    text = stringResource(id = R.string.leaderboard),
+                                    color = White
+                                )
+                            }
                         }
                     }
                 }
