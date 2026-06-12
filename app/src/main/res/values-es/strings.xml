@@ -11,7 +11,7 @@
     <string name="back">Atrás</string>
     <string name="next">Próximo</string>
     <string name="getStarted">Empezar</string>
-    <string name="newbie">novato</string>
+    <string name="newbie">Novato</string>
     <string name="intermediate">Intermedio</string>
     <string name="advanced">Avanzado</string>
     <string name="legend">Leyenda</string>
@@ -55,7 +55,7 @@
     <string name="server_down">El servidor está caído en este momento.</string>
     <string name="unexpected_error">Ocurrió un error inesperado</string>
     <string name="no_category_or_level_defined">No se ha definido ninguna categoría ni nivel.</string>
-    <string name="login_failed">error de inicio de sesion</string>
+    <string name="login_failed">Error de inicio de sesion</string>
     <string name="invalid_credential">Tipo de credencial no válida</string>
     <string name="user_no_authenticated">Usuario no autenticado</string>
     <string name="greeting">Bienvenido de nuevo</string>
@@ -66,5 +66,5 @@
     <string name="another_option"> O </string>
     <string name="do_not_have_account">¿No tienes cuenta? Regístrate</string>
     <string name="create_account">Crear una cuenta</string>
-    <string name="confirm_password_field">confirmar Contraseña</string>
+    <string name="confirm_password_field">Confirmar Contraseña</string>
 </resources>
