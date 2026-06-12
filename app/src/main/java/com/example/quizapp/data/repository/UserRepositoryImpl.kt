@@ -35,6 +35,7 @@ class UserRepositoryImpl(
         val data = workDataOf(
             "totalPoints" to user.totalPoints,
             "totalPointsPossible" to user.totalPointsPossible,
+            "badge" to user.badge,
             "category" to results.category,
             "correct" to results.correctAnswers,
             "incorrect" to results.incorrectAnswers
