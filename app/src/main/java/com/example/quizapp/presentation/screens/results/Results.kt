@@ -112,7 +112,8 @@ fun Results(navHostController: NavHostController) {
 
 @Composable
 private fun ShowResults() {
-    for (i in results.indices) {
+    val displayCount = minOf(results.size, categories.size)
+    for (i in 0 until displayCount) {
         val correct = results[i].correctAnswers
         val incorrect = results[i].incorrectAnswers
         if (i == 0) {
@@ -290,7 +291,7 @@ fun DetailsPieChart(
         items(data.size) { item ->
             DetailsPieChartItem(
                 data = Pair(data.keys.elementAt(item), data.values.elementAt(item)),
-                color = colors[item]
+                color = colors[item % colors.size]
             )
         }
     }

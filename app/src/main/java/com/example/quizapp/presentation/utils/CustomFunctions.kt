@@ -5,39 +5,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.example.quizapp.R
 import kotlin.math.ln
 import kotlin.math.pow
 
 val small = 600.dp
 val normal = 840.dp
-
-val badgesDescription = listOf(
-    R.string.newbie,
-    R.string.intermediate,
-    R.string.advanced,
-    R.string.legend,
-)
-
-val badgesPoints = listOf(
-    1000,
-    10000,
-    100000,
-    1000000
-)
-
-val categories = listOf(
-    R.string.artsAndLiterature,
-    R.string.filmAndTV,
-    R.string.foodAndDrink,
-    R.string.generalKnowledge,
-    R.string.geography,
-    R.string.history,
-    R.string.music,
-    R.string.science,
-    R.string.societyAndCulture,
-    R.string.sportAndLeisure
-)
 
 @Composable
 fun mediaQueryWidth(): Dp {

@@ -5,7 +5,7 @@ import com.example.quizapp.R
 import com.example.quizapp.domain.model.quiz.Quiz
 import com.example.quizapp.domain.repository.QuizRepository
 import com.example.quizapp.domain.result.AppResult
-import com.example.quizapp.domain.util.QuizConstants // Importar as constantes
+import com.example.quizapp.domain.util.QuizConstants
 
 class GetQuizUseCase(
     private val repository: QuizRepository,

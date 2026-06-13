@@ -15,6 +15,7 @@ fun Results.toResultsEntity(): ResultsEntity {
     return ResultsEntity(
         category = category,
         correctAnswers = correctAnswers,
-        incorrectAnswers = incorrectAnswers
+        incorrectAnswers = incorrectAnswers,
+        username = username
     )
 }

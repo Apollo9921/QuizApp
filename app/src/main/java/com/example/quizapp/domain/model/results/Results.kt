@@ -6,5 +6,6 @@ import androidx.annotation.Keep
 data class Results(
     val category: String = "",
     val correctAnswers: Int = 0,
-    val incorrectAnswers: Int = 0
+    val incorrectAnswers: Int = 0,
+    val username: String = ""
 )

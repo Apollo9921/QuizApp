@@ -8,5 +8,6 @@ data class ResultsEntity(
     @PrimaryKey(autoGenerate = false)
     val category: String,
     val correctAnswers: Int,
-    val incorrectAnswers: Int
+    val incorrectAnswers: Int,
+    val username: String
 )
