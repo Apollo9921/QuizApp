@@ -20,6 +20,7 @@ import com.example.quizapp.domain.repository.ResultsRepository
 import com.example.quizapp.domain.repository.UserRepository
 import com.example.quizapp.domain.usecase.FetchBadgeImageUseCase
 import com.example.quizapp.domain.usecase.FetchBadgeUseCase
+import com.example.quizapp.domain.usecase.FetchResultsUseCase
 import com.example.quizapp.domain.usecase.FetchUserUseCase
 import com.example.quizapp.domain.usecase.FormatProgressPercentageUseCase
 import com.example.quizapp.domain.usecase.FormatQuizUseCase
@@ -43,6 +44,7 @@ import com.example.quizapp.presentation.screens.quiz.QuizViewModel
 import com.example.quizapp.presentation.screens.quizResult.QuizResultViewModel
 import com.example.quizapp.presentation.screens.login.LoginViewModel
 import com.example.quizapp.presentation.screens.register.RegisterViewModel
+import com.example.quizapp.presentation.screens.results.ResultsViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.functions.FirebaseFunctions
@@ -98,6 +100,7 @@ val viewModelModule = module {
     viewModel { LoginViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { RegisterViewModel(get()) }
     viewModel { LeaderboardViewModel(get(), get(), get()) }
+    viewModel { ResultsViewModel(get(), get()) }
 }
 
 val useCaseModule = module {
@@ -119,4 +122,5 @@ val useCaseModule = module {
     factory { InsertUserLocally(get()) }
     factory { GetTopPlayersByLevelUseCase(get()) }
     factory { GetTopPlayersByCategoryUseCase(get()) }
+    factory { FetchResultsUseCase(get()) }
 }

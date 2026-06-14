@@ -35,9 +35,9 @@ import com.example.quizapp.presentation.core.Black
 import com.example.quizapp.presentation.core.PurpleGrey40
 import com.example.quizapp.presentation.core.White
 import com.example.quizapp.presentation.utils.formatTotalCount
-import com.example.quizapp.presentation.utils.mediaQueryWidth
 import com.example.quizapp.presentation.utils.normal
 import com.example.quizapp.presentation.utils.small
+import com.example.quizapp.presentation.utils.widthOfScreen
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -99,7 +99,7 @@ private fun ShowProfile(
 ) {
     val percentage = (user.totalPoints * 100) / badgeState.badgeLevel.toDouble()
 
-    val screenWidth = mediaQueryWidth()
+    val screenWidth = widthOfScreen()
     val isSmall = screenWidth <= small
     val isNormal = screenWidth <= normal
 

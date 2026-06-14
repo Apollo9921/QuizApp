@@ -14,7 +14,7 @@ interface ResultsDAO {
     suspend fun createResult(results: ResultsEntity)
 
     @Query("SELECT * FROM results_table ORDER BY category")
-    fun getResults() : LiveData<List<ResultsEntity>>
+    suspend fun fetchResults() : List<ResultsEntity>
 
     @Query("SELECT * FROM results_table WHERE category =:category")
     fun getSpecificCategory(category: String) : LiveData<ResultsEntity>

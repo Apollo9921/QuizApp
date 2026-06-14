@@ -13,7 +13,6 @@ import androidx.navigation.navArgument
 import com.example.quizapp.presentation.screens.progress.ProgressRoute
 import com.example.quizapp.presentation.screens.categories.CategoriesRoute
 import com.example.quizapp.presentation.screens.profile.ProfileRoute
-import com.example.quizapp.presentation.screens.results.Results
 import com.example.quizapp.presentation.screens.boarding.OnBoard
 import com.example.quizapp.presentation.screens.leaderboard.LeaderboardRoute
 import com.example.quizapp.presentation.screens.login.LoginRoute
@@ -21,6 +20,7 @@ import com.example.quizapp.presentation.screens.quizLevel.LevelDifficulty
 import com.example.quizapp.presentation.screens.quiz.StartQuizRoute
 import com.example.quizapp.presentation.screens.quizResult.QuizResultRoute
 import com.example.quizapp.presentation.screens.register.RegisterRoute
+import com.example.quizapp.presentation.screens.results.ResultsRoute
 
 @Composable
 fun AnimationNav(navHostController: NavHostController, startDestination: String) {
@@ -86,7 +86,7 @@ fun AnimationNav(navHostController: NavHostController, startDestination: String)
             LeaderboardRoute(navHostController = navHostController)
         }
         composable(route = Destination.Results.route) {
-            Results(navHostController = navHostController)
+            ResultsRoute(navHostController = navHostController)
         }
         composable(route = Destination.Profile.route) {
             ProfileRoute(navHostController = navHostController)
