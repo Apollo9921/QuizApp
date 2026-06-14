@@ -128,7 +128,7 @@ class LoginViewModel(
                     } else {
                         val randomName = generateRandomName()
                         insertUserUseCase.invoke(randomName)
-                        insertResultsUseCase.invoke()
+                        insertResultsUseCase.invoke(randomName)
                         saveUserAndResults(randomName, navHostController)
                     }
                 }

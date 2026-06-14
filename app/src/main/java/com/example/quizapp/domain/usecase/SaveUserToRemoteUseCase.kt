@@ -1,15 +1,13 @@
 package com.example.quizapp.domain.usecase
 
-import android.content.Context
 import com.example.quizapp.domain.model.results.Results
 import com.example.quizapp.domain.model.user.User
 import com.example.quizapp.domain.repository.UserRepository
 import com.example.quizapp.domain.result.AppResult
-import com.example.quizapp.presentation.utils.badgesDescription
-import com.example.quizapp.presentation.utils.categories
+import com.example.quizapp.domain.util.PlayerLevel
+import com.example.quizapp.domain.util.QuizCategory
 
 class SaveUserToRemoteUseCase(
-    private val context: Context,
     private val repository: UserRepository
 ) {
     suspend operator fun invoke(name: String): AppResult<Unit> {
@@ -17,14 +15,15 @@ class SaveUserToRemoteUseCase(
             name = name,
             totalPoints = 0,
             totalPointsPossible = 0,
-            badge = context.resources.getString(badgesDescription[0])
+            badge = PlayerLevel.RECRUIT.badgeName
         )
 
-        val resultsList = categories.map { categoryRes ->
+        val resultsList = QuizCategory.entries.map { categoryRes ->
             Results(
-                category = context.resources.getString(categoryRes),
+                category = categoryRes.categoryName,
                 correctAnswers = 0,
-                incorrectAnswers = 0
+                incorrectAnswers = 0,
+                username = name
             )
         }
 

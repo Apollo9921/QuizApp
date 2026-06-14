@@ -20,6 +20,7 @@ class UpdateUserWorker(
     override suspend fun doWork(): Result {
         val totalPoints = inputData.getInt("totalPoints", 0)
         val totalPointsPossible = inputData.getInt("totalPointsPossible", 0)
+        val badge = inputData.getString("badge") ?: return Result.failure()
         val category = inputData.getString("category") ?: return Result.failure()
         val correct = inputData.getInt("correct", 0)
         val incorrect = inputData.getInt("incorrect", 0)
@@ -28,7 +29,7 @@ class UpdateUserWorker(
             totalPoints = totalPoints,
             totalPointsPossible = totalPointsPossible,
             name = "",
-            badge = ""
+            badge = badge
         )
         val results =
             Results(category = category, correctAnswers = correct, incorrectAnswers = incorrect)

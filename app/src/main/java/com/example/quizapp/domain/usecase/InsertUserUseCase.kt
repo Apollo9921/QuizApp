@@ -1,12 +1,10 @@
 package com.example.quizapp.domain.usecase
 
-import android.content.Context
 import com.example.quizapp.domain.model.user.User
 import com.example.quizapp.domain.repository.UserRepository
-import com.example.quizapp.presentation.utils.badgesDescription
+import com.example.quizapp.domain.util.PlayerLevel
 
 class InsertUserUseCase(
-    private val context: Context,
     private val repository: UserRepository
 ) {
     suspend operator fun invoke(name: String) {
@@ -14,7 +12,7 @@ class InsertUserUseCase(
             name = name,
             totalPoints = 0,
             totalPointsPossible = 0,
-            badge = context.resources.getString(badgesDescription[0])
+            badge = PlayerLevel.RECRUIT.badgeName
         )
         repository.insertUser(user)
     }

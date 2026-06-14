@@ -80,4 +80,11 @@
     <string name="register">Register</string>
     <string name="have_an_account">Already have an account? Do Login</string>
     <string name="loading_translations">Please wait, we are loading the translations!</string>
+    <string name="leaderboard">Leaderboard</string>
+    <string name="leaderboard_title">Leaderboard 🌌</string>
+    <string name="filter_by">Filter by: %1$s 🔽</string>
+    <string name="tab_level">By Level</string>
+    <string name="tab_category">By Category</string>
+    <string name="current_user">%1$s (You)</string>
+    <string name="user_position">%1$d º</string>
 </resources>

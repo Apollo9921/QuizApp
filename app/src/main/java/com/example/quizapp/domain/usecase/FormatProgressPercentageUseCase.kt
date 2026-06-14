@@ -1,20 +1,18 @@
 package com.example.quizapp.domain.usecase
 
 import com.example.quizapp.domain.model.user.User
+import com.example.quizapp.domain.util.PlayerLevel
 import com.example.quizapp.presentation.screens.progress.ProgressViewModel
-import com.example.quizapp.presentation.utils.badgesPoints
 
 class FormatProgressPercentageUseCase {
     operator fun invoke(data: User): ProgressViewModel.UserData {
-        val userData = ProgressViewModel.UserData(totalPoints = data.totalPoints)
-        for (i in badgesPoints.indices) {
-            if (data.totalPoints <= badgesPoints[i]) {
-                userData.badge = badgesPoints[i]
-                break
-            }
-        }
-        userData.percentage = (data.totalPoints * 100) / userData.badge.toDouble()
-        userData.percentage *= 0.01
-        return userData
+        val maxPoints = PlayerLevel.getLevelByPoints(data.totalPoints).maxPoints
+        var percentage = (data.totalPoints * 100) / maxPoints.toDouble()
+        percentage *= 0.01
+        return ProgressViewModel.UserData(
+            currentPoints = data.totalPoints,
+            maxPoints = maxPoints,
+            percentage = percentage
+        )
     }
 }
