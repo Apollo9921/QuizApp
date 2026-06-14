@@ -69,4 +69,10 @@
     <string name="confirm_password_field">Confirmar Contraseña</string>
     <string name="loading_translations">Por favor, espere, estamos cargando las traducciones.</string>
     <string name="leaderboard">Clasificación</string>
+    <string name="leaderboard_title">Clasificación 🌌</string>
+    <string name="filter_by">Filtrar por: %1$s 🔽</string>
+    <string name="tab_level">Por Nivel</string>
+    <string name="tab_category">Por Categoría</string>
+    <string name="current_user">%1$s (Tú)</string>
+    <string name="user_position">%1$d º</string>
 </resources>

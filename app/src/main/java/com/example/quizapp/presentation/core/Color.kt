@@ -13,3 +13,11 @@ val DarkGreen = Color(0xFF304D18)
 val Green = Color(0xFF17D31A)
 val Blue = Color(0xFF0F4988)
 val Orange = Color(0xFFE2470A)
+
+// Leaderboard
+val LeaderboardBackground = Color(0xFF0F172A)
+val LeaderboardSurfaceColor = Color(0xFF1E293B)
+val LeaderboardAccentColor = Color(0xFF38BDF8)
+val Gold = Color(0xFFFBBF24)
+val Silver = Color(0xFF94A3B8)
+val Bronze = Color(0xFFB45309)

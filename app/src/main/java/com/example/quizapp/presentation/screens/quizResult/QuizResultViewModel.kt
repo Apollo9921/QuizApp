@@ -50,8 +50,8 @@ class QuizResultViewModel(
                 val badge = PlayerLevel.getLevelByPoints(userResult.getOrThrow().totalPoints).badgeName
                 updateBadgeUseCase.invoke(badge, userName ?: "")
 
-                val userRemote = User(userLocal.name, pointsReceived.intValue, pointsPossible, badge)
-                val resultsRemote = Results(category, correctAnswers, incorrectAnswers)
+                val userRemote = User("", userLocal.name, pointsReceived.intValue, pointsPossible, badge)
+                val resultsRemote = Results("", category, correctAnswers, incorrectAnswers)
 
                 updateUserToRemoteUseCase.invoke(userRemote, resultsRemote)
 

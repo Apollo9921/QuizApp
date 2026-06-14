@@ -69,4 +69,10 @@
     <string name="have_an_account">Já tem uma conta? Faça login.</string>
     <string name="loading_translations">Por Favor aguarde, estamos carregando as traduções!</string>
     <string name="leaderboard">Classificação</string>
+    <string name="leaderboard_title">Classificação 🌌</string>
+    <string name="filter_by">Filtrar por: %1$s 🔽</string>
+    <string name="tab_level">Por Nível</string>
+    <string name="tab_category">Por Categoria</string>
+    <string name="current_user">%1$s (Tu)</string>
+    <string name="user_position">%1$d º</string>
 </resources>
