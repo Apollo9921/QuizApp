@@ -3,9 +3,11 @@ package com.example.quizapp.presentation.screens.login
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
+import com.example.quizapp.R
 import com.example.quizapp.domain.repository.AuthRepository
 import com.example.quizapp.domain.repository.GoogleAuthService
 import com.example.quizapp.domain.repository.UserRepository
+import com.example.quizapp.domain.result.AppError
 import com.example.quizapp.domain.result.AppResult
 import com.example.quizapp.domain.usecase.InsertResultsUseCase
 import com.example.quizapp.domain.usecase.InsertNewResultsUseCase
@@ -52,19 +54,20 @@ class LoginViewModel(
     val uiState = _uiState.asStateFlow()
 
     sealed class UIState {
-        data object Idle: UIState()
-        data object Loading: UIState()
-        data class Error(val message: Int): UIState()
+        data object Idle : UIState()
+        data object Loading : UIState()
+        data class Error(val message: Int) : UIState()
     }
 
     fun loginWithEmail(email: String, password: String, navHostController: NavHostController) {
         viewModelScope.launch {
             _uiState.value = UIState.Loading
             val result = authRepository.loginWithEmail(email, password)
-            when(result) {
-                is AppResult.Error<*> -> {
-                    _uiState.value = UIState.Error(message = result.message as Int)
+            when (result) {
+                is AppResult.Error -> {
+                    getTypeOfError(result.error)
                 }
+
                 is AppResult.Success<*> -> {
                     checkIfUserExists(navHostController)
                 }
@@ -75,10 +78,11 @@ class LoginViewModel(
     fun startSignInByGoogle(navHostController: NavHostController) {
         viewModelScope.launch {
             val result = googleAuthService.getGoogleIdToken()
-            when(result) {
-                is AppResult.Error<*> -> {
-                    _uiState.value = UIState.Error(message = result.message as Int)
+            when (result) {
+                is AppResult.Error -> {
+                    getTypeOfError(result.error)
                 }
+
                 is AppResult.Success<*> -> {
                     signInWithGoogle(result.data.toString(), navHostController)
                 }
@@ -89,10 +93,11 @@ class LoginViewModel(
     private fun signInWithGoogle(idToken: String, navHostController: NavHostController) {
         viewModelScope.launch {
             val result = authRepository.signInWithGoogle(idToken)
-            when(result) {
-                is AppResult.Error<*> -> {
-                    _uiState.value = UIState.Error(message = result.message as Int)
+            when (result) {
+                is AppResult.Error -> {
+                    getTypeOfError(result.error)
                 }
+
                 is AppResult.Success<*> -> {
                     checkIfUserExists(navHostController)
                 }
@@ -103,10 +108,11 @@ class LoginViewModel(
     private fun checkIfUserExists(navHostController: NavHostController) {
         viewModelScope.launch {
             val result = authRepository.checkIfUserExists()
-            when(result) {
-                is AppResult.Error<*> -> {
-                    _uiState.value = UIState.Error(message = result.message as Int)
+            when (result) {
+                is AppResult.Error -> {
+                    getTypeOfError(result.error)
                 }
+
                 is AppResult.Success<*> -> {
                     val exists = result.data as Boolean
                     if (exists) {
@@ -142,15 +148,52 @@ class LoginViewModel(
     ) {
         viewModelScope.launch {
             val result = postUserAndResultsUseCase.invoke(name)
-            when(result) {
-                is AppResult.Error<*> -> {
-                    _uiState.value = UIState.Error(message = result.message as Int)
+            when (result) {
+                is AppResult.Error -> {
+                    getTypeOfError(result.error)
                 }
+
                 is AppResult.Success<*> -> {
                     _uiState.value = UIState.Idle
                     navHostController.popBackStack()
                     navHostController.navigate(Destination.Categories.route)
                 }
+            }
+        }
+    }
+
+    private fun getTypeOfError(error: AppError) {
+        when (error) {
+            is AppError.Timeout -> {
+                _uiState.value = UIState.Error(message = R.string.request_timeout)
+            }
+
+            is AppError.NoInternetConnection -> {
+                _uiState.value = UIState.Error(message = R.string.no_internet_connection)
+            }
+
+            is AppError.Network -> {
+                _uiState.value = UIState.Error(message = R.string.network_error)
+            }
+
+            is AppError.Server -> {
+                _uiState.value = UIState.Error(message = R.string.server_error)
+            }
+
+            is AppError.ServerDown -> {
+                _uiState.value = UIState.Error(message = R.string.server_down)
+            }
+
+            is AppError.Unknown -> {
+                _uiState.value = UIState.Error(message = R.string.unexpected_error)
+            }
+
+            is AppError.InvalidCredentials -> {
+                _uiState.value = UIState.Error(message = R.string.invalid_credential)
+            }
+
+            else -> {
+                _uiState.value = UIState.Error(message = R.string.unexpected_error)
             }
         }
     }

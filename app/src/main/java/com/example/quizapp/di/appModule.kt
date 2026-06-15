@@ -89,7 +89,7 @@ val repositoryModule = module {
     single<AuthRepository> { AuthRepositoryImpl(get(), get()) }
     single<GoogleAuthService> { GoogleAuthServiceImpl(androidContext()) }
     single<CloudQuizTranslator> { CloudQuizTranslatorImpl(get()) }
-    single<LeaderboardRepository> { LeaderboardRepositoryImpl(androidContext(), get()) }
+    single<LeaderboardRepository> { LeaderboardRepositoryImpl(get()) }
 }
 
 val viewModelModule = module {

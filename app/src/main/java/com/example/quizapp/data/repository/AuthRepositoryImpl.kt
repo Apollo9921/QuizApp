@@ -1,7 +1,7 @@
 package com.example.quizapp.data.repository
 
-import com.example.quizapp.R
 import com.example.quizapp.domain.repository.AuthRepository
+import com.example.quizapp.domain.result.AppError
 import com.example.quizapp.domain.result.AppResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
@@ -25,10 +25,10 @@ class AuthRepositoryImpl(
             if (result.user != null) {
                 AppResult.Success(Unit)
             } else {
-                AppResult.Error(R.string.register_failure)
+                AppResult.Error(AppError.Unknown)
             }
         } catch (_: Exception) {
-            AppResult.Error(R.string.unexpected_error)
+            AppResult.Error(AppError.Unknown)
         }
     }
 
@@ -39,10 +39,10 @@ class AuthRepositoryImpl(
             if (result.user != null) {
                 AppResult.Success(Unit)
             } else {
-                AppResult.Error(R.string.register_failure)
+                AppResult.Error(AppError.Unknown)
             }
         } catch (_: Exception) {
-            AppResult.Error(R.string.unexpected_error)
+            AppResult.Error(AppError.Unknown)
         }
     }
 
@@ -55,10 +55,10 @@ class AuthRepositoryImpl(
             if (result.user != null) {
                 AppResult.Success(Unit)
             } else {
-                AppResult.Error(R.string.login_failed)
+                AppResult.Error(AppError.Unknown)
             }
         } catch (_: Exception) {
-            AppResult.Error(R.string.unexpected_error)
+            AppResult.Error(AppError.Unknown)
         }
     }
 
@@ -66,7 +66,7 @@ class AuthRepositoryImpl(
         return withContext(ioDispatcher) {
             try {
                 val userId = auth.currentUser?.uid
-                    ?: return@withContext AppResult.Error(R.string.user_no_authenticated)
+                    ?: return@withContext AppResult.Error(AppError.Unknown)
 
                 val document = firestore.collection("users")
                     .document(userId)
@@ -75,7 +75,7 @@ class AuthRepositoryImpl(
 
                 AppResult.Success(document.exists())
             } catch (_: Exception) {
-                AppResult.Error(R.string.unexpected_error)
+                AppResult.Error(AppError.Unknown)
             }
         }
     }

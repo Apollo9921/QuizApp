@@ -13,14 +13,21 @@ import com.example.quizapp.data.worker.UpdateUserWorker
 import com.example.quizapp.domain.model.results.Results
 import com.example.quizapp.domain.model.user.User
 import com.example.quizapp.domain.repository.UserRepository
+import com.example.quizapp.domain.result.AppError
 import com.example.quizapp.domain.result.AppResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import io.ktor.client.network.sockets.ConnectTimeoutException
+import io.ktor.client.plugins.ClientRequestException
+import io.ktor.client.plugins.HttpRequestTimeoutException
+import io.ktor.client.plugins.RedirectResponseException
+import io.ktor.client.plugins.ServerResponseException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import java.io.IOException
 import java.net.UnknownHostException
 import java.util.concurrent.TimeUnit
 
@@ -88,7 +95,7 @@ class UserRepositoryImpl(
             val currentUser = FirebaseAuth.getInstance().currentUser
 
             if (currentUser == null) {
-                return@withContext AppResult.Error(Exception("Firestore impedido: Utilizador não está autenticado no Firebase Auth."))
+                return@withContext AppResult.Error(AppError.Unauthorized)
             }
 
             val userId = currentUser.uid
@@ -106,8 +113,20 @@ class UserRepositoryImpl(
                 batch.commit().await()
                 AppResult.Success(Unit)
 
-            } catch (e: Exception) {
-                AppResult.Error(e)
+            } catch (_: HttpRequestTimeoutException) {
+                AppResult.Error(AppError.Timeout)
+            } catch (_: ConnectTimeoutException) {
+                AppResult.Error(AppError.NoInternetConnection)
+            } catch (_: IOException) {
+                AppResult.Error(AppError.Network)
+            } catch (_: RedirectResponseException) {
+                AppResult.Error(AppError.Server)
+            } catch (_: ClientRequestException) {
+                AppResult.Error(AppError.BadRequest)
+            } catch (_: ServerResponseException) {
+                AppResult.Error(AppError.ServerDown)
+            } catch (_: Exception) {
+                AppResult.Error(AppError.Unknown)
             }
         }
     }
@@ -120,7 +139,7 @@ class UserRepositoryImpl(
             val currentUser = FirebaseAuth.getInstance().currentUser
 
             if (currentUser == null) {
-                return@withContext AppResult.Error(Exception("Firestore impedido: Utilizador não está autenticado no Firebase Auth."))
+                return@withContext AppResult.Error(AppError.Unauthorized)
             }
 
             val userId = currentUser.uid
@@ -156,7 +175,7 @@ class UserRepositoryImpl(
                     scheduleUpdateWorker(user, results)
                     AppResult.Success(Unit)
                 } else {
-                    AppResult.Error(e)
+                    AppResult.Error(AppError.Unknown)
                 }
             }
         }
@@ -166,7 +185,7 @@ class UserRepositoryImpl(
         return withContext(ioDispatcher) {
             try {
                 val userId = FirebaseAuth.getInstance().currentUser?.uid
-                    ?: return@withContext AppResult.Error(Exception("User Not Authenticated"))
+                    ?: return@withContext AppResult.Error(AppError.Unauthorized)
 
                 val document = firestore.collection("users").document(userId).get().await()
                 val user = document.toObject(User::class.java)
@@ -174,10 +193,22 @@ class UserRepositoryImpl(
                 if (user != null) {
                     AppResult.Success(user)
                 } else {
-                    AppResult.Error(Exception("User Document Not Found"))
+                    AppResult.Error(AppError.Unknown)
                 }
-            } catch (e: Exception) {
-                AppResult.Error(e)
+            } catch (_: HttpRequestTimeoutException) {
+                AppResult.Error(AppError.Timeout)
+            } catch (_: ConnectTimeoutException) {
+                AppResult.Error(AppError.NoInternetConnection)
+            } catch (_: IOException) {
+                AppResult.Error(AppError.Network)
+            } catch (_: RedirectResponseException) {
+                AppResult.Error(AppError.Server)
+            } catch (_: ClientRequestException) {
+                AppResult.Error(AppError.BadRequest)
+            } catch (_: ServerResponseException) {
+                AppResult.Error(AppError.ServerDown)
+            } catch (_: Exception) {
+                AppResult.Error(AppError.Unknown)
             }
         }
     }
@@ -186,7 +217,7 @@ class UserRepositoryImpl(
         return withContext(ioDispatcher) {
             try {
                 val userId = FirebaseAuth.getInstance().currentUser?.uid
-                    ?: return@withContext AppResult.Error(Exception("User Not Authenticated"))
+                    ?: return@withContext AppResult.Error(AppError.Unauthorized)
 
                 val snapshot = firestore.collection("users")
                     .document(userId)
@@ -196,8 +227,20 @@ class UserRepositoryImpl(
 
                 val resultsList = snapshot.toObjects(Results::class.java)
                 AppResult.Success(resultsList)
-            } catch (e: Exception) {
-                AppResult.Error(e)
+            } catch (_: HttpRequestTimeoutException) {
+                AppResult.Error(AppError.Timeout)
+            } catch (_: ConnectTimeoutException) {
+                AppResult.Error(AppError.NoInternetConnection)
+            } catch (_: IOException) {
+                AppResult.Error(AppError.Network)
+            } catch (_: RedirectResponseException) {
+                AppResult.Error(AppError.Server)
+            } catch (_: ClientRequestException) {
+                AppResult.Error(AppError.BadRequest)
+            } catch (_: ServerResponseException) {
+                AppResult.Error(AppError.ServerDown)
+            } catch (_: Exception) {
+                AppResult.Error(AppError.Unknown)
             }
         }
     }

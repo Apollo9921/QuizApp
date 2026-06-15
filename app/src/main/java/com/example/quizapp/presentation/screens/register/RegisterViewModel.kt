@@ -2,6 +2,8 @@ package com.example.quizapp.presentation.screens.register
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.quizapp.R
+import com.example.quizapp.domain.result.AppError
 import com.example.quizapp.domain.result.AppResult
 import com.example.quizapp.domain.usecase.PostUserUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,8 +33,24 @@ class RegisterViewModel(
             _uiState.value = UIState.Loading
             val result = postUserUseCase.invoke(email, password, confirmPassword)
             when(result) {
-                is AppResult.Error<*> -> {
-                    _uiState.value = UIState.Error(message = result.message as Int)
+                is AppResult.Error -> {
+                    when(result.error) {
+                        is AppError.EmptyFields -> {
+                            _uiState.value = UIState.Error(message = R.string.empty_fields)
+                        }
+                        is AppError.InvalidEmailFormat -> {
+                            _uiState.value = UIState.Error(message = R.string.invalid_email_format)
+                        }
+                        is AppError.PasswordLength -> {
+                            _uiState.value = UIState.Error(message = R.string.password_length)
+                        }
+                        is AppError.PasswordMismatch -> {
+                            _uiState.value = UIState.Error(message = R.string.password_mismatch)
+                        }
+                        else -> {
+                            _uiState.value = UIState.Error(message = R.string.unexpected_error)
+                        }
+                    }
                 }
                 is AppResult.Success<*> -> {
                     _uiState.value = UIState.Idle

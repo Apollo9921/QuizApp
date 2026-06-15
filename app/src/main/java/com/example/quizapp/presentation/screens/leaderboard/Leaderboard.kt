@@ -2,6 +2,7 @@ package com.example.quizapp.presentation.screens.leaderboard
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import com.example.quizapp.domain.util.PlayerLevel
 import com.example.quizapp.presentation.components.ErrorScreen
@@ -38,7 +39,7 @@ private fun LeaderboardScreenRoute(
     when (state) {
         is LeaderboardViewModel.UIState.Error -> {
             ErrorScreen(
-                errorMessage = state.message,
+                errorMessage = stringResource(state.message),
                 onClick = { getTopPlayersByLevel(PlayerLevel.RECRUIT.badgeName) }
             )
         }

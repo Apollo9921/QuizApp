@@ -4,6 +4,7 @@ import android.content.Context
 import com.example.quizapp.R
 import com.example.quizapp.domain.model.quiz.Quiz
 import com.example.quizapp.domain.repository.QuizRepository
+import com.example.quizapp.domain.result.AppError
 import com.example.quizapp.domain.result.AppResult
 import com.example.quizapp.domain.util.QuizConstants
 
@@ -23,14 +24,14 @@ class GetQuizUseCase(
             context.getString(R.string.generalKnowledge_translatable) -> QuizConstants.CATEGORY_GENERAL_KNOWLEDGE
             context.getString(R.string.societyAndCulture_translatable) -> QuizConstants.CATEGORY_SOCIETY_CULTURE
             context.getString(R.string.sportAndLeisure_translatable) -> QuizConstants.CATEGORY_SPORT_LEISURE
-            else -> return AppResult.Error(R.string.no_category_or_level_defined)
+            else -> return AppResult.Error(AppError.NoCategoryOrLevelDefined)
         }
 
         val levelKey = when (levelResId) {
             context.getString(R.string.easy_translatable) -> QuizConstants.LEVEL_EASY
             context.getString(R.string.medium_translatable) -> QuizConstants.LEVEL_MEDIUM
             context.getString(R.string.hard_translatable) -> QuizConstants.LEVEL_HARD
-            else -> return AppResult.Error(R.string.no_category_or_level_defined)
+            else -> return AppResult.Error(AppError.NoCategoryOrLevelDefined)
         }
 
         return repository.getQuiz(categoryKey, levelKey)

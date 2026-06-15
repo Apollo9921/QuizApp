@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import com.example.quizapp.R
 import com.example.quizapp.data.network.dto.TranslatedQuizResult
+import com.example.quizapp.domain.result.AppError
 import com.example.quizapp.domain.result.AppResult
 import com.example.quizapp.domain.usecase.FormatQuizUseCase
 import com.example.quizapp.domain.usecase.GetQuizUseCase
@@ -52,8 +53,30 @@ class QuizViewModel(
                 val result = getQuizUseCase.invoke(category, level)
 
                 when (result) {
-                    is AppResult.Error<*> -> {
-                        _uiState.value = UIState.Error(result.message as Int)
+                    is AppResult.Error -> {
+                        when (result.error) {
+                            is AppError.NoCategoryOrLevelDefined -> {
+                                _uiState.value = UIState.Error(R.string.no_category_or_level_defined)
+                            }
+                            is AppError.NoInternetConnection -> {
+                                _uiState.value = UIState.Error(R.string.no_internet_connection)
+                            }
+                            is AppError.Network -> {
+                                _uiState.value = UIState.Error(R.string.network_error)
+                            }
+                            is AppError.Server -> {
+                                _uiState.value = UIState.Error(R.string.server_error)
+                            }
+                            is AppError.ServerDown -> {
+                                _uiState.value = UIState.Error(R.string.server_down)
+                            }
+                            is AppError.Unknown -> {
+                                _uiState.value = UIState.Error(R.string.unexpected_error)
+                            }
+                            else -> {
+                                _uiState.value = UIState.Error(R.string.unexpected_error)
+                            }
+                        }
                     }
 
                     is AppResult.Success -> {
