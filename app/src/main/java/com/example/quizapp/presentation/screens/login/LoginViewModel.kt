@@ -7,11 +7,11 @@ import com.example.quizapp.domain.repository.AuthRepository
 import com.example.quizapp.domain.repository.GoogleAuthService
 import com.example.quizapp.domain.repository.UserRepository
 import com.example.quizapp.domain.result.AppResult
-import com.example.quizapp.domain.usecase.InsertResultLocally
 import com.example.quizapp.domain.usecase.InsertResultsUseCase
-import com.example.quizapp.domain.usecase.InsertUserLocally
+import com.example.quizapp.domain.usecase.InsertNewResultsUseCase
 import com.example.quizapp.domain.usecase.InsertUserUseCase
-import com.example.quizapp.domain.usecase.SaveUserToRemoteUseCase
+import com.example.quizapp.domain.usecase.InsertNewUserUseCase
+import com.example.quizapp.domain.usecase.PostUserAndResultsUseCase
 import com.example.quizapp.presentation.navigation.Destination
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -21,11 +21,11 @@ class LoginViewModel(
     private val authRepository: AuthRepository,
     private val googleAuthService: GoogleAuthService,
     private val userRepository: UserRepository,
-    private val insertUserLocally: InsertUserLocally,
-    private val insertResultLocally: InsertResultLocally,
     private val insertUserUseCase: InsertUserUseCase,
     private val insertResultsUseCase: InsertResultsUseCase,
-    private val saveUserToRemoteUseCase: SaveUserToRemoteUseCase
+    private val insertNewUserUseCase: InsertNewUserUseCase,
+    private val insertNewResultsUseCase: InsertNewResultsUseCase,
+    private val postUserAndResultsUseCase: PostUserAndResultsUseCase
 ) : ViewModel() {
 
     companion object {
@@ -110,15 +110,15 @@ class LoginViewModel(
                 is AppResult.Success<*> -> {
                     val exists = result.data as Boolean
                     if (exists) {
-                        val remoteUserResult = userRepository.fetchUserFromRemote()
+                        val remoteUserResult = userRepository.getUser()
                         if (remoteUserResult is AppResult.Success) {
-                            insertUserLocally.invoke(remoteUserResult.data)
+                            insertUserUseCase.invoke(remoteUserResult.data)
                         }
 
-                        val remoteResults = userRepository.fetchResultsFromRemote()
+                        val remoteResults = userRepository.getResults()
                         if (remoteResults is AppResult.Success) {
                             remoteResults.data.forEach { result ->
-                                insertResultLocally.invoke(result)
+                                insertResultsUseCase.invoke(result)
                             }
                         }
 
@@ -127,21 +127,21 @@ class LoginViewModel(
                         navHostController.navigate(Destination.Categories.route)
                     } else {
                         val randomName = generateRandomName()
-                        insertUserUseCase.invoke(randomName)
-                        insertResultsUseCase.invoke(randomName)
-                        saveUserAndResults(randomName, navHostController)
+                        insertNewUserUseCase.invoke(randomName)
+                        insertNewResultsUseCase.invoke(randomName)
+                        postUserAndResults(randomName, navHostController)
                     }
                 }
             }
         }
     }
 
-    private fun saveUserAndResults(
+    private fun postUserAndResults(
         name: String,
         navHostController: NavHostController
     ) {
         viewModelScope.launch {
-            val result = saveUserToRemoteUseCase.invoke(name)
+            val result = postUserAndResultsUseCase.invoke(name)
             when(result) {
                 is AppResult.Error<*> -> {
                     _uiState.value = UIState.Error(message = result.message as Int)

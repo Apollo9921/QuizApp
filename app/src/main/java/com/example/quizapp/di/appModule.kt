@@ -27,16 +27,16 @@ import com.example.quizapp.domain.usecase.FormatQuizUseCase
 import com.example.quizapp.domain.usecase.GetQuizUseCase
 import com.example.quizapp.domain.usecase.GetTopPlayersByCategoryUseCase
 import com.example.quizapp.domain.usecase.GetTopPlayersByLevelUseCase
-import com.example.quizapp.domain.usecase.InsertResultLocally
 import com.example.quizapp.domain.usecase.InsertResultsUseCase
-import com.example.quizapp.domain.usecase.InsertUserLocally
+import com.example.quizapp.domain.usecase.InsertNewResultsUseCase
 import com.example.quizapp.domain.usecase.InsertUserUseCase
+import com.example.quizapp.domain.usecase.InsertNewUserUseCase
 import com.example.quizapp.domain.usecase.PostUserUseCase
-import com.example.quizapp.domain.usecase.SaveUserToRemoteUseCase
+import com.example.quizapp.domain.usecase.PostUserAndResultsUseCase
 import com.example.quizapp.domain.usecase.UpdateBadgeUseCase
 import com.example.quizapp.domain.usecase.UpdatePointsUseCase
 import com.example.quizapp.domain.usecase.UpdateResultsUseCase
-import com.example.quizapp.domain.usecase.UpdateUserToRemoteUseCase
+import com.example.quizapp.domain.usecase.UpdateUserAndResultsUseCase
 import com.example.quizapp.presentation.screens.leaderboard.LeaderboardViewModel
 import com.example.quizapp.presentation.screens.profile.ProfileViewModel
 import com.example.quizapp.presentation.screens.progress.ProgressViewModel
@@ -113,13 +113,13 @@ val useCaseModule = module {
     factory { FetchBadgeImageUseCase() }
     factory { FetchBadgeUseCase() }
     factory { UpdateBadgeUseCase(get()) }
+    factory { InsertNewResultsUseCase(get()) }
+    factory { InsertNewUserUseCase(get()) }
+    factory { PostUserAndResultsUseCase(get()) }
+    factory { UpdateUserAndResultsUseCase(androidContext(), get()) }
+    factory { PostUserUseCase(get()) }
     factory { InsertResultsUseCase(get()) }
     factory { InsertUserUseCase(get()) }
-    factory { SaveUserToRemoteUseCase(get()) }
-    factory { UpdateUserToRemoteUseCase(androidContext(), get()) }
-    factory { PostUserUseCase(get()) }
-    factory { InsertResultLocally(get()) }
-    factory { InsertUserLocally(get()) }
     factory { GetTopPlayersByLevelUseCase(get()) }
     factory { GetTopPlayersByCategoryUseCase(get()) }
     factory { FetchResultsUseCase(get()) }

@@ -7,7 +7,7 @@ import com.example.quizapp.domain.result.AppResult
 import com.example.quizapp.domain.util.PlayerLevel
 import com.example.quizapp.domain.util.QuizCategory
 
-class SaveUserToRemoteUseCase(
+class PostUserAndResultsUseCase(
     private val repository: UserRepository
 ) {
     suspend operator fun invoke(name: String): AppResult<Unit> {
@@ -27,6 +27,6 @@ class SaveUserToRemoteUseCase(
             )
         }
 
-        return repository.saveUserAndResults(user, resultsList)
+        return repository.postUserAndResults(user, resultsList)
     }
 }

@@ -8,7 +8,7 @@ import com.example.quizapp.domain.repository.UserRepository
 import com.example.quizapp.domain.result.AppResult
 import com.example.quizapp.domain.util.QuizCategory
 
-class UpdateUserToRemoteUseCase(
+class UpdateUserAndResultsUseCase(
     private val context: Context,
     private val repository: UserRepository
 ) {

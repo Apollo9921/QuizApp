@@ -83,7 +83,7 @@ class UserRepositoryImpl(
         }
     }
 
-    override suspend fun saveUserAndResults(user: User, results: List<Results>): AppResult<Unit> {
+    override suspend fun postUserAndResults(user: User, results: List<Results>): AppResult<Unit> {
         return withContext(ioDispatcher) {
             val currentUser = FirebaseAuth.getInstance().currentUser
 
@@ -162,7 +162,7 @@ class UserRepositoryImpl(
         }
     }
 
-    override suspend fun fetchUserFromRemote(): AppResult<User> {
+    override suspend fun getUser(): AppResult<User> {
         return withContext(ioDispatcher) {
             try {
                 val userId = FirebaseAuth.getInstance().currentUser?.uid
@@ -182,7 +182,7 @@ class UserRepositoryImpl(
         }
     }
 
-    override suspend fun fetchResultsFromRemote(): AppResult<List<Results>> {
+    override suspend fun getResults(): AppResult<List<Results>> {
         return withContext(ioDispatcher) {
             try {
                 val userId = FirebaseAuth.getInstance().currentUser?.uid
