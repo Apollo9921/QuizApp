@@ -75,4 +75,6 @@
     <string name="tab_category">Por Categoria</string>
     <string name="current_user">%1$s (Tu)</string>
     <string name="user_position">%1$d º</string>
+    <string name="almost_level_up">Quase a Subir de Nível!</string>
+    <string name="keep_answer_correctly">Continua a responder acertadamente para chegares ao topo.</string>
 </resources>
