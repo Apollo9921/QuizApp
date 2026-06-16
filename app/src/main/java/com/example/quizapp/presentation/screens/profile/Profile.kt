@@ -161,7 +161,7 @@ private fun ShowProfile(
 
                 Text(
                     text = user.name,
-                    style = MaterialTheme.typography.headlineMedium,
+                    style = MaterialTheme.typography.titleLarge,
                     color = Black,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center
@@ -238,13 +238,13 @@ private fun StatCard(
             }
             Text(
                 text = title,
-                style = MaterialTheme.typography.bodySmall,
+                style = MaterialTheme.typography.labelSmall,
                 color = Black.copy(alpha = 0.6f),
                 fontWeight = FontWeight.Medium
             )
             Text(
                 text = value,
-                style = MaterialTheme.typography.titleLarge,
+                style = MaterialTheme.typography.labelMedium,
                 color = Black,
                 fontWeight = FontWeight.Bold
             )
@@ -283,13 +283,13 @@ private fun BadgeCard(
             ) {
                 Text(
                     text = stringResource(R.string.badge).uppercase(),
-                    style = MaterialTheme.typography.labelSmall,
+                    style = MaterialTheme.typography.labelMedium,
                     color = PurpleGrey40,
                     fontWeight = FontWeight.Bold
                 )
                 Text(
                     text = badgeName,
-                    style = MaterialTheme.typography.titleMedium,
+                    style = MaterialTheme.typography.labelSmall,
                     color = Black,
                     fontWeight = FontWeight.Bold
                 )

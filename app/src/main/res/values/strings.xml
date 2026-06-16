@@ -89,4 +89,5 @@
     <string name="user_position">%1$d º</string>
     <string name="almost_level_up">Almost Level Up!</string>
     <string name="keep_answer_correctly">Keep answering correctly to reach the top.</string>
+    <string name="choose_level_difficulty">Choose the ideal difficulty for your challenge today.</string>
 </resources>

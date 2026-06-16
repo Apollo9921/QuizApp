@@ -22,11 +22,11 @@ fun textSizeByScreen(baseSize: TextUnit): TextUnit {
         }
 
         screenWidth < mediumWidth -> {
-            (baseSize * 1.5)
+            (baseSize * 2)
         }
 
         else -> {
-            (baseSize * 2)
+            (baseSize * 2.5)
         }
     }
 }

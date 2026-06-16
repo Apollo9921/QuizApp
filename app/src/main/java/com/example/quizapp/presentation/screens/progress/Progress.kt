@@ -152,14 +152,14 @@ private fun Progress(
                             ) {
                                 Text(
                                     text = "${(progress * 100).toInt()}%",
-                                    style = MaterialTheme.typography.displayMedium,
+                                    style = MaterialTheme.typography.titleLarge,
                                     color = White,
                                     fontWeight = FontWeight.ExtraBold
                                 )
                                 Spacer(modifier = Modifier.height(4.dp))
                                 Text(
                                     text = "$currentPoints / $maxPoints XP",
-                                    style = MaterialTheme.typography.titleMedium,
+                                    style = MaterialTheme.typography.labelMedium,
                                     color = White.copy(alpha = 0.85f),
                                     fontWeight = FontWeight.SemiBold
                                 )
@@ -185,7 +185,7 @@ private fun Progress(
                             Spacer(modifier = Modifier.width(10.dp))
                             Text(
                                 text = stringResource(id = R.string.leaderboard),
-                                style = MaterialTheme.typography.titleMedium,
+                                style = MaterialTheme.typography.labelMedium,
                                 color = White,
                                 fontWeight = FontWeight.Bold
                             )
