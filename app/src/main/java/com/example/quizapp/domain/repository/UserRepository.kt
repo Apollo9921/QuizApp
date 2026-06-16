@@ -9,8 +9,8 @@ interface UserRepository {
     suspend fun insertUser(user: User)
     suspend fun updatePoints(totalPoints: Int, totalPointsPossible: Int, name: String)
     suspend fun updateBadge(badge: String, name: String)
-    suspend fun saveUserAndResults(user: User, results: List<Results>): AppResult<Unit>
+    suspend fun postUserAndResults(user: User, results: List<Results>): AppResult<Unit>
     suspend fun updateUserAndResults(user: User, results: Results): AppResult<Unit>
-    suspend fun fetchUserFromRemote(): AppResult<User>
-    suspend fun fetchResultsFromRemote(): AppResult<List<Results>>
+    suspend fun getUser(): AppResult<User>
+    suspend fun getResults(): AppResult<List<Results>>
 }

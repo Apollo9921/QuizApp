@@ -9,14 +9,14 @@ import com.example.quizapp.domain.usecase.FetchUserUseCase
 import com.example.quizapp.domain.usecase.UpdateBadgeUseCase
 import com.example.quizapp.domain.usecase.UpdatePointsUseCase
 import com.example.quizapp.domain.usecase.UpdateResultsUseCase
-import com.example.quizapp.domain.usecase.UpdateUserToRemoteUseCase
+import com.example.quizapp.domain.usecase.UpdateUserAndResultsUseCase
 import com.example.quizapp.domain.util.PlayerLevel
 import kotlinx.coroutines.launch
 
 class QuizResultViewModel(
     private val updateResultsUseCase: UpdateResultsUseCase,
     private val updatePointsUseCase: UpdatePointsUseCase,
-    private val updateUserToRemoteUseCase: UpdateUserToRemoteUseCase,
+    private val updateUserAndResultsUseCase: UpdateUserAndResultsUseCase,
     private val fetchUserUseCase: FetchUserUseCase,
     private val updateBadgeUseCase: UpdateBadgeUseCase,
     val category: String,
@@ -53,7 +53,7 @@ class QuizResultViewModel(
                 val userRemote = User("", userLocal.name, pointsReceived.intValue, pointsPossible, badge)
                 val resultsRemote = Results("", category, correctAnswers, incorrectAnswers)
 
-                updateUserToRemoteUseCase.invoke(userRemote, resultsRemote)
+                updateUserAndResultsUseCase.invoke(userRemote, resultsRemote)
 
             } catch (_: Exception) {
 

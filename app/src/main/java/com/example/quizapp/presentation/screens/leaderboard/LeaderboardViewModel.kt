@@ -2,14 +2,21 @@ package com.example.quizapp.presentation.screens.leaderboard
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.quizapp.R
 import com.example.quizapp.domain.usecase.GetTopPlayersByCategoryUseCase
 import com.example.quizapp.domain.usecase.GetTopPlayersByLevelUseCase
 import com.example.quizapp.domain.util.PlayerLevel
 import com.example.quizapp.domain.util.QuizCategory
 import com.google.firebase.auth.FirebaseAuth
+import io.ktor.client.network.sockets.ConnectTimeoutException
+import io.ktor.client.plugins.ClientRequestException
+import io.ktor.client.plugins.HttpRequestTimeoutException
+import io.ktor.client.plugins.RedirectResponseException
+import io.ktor.client.plugins.ServerResponseException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.io.IOException
 
 class LeaderboardViewModel(
     private val firebaseAuth: FirebaseAuth,
@@ -41,7 +48,7 @@ class LeaderboardViewModel(
     sealed class UIState {
         data object Idle : UIState()
         data class Success(val data: LeaderboardUiState) : UIState()
-        data class Error(val message: String) : UIState()
+        data class Error(val message: Int) : UIState()
     }
 
     init {
@@ -96,8 +103,15 @@ class LeaderboardViewModel(
                     )
                 },
                 onFailure = {
-                    _uiState.value =
-                        UIState.Error(message = it.message ?: "Error")
+                    when(it) {
+                        is HttpRequestTimeoutException -> _uiState.value = UIState.Error(message = R.string.request_timeout)
+                        is ConnectTimeoutException -> _uiState.value = UIState.Error(message = R.string.no_internet_connection)
+                        is IOException -> _uiState.value = UIState.Error(message = R.string.network_error)
+                        is RedirectResponseException -> _uiState.value = UIState.Error(message = R.string.server_error)
+                        is ClientRequestException -> _uiState.value = UIState.Error(message = R.string.invalid_request)
+                        is ServerResponseException -> _uiState.value = UIState.Error(message = R.string.server_down)
+                        else -> _uiState.value = UIState.Error(message = R.string.unexpected_error)
+                    }
                 })
         }
     }
@@ -132,7 +146,15 @@ class LeaderboardViewModel(
                     )
                 },
                 onFailure = {
-                    _uiState.value = UIState.Error(message = it.message ?: "Error")
+                    when(it) {
+                        is HttpRequestTimeoutException -> _uiState.value = UIState.Error(message = R.string.request_timeout)
+                        is ConnectTimeoutException -> _uiState.value = UIState.Error(message = R.string.no_internet_connection)
+                        is IOException -> _uiState.value = UIState.Error(message = R.string.network_error)
+                        is RedirectResponseException -> _uiState.value = UIState.Error(message = R.string.server_error)
+                        is ClientRequestException -> _uiState.value = UIState.Error(message = R.string.invalid_request)
+                        is ServerResponseException -> _uiState.value = UIState.Error(message = R.string.server_down)
+                        else -> _uiState.value = UIState.Error(message = R.string.unexpected_error)
+                    }
                 })
         }
     }

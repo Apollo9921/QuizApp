@@ -14,30 +14,28 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.quizapp.R
-import com.example.quizapp.data.local.database.QuizDatabase
-import com.example.quizapp.data.local.entity.ResultsEntity
-import com.example.quizapp.data.local.entity.UserEntity
+import com.example.quizapp.domain.model.results.Results
+import com.example.quizapp.domain.model.user.User
 import com.example.quizapp.presentation.components.BottomNavigationBar
+import com.example.quizapp.presentation.components.ErrorScreen
+import com.example.quizapp.presentation.components.Loading
 import com.example.quizapp.presentation.core.Black
 import com.example.quizapp.presentation.core.Blue
 import com.example.quizapp.presentation.core.DarkGreen
@@ -50,13 +48,7 @@ import com.example.quizapp.presentation.core.Red
 import com.example.quizapp.presentation.core.White
 import com.example.quizapp.presentation.core.Yellow
 import com.example.quizapp.presentation.utils.formatTotalCount
-import com.example.quizapp.presentation.utils.mediaQueryWidth
-import com.example.quizapp.presentation.utils.normal
-import com.example.quizapp.presentation.utils.small
-
-private lateinit var user: SnapshotStateList<UserEntity>
-private lateinit var results: SnapshotStateList<ResultsEntity>
-private lateinit var data: Map<String, Int>
+import org.koin.androidx.compose.koinViewModel
 
 private val categories = listOf(
     R.string.artsAndLiterature_translatable,
@@ -72,7 +64,25 @@ private val categories = listOf(
 )
 
 @Composable
-fun Results(navHostController: NavHostController) {
+fun ResultsRoute(
+    navHostController: NavHostController,
+    viewModel: ResultsViewModel = koinViewModel<ResultsViewModel>()
+) {
+    val state = viewModel.uiState.collectAsState().value
+    val retry = { viewModel.fetchUserAndResults() }
+    Results(
+        navHostController = navHostController,
+        state = state,
+        retry = retry
+    )
+}
+
+@Composable
+private fun Results(
+    navHostController: NavHostController,
+    state: ResultsViewModel.UIState,
+    retry: () -> Unit
+) {
     Scaffold(
         bottomBar = { BottomNavigationBar(navHostController) }
     ) {
@@ -80,38 +90,30 @@ fun Results(navHostController: NavHostController) {
             modifier = Modifier
                 .fillMaxSize()
                 .background(PurpleGrey40)
+                .safeDrawingPadding()
                 .padding(bottom = it.calculateBottomPadding())
         ) {
-            user = remember { mutableStateListOf() }
-            results = remember { mutableStateListOf() }
-            QuizDatabase.getDatabase(LocalContext.current)
-                .userDao().fetchUserProfile()
-                .observe(LocalLifecycleOwner.current) {
-                    if (user.isNotEmpty()) {
-                        user.clear()
-                    }
-                    user.add(it)
+            when(state) {
+                is ResultsViewModel.UIState.Error -> {
+                    ErrorScreen(
+                        errorMessage = stringResource(id = state.message),
+                        onClick = retry
+                    )
                 }
-            QuizDatabase.getDatabase(LocalContext.current)
-                .resultsDao().getResults()
-                .observe(LocalLifecycleOwner.current) {
-                    if (results.isNotEmpty()) {
-                        results.clear()
-                    }
-                    for (i in it.indices) {
-                        results.add(it[i])
-                    }
+                ResultsViewModel.UIState.Loading -> {
+                    Loading()
                 }
-
-            if (user.isNotEmpty() && results.isNotEmpty()) {
-                ShowResults()
+                is ResultsViewModel.UIState.Success -> {
+                    ShowResults(state.user, state.results)
+                }
             }
         }
     }
 }
 
 @Composable
-private fun ShowResults() {
+private fun ShowResults(user: User, results: List<Results>) {
+    var data: Map<String, Int> = mapOf()
     val displayCount = minOf(results.size, categories.size)
     for (i in 0 until displayCount) {
         val correct = results[i].correctAnswers
@@ -166,8 +168,8 @@ private fun ShowResults() {
                 style = MaterialTheme.typography.labelMedium,
                 text = stringResource(
                     id = R.string.totalAndTotalPossiblePoints,
-                    formatTotalCount(user[0].totalPoints.toFloat()),
-                    formatTotalCount(user[0].totalPointsPossible.toFloat())
+                    formatTotalCount(user.totalPoints.toFloat()),
+                    formatTotalCount(user.totalPointsPossible.toFloat())
                 ),
                 color = White
             )
@@ -182,20 +184,8 @@ private fun ShowResults() {
 @Composable
 private fun PieChart(
     data: Map<String, Int>,
-    radiusOuter: Dp = if (mediaQueryWidth() <= small) {
-        70.dp
-    } else if (mediaQueryWidth() <= normal) {
-        100.dp
-    } else {
-        130.dp
-    },
-    chartBarWidth: Dp = if (mediaQueryWidth() <= small) {
-        15.dp
-    } else if (mediaQueryWidth() <= normal) {
-        25.dp
-    } else {
-        35.dp
-    },
+    radiusOuter: Dp = 80.dp,
+    chartBarWidth: Dp = 20.dp,
     animDuration: Int = 1000,
 ) {
 
@@ -300,13 +290,7 @@ fun DetailsPieChart(
 @Composable
 fun DetailsPieChartItem(
     data: Pair<String, Int>,
-    height: Dp = if (mediaQueryWidth() <= small) {
-        45.dp
-    } else if (mediaQueryWidth() <= normal) {
-        55.dp
-    } else {
-        65.dp
-    },
+    height: Dp = 50.dp,
     color: Color
 ) {
     Row(

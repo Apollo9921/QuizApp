@@ -20,22 +20,23 @@ import com.example.quizapp.domain.repository.ResultsRepository
 import com.example.quizapp.domain.repository.UserRepository
 import com.example.quizapp.domain.usecase.FetchBadgeImageUseCase
 import com.example.quizapp.domain.usecase.FetchBadgeUseCase
+import com.example.quizapp.domain.usecase.FetchResultsUseCase
 import com.example.quizapp.domain.usecase.FetchUserUseCase
 import com.example.quizapp.domain.usecase.FormatProgressPercentageUseCase
 import com.example.quizapp.domain.usecase.FormatQuizUseCase
 import com.example.quizapp.domain.usecase.GetQuizUseCase
 import com.example.quizapp.domain.usecase.GetTopPlayersByCategoryUseCase
 import com.example.quizapp.domain.usecase.GetTopPlayersByLevelUseCase
-import com.example.quizapp.domain.usecase.InsertResultLocally
 import com.example.quizapp.domain.usecase.InsertResultsUseCase
-import com.example.quizapp.domain.usecase.InsertUserLocally
+import com.example.quizapp.domain.usecase.InsertNewResultsUseCase
 import com.example.quizapp.domain.usecase.InsertUserUseCase
+import com.example.quizapp.domain.usecase.InsertNewUserUseCase
 import com.example.quizapp.domain.usecase.PostUserUseCase
-import com.example.quizapp.domain.usecase.SaveUserToRemoteUseCase
+import com.example.quizapp.domain.usecase.PostUserAndResultsUseCase
 import com.example.quizapp.domain.usecase.UpdateBadgeUseCase
 import com.example.quizapp.domain.usecase.UpdatePointsUseCase
 import com.example.quizapp.domain.usecase.UpdateResultsUseCase
-import com.example.quizapp.domain.usecase.UpdateUserToRemoteUseCase
+import com.example.quizapp.domain.usecase.UpdateUserAndResultsUseCase
 import com.example.quizapp.presentation.screens.leaderboard.LeaderboardViewModel
 import com.example.quizapp.presentation.screens.profile.ProfileViewModel
 import com.example.quizapp.presentation.screens.progress.ProgressViewModel
@@ -43,6 +44,7 @@ import com.example.quizapp.presentation.screens.quiz.QuizViewModel
 import com.example.quizapp.presentation.screens.quizResult.QuizResultViewModel
 import com.example.quizapp.presentation.screens.login.LoginViewModel
 import com.example.quizapp.presentation.screens.register.RegisterViewModel
+import com.example.quizapp.presentation.screens.results.ResultsViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.functions.FirebaseFunctions
@@ -87,7 +89,7 @@ val repositoryModule = module {
     single<AuthRepository> { AuthRepositoryImpl(get(), get()) }
     single<GoogleAuthService> { GoogleAuthServiceImpl(androidContext()) }
     single<CloudQuizTranslator> { CloudQuizTranslatorImpl(get()) }
-    single<LeaderboardRepository> { LeaderboardRepositoryImpl(androidContext(), get()) }
+    single<LeaderboardRepository> { LeaderboardRepositoryImpl(get()) }
 }
 
 val viewModelModule = module {
@@ -98,6 +100,7 @@ val viewModelModule = module {
     viewModel { LoginViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { RegisterViewModel(get()) }
     viewModel { LeaderboardViewModel(get(), get(), get()) }
+    viewModel { ResultsViewModel(get(), get()) }
 }
 
 val useCaseModule = module {
@@ -110,13 +113,14 @@ val useCaseModule = module {
     factory { FetchBadgeImageUseCase() }
     factory { FetchBadgeUseCase() }
     factory { UpdateBadgeUseCase(get()) }
+    factory { InsertNewResultsUseCase(get()) }
+    factory { InsertNewUserUseCase(get()) }
+    factory { PostUserAndResultsUseCase(get()) }
+    factory { UpdateUserAndResultsUseCase(androidContext(), get()) }
+    factory { PostUserUseCase(get()) }
     factory { InsertResultsUseCase(get()) }
     factory { InsertUserUseCase(get()) }
-    factory { SaveUserToRemoteUseCase(get()) }
-    factory { UpdateUserToRemoteUseCase(androidContext(), get()) }
-    factory { PostUserUseCase(get()) }
-    factory { InsertResultLocally(get()) }
-    factory { InsertUserLocally(get()) }
     factory { GetTopPlayersByLevelUseCase(get()) }
     factory { GetTopPlayersByCategoryUseCase(get()) }
+    factory { FetchResultsUseCase(get()) }
 }

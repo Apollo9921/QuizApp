@@ -1,10 +1,9 @@
 package com.example.quizapp.data.repository
 
-import android.content.Context
-import com.example.quizapp.R
 import com.example.quizapp.domain.model.results.Results
 import com.example.quizapp.domain.model.user.User
 import com.example.quizapp.domain.repository.LeaderboardRepository
+import com.example.quizapp.domain.result.AppError
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import io.ktor.client.network.sockets.ConnectTimeoutException
@@ -15,7 +14,6 @@ import io.ktor.client.plugins.ServerResponseException
 import java.io.IOException
 
 class LeaderboardRepositoryImpl(
-    private val context: Context,
     private val firestore: FirebaseFirestore
 ): LeaderboardRepository {
 
@@ -37,13 +35,13 @@ class LeaderboardRepositoryImpl(
             }
             .addOnFailureListener { exception ->
                 when(exception) {
-                    is HttpRequestTimeoutException -> onFailure(Exception(context.getString(R.string.request_timeout)))
-                    is ConnectTimeoutException -> onFailure(Exception(context.getString(R.string.no_internet_connection)))
-                    is IOException -> onFailure(Exception(context.getString(R.string.network_error)))
-                    is RedirectResponseException -> onFailure(Exception(context.getString(R.string.server_error)))
-                    is ClientRequestException -> onFailure(Exception(context.getString(R.string.invalid_request)))
-                    is ServerResponseException -> onFailure(Exception(context.getString(R.string.server_down)))
-                    else -> onFailure(Exception(context.getString(R.string.unexpected_error)))
+                    is HttpRequestTimeoutException -> AppError.Timeout
+                    is ConnectTimeoutException -> AppError.NoInternetConnection
+                    is IOException -> AppError.Network
+                    is RedirectResponseException -> AppError.Server
+                    is ClientRequestException -> AppError.BadRequest
+                    is ServerResponseException -> AppError.ServerDown
+                    else -> AppError.Unknown
                 }
             }
     }
@@ -68,13 +66,13 @@ class LeaderboardRepositoryImpl(
             }
             .addOnFailureListener { exception ->
                 when(exception) {
-                    is HttpRequestTimeoutException -> onFailure(Exception(context.getString(R.string.request_timeout)))
-                    is ConnectTimeoutException -> onFailure(Exception(context.getString(R.string.no_internet_connection)))
-                    is IOException -> onFailure(Exception(context.getString(R.string.network_error)))
-                    is RedirectResponseException -> onFailure(Exception(context.getString(R.string.server_error)))
-                    is ClientRequestException -> onFailure(Exception(context.getString(R.string.invalid_request)))
-                    is ServerResponseException -> onFailure(Exception(context.getString(R.string.server_down)))
-                    else -> onFailure(Exception(context.getString(R.string.unexpected_error)))
+                    is HttpRequestTimeoutException -> AppError.Timeout
+                    is ConnectTimeoutException -> AppError.NoInternetConnection
+                    is IOException -> AppError.Network
+                    is RedirectResponseException -> AppError.Server
+                    is ClientRequestException -> AppError.BadRequest
+                    is ServerResponseException -> AppError.ServerDown
+                    else -> AppError.Unknown
                 }
             }
     }

@@ -1,12 +1,12 @@
 package com.example.quizapp.data.repository
 
 import com.example.quizapp.BuildConfig
-import com.example.quizapp.R
 import com.example.quizapp.data.mapper.toQuiz
 import com.example.quizapp.data.network.dto.QuizDTO
 import com.example.quizapp.data.network.instance.Instance
 import com.example.quizapp.domain.model.quiz.Quiz
 import com.example.quizapp.domain.repository.QuizRepository
+import com.example.quizapp.domain.result.AppError
 import com.example.quizapp.domain.result.AppResult
 import io.ktor.client.call.body
 import io.ktor.client.network.sockets.ConnectTimeoutException
@@ -39,19 +39,19 @@ class QuizRepositoryImpl(private val instance: Instance) : QuizRepository {
             AppResult.Success(response.map { it.toQuiz() })
 
         } catch (_: HttpRequestTimeoutException) {
-            AppResult.Error(R.string.request_timeout)
+            AppResult.Error(AppError.Timeout)
         } catch (_: ConnectTimeoutException) {
-            AppResult.Error(R.string.no_internet_connection)
+            AppResult.Error(AppError.NoInternetConnection)
         } catch (_: IOException) {
-            AppResult.Error(R.string.network_error)
+            AppResult.Error(AppError.Network)
         } catch (_: RedirectResponseException) {
-            AppResult.Error(R.string.server_error)
+            AppResult.Error(AppError.Server)
         } catch (_: ClientRequestException) {
-            AppResult.Error(R.string.invalid_request)
+            AppResult.Error(AppError.BadRequest)
         } catch (_: ServerResponseException) {
-            AppResult.Error(R.string.server_down)
+            AppResult.Error(AppError.ServerDown)
         } catch (_: Exception) {
-            AppResult.Error(R.string.unexpected_error)
+            AppResult.Error(AppError.Unknown)
         }
     }
 }

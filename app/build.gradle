@@ -102,6 +102,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
     debugImplementation 'androidx.compose.ui:ui-tooling'
     debugImplementation 'androidx.compose.ui:ui-test-manifest'
+    testImplementation("io.mockk:mockk:1.13.13")
 
     // Splash API
     implementation 'androidx.core:core-splashscreen:1.0.1'
