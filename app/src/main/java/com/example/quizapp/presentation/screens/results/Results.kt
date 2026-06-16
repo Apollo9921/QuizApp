@@ -70,6 +70,10 @@ fun ResultsRoute(
 ) {
     val state = viewModel.uiState.collectAsState().value
     val retry = { viewModel.fetchUserAndResults() }
+    LaunchedEffect(Unit) {
+        viewModel.fetchUserAndResults()
+    }
+
     Results(
         navHostController = navHostController,
         state = state,
