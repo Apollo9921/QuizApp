@@ -1,11 +1,7 @@
 package com.example.quizapp.presentation.utils
 
-import androidx.compose.ui.unit.dp
 import kotlin.math.ln
 import kotlin.math.pow
-
-val small = 600.dp
-val normal = 840.dp
 
 fun formatTotalCount(count: Float): String {
     if (count < 1000) return count.toInt().toString()

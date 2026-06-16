@@ -20,6 +20,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.quizapp.R
@@ -29,6 +30,8 @@ import com.example.quizapp.presentation.navigation.Destination
 import com.example.quizapp.presentation.core.Black
 import com.example.quizapp.presentation.core.PurpleGrey40
 import com.example.quizapp.presentation.core.White
+import com.example.quizapp.presentation.utils.componentSizeByScreen
+import com.example.quizapp.presentation.utils.widthOfScreen
 
 @Composable
 fun CategoriesRoute(navHostController: NavHostController) {
@@ -83,27 +86,47 @@ private fun CategoriesScreen(
     categoriesImages: List<Int>,
     categories: List<Int>
 ) {
+    val screenWidth = widthOfScreen()
+
+    val columnCount = when {
+        screenWidth < 600.dp -> 2
+        screenWidth < 840.dp -> 3
+        else -> 4
+    }
+
+    val maxLayoutWidth = if (screenWidth < 600.dp) Dp.Unspecified else 900.dp
+
+    val gridPadding = componentSizeByScreen(baseSize = 20.dp)
+    val itemSpacingVertical = componentSizeByScreen(baseSize = 20.dp)
+    val itemSpacingHorizontal = componentSizeByScreen(baseSize = 16.dp)
+    val cardCornerRadius = componentSizeByScreen(baseSize = 20.dp)
+    val cardBorderThickness = componentSizeByScreen(baseSize = 2.dp)
+
     Scaffold(
         bottomBar = { BottomNavigationBar(navHostController) }
-    ) {
+    ) { paddingValues ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .background(PurpleGrey40)
                 .safeDrawingPadding()
-                .padding(bottom = it.calculateBottomPadding())
+                .padding(bottom = paddingValues.calculateBottomPadding()),
+            contentAlignment = Alignment.TopCenter
         ) {
             LazyVerticalStaggeredGrid(
-                columns = StaggeredGridCells.Fixed(2),
-                verticalItemSpacing = 20.dp,
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
-                contentPadding = PaddingValues(20.dp),
-                modifier = Modifier.fillMaxSize()
+                columns = StaggeredGridCells.Fixed(columnCount),
+                verticalItemSpacing = itemSpacingVertical,
+                horizontalArrangement = Arrangement.spacedBy(itemSpacingHorizontal),
+                contentPadding = PaddingValues(gridPadding),
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .widthIn(max = maxLayoutWidth)
+                    .fillMaxWidth()
             ) {
-                items(categories.size) {
+                items(categories.size) { index ->
                     Card(
-                        shape = RoundedCornerShape(20.dp),
-                        border = BorderStroke(width = 2.dp, color = White),
+                        shape = RoundedCornerShape(cardCornerRadius),
+                        border = BorderStroke(width = cardBorderThickness, color = White),
                         colors = CardDefaults.cardColors(
                             containerColor = White,
                             contentColor = Black,
@@ -113,24 +136,29 @@ private fun CategoriesScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .aspectRatio(1f)
-                            .clickable { navigateToCategory(it) }
+                            .clickable { navigateToCategory(index) }
                     ) {
                         Column(
-                            modifier = Modifier.fillMaxSize(),
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(componentSizeByScreen(baseSize = 8.dp)),
                             verticalArrangement = Arrangement.Center,
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             Image(
-                                painter = painterResource(id = categoriesImages[it]),
+                                painter = painterResource(id = categoriesImages[index]),
                                 contentDescription = null,
                                 modifier = Modifier.fillMaxSize(0.5f),
                                 contentScale = ContentScale.Fit
                             )
+
+                            Spacer(modifier = Modifier.height(componentSizeByScreen(baseSize = 8.dp)))
+
                             Text(
-                                text = stringResource(id = categories[it]),
+                                text = stringResource(id = categories[index]),
                                 color = Black,
-                                style = MaterialTheme.typography.labelMedium,
-                                modifier = Modifier.padding(horizontal = 4.dp, vertical = 4.dp)
+                                style = MaterialTheme.typography.labelSmall,
+                                modifier = Modifier.padding(horizontal = 4.dp)
                             )
                         }
                     }
