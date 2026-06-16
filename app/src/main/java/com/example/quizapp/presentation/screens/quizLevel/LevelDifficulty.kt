@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -19,6 +20,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -28,6 +30,8 @@ import com.example.quizapp.presentation.core.Purple40
 import com.example.quizapp.presentation.core.PurpleGrey40
 import com.example.quizapp.presentation.core.White
 import com.example.quizapp.presentation.navigation.Destination
+import com.example.quizapp.presentation.utils.componentSizeByScreen
+import com.example.quizapp.presentation.utils.widthOfScreen
 
 @Composable
 fun LevelDifficulty(navHostController: NavHostController, category: String) {
@@ -41,115 +45,106 @@ fun LevelDifficulty(navHostController: NavHostController, category: String) {
     var selectedOption by remember { mutableIntStateOf(levelsDifficulty[0]) }
     val level = remember { mutableStateOf("") }
 
+    val screenWidth = widthOfScreen()
+    val maxLayoutWidth = if (screenWidth < 600.dp) Dp.Unspecified else 560.dp
+    val cardHeight = componentSizeByScreen(baseSize = 72.dp)
+
     LaunchedEffect(selectedOption) {
         level.value = context.resources.getString(selectedOption)
     }
 
     Scaffold(
         topBar = {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .statusBarsPadding()
-                    .padding(horizontal = 8.dp, vertical = 8.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Box(
+            Box(modifier = Modifier.fillMaxWidth().background(PurpleGrey40)) {
+                Row(
                     modifier = Modifier
-                        .size(48.dp)
-                        .background(White.copy(alpha = 0.1f), RoundedCornerShape(24.dp)),
-                    contentAlignment = Alignment.Center
+                        .statusBarsPadding()
+                        .widthIn(max = maxLayoutWidth)
+                        .fillMaxWidth()
+                        .align(Alignment.TopStart)
+                        .padding(horizontal = 8.dp, vertical = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    IconButton(
-                        onClick = { navHostController.navigateUp() },
-                        modifier = Modifier.size(48.dp)
+                    Box(
+                        modifier = Modifier
+                            .size(componentSizeByScreen(baseSize = 50.dp))
+                            .background(White.copy(alpha = 0.1f), RoundedCornerShape(24.dp)),
                     ) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back",
-                            tint = White,
-                            modifier = Modifier.size(24.dp)
-                        )
+                        IconButton(
+                            onClick = { navHostController.navigateUp() },
+                            modifier = Modifier.size(componentSizeByScreen(baseSize = 48.dp))
+                        ) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = "Back",
+                                tint = White,
+                                modifier = Modifier.size(componentSizeByScreen(baseSize = 24.dp))
+                            )
+                        }
                     }
                 }
             }
         },
         bottomBar = {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(PurpleGrey40)
-                    .navigationBarsPadding()
-                    .padding(horizontal = 24.dp, vertical = 24.dp)
-            ) {
-                Button(
-                    onClick = {
-                        navHostController.navigate(
-                            Destination.StartQuiz.passArgument(category, level.value)
+            Box(modifier = Modifier.fillMaxWidth().background(PurpleGrey40).navigationBarsPadding(), contentAlignment = Alignment.Center) {
+                Box(modifier = Modifier.widthIn(max = maxLayoutWidth).fillMaxWidth().padding(horizontal = 24.dp, vertical = 24.dp)) {
+                    Button(
+                        onClick = {
+                            navHostController.navigate(Destination.StartQuiz.passArgument(category, level.value))
+                        },
+                        shape = RoundedCornerShape(16.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = Purple40, contentColor = White),
+                        modifier = Modifier.fillMaxWidth().height(componentSizeByScreen(baseSize = 56.dp))
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.getStarted),
+                            style = MaterialTheme.typography.labelMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = White
                         )
-                    },
-                    shape = RoundedCornerShape(16.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Purple40,
-                        contentColor = White
-                    ),
-                    elevation = ButtonDefaults.buttonElevation(defaultElevation = 2.dp),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(56.dp)
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.getStarted),
-                        style = MaterialTheme.typography.labelMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = White
-                    )
+                    }
                 }
             }
         }
     ) { paddingValues ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(PurpleGrey40)
-                .padding(paddingValues)
-                .padding(horizontal = 24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Top
-        ) {
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Text(
-                text = stringResource(id = R.string.chooseLevel),
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold,
-                color = White,
-                textAlign = TextAlign.Center
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Text(
-                text = stringResource(R.string.choose_level_difficulty),
-                style = MaterialTheme.typography.labelMedium,
-                color = White.copy(alpha = 0.7f),
-                textAlign = TextAlign.Center
-            )
-
-            Spacer(modifier = Modifier.height(40.dp))
-
+        Box(modifier = Modifier.fillMaxSize().background(PurpleGrey40).padding(paddingValues), contentAlignment = Alignment.TopCenter) {
             Column(
-                modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                modifier = Modifier.widthIn(max = maxLayoutWidth).fillMaxWidth().padding(horizontal = 24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                levelsDifficulty.forEach { item ->
-                    val isSelected = selectedOption == item
+                Spacer(modifier = Modifier.height(16.dp))
 
-                    DifficultyCard(
-                        title = stringResource(id = item),
-                        isSelected = isSelected,
-                        onClick = { selectedOption = item }
-                    )
+                Text(
+                    text = stringResource(id = R.string.chooseLevel),
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold,
+                    color = White,
+                    textAlign = TextAlign.Center
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Text(
+                    text = stringResource(R.string.choose_level_difficulty),
+                    style = MaterialTheme.typography.labelSmall,
+                    color = White.copy(alpha = 0.7f),
+                    textAlign = TextAlign.Center
+                )
+
+                Spacer(modifier = Modifier.height(componentSizeByScreen(baseSize = 40.dp)))
+
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    levelsDifficulty.forEach { item ->
+                        DifficultyCard(
+                            title = stringResource(id = item),
+                            isSelected = (selectedOption == item),
+                            onClick = { selectedOption = item },
+                            modifier = Modifier.height(cardHeight)
+                        )
+                    }
                 }
             }
         }
@@ -160,16 +155,17 @@ fun LevelDifficulty(navHostController: NavHostController, category: String) {
 private fun DifficultyCard(
     title: String,
     isSelected: Boolean,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val containerColor = if (isSelected) White else White.copy(alpha = 0.1f)
     val textColor = if (isSelected) Black else White
     val borderStroke = if (isSelected) null else BorderStroke(1.dp, White.copy(alpha = 0.2f))
+    val indicatorSize = componentSizeByScreen(baseSize = 24.dp)
 
     Surface(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
-            .height(72.dp)
             .clip(RoundedCornerShape(20.dp))
             .clickable { onClick() },
         color = containerColor,
@@ -177,9 +173,7 @@ private fun DifficultyCard(
         border = borderStroke
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 24.dp),
+            modifier = Modifier.fillMaxSize().padding(horizontal = 24.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
@@ -192,24 +186,13 @@ private fun DifficultyCard(
 
             Box(
                 modifier = Modifier
-                    .size(24.dp)
-                    .background(
-                        color = if (isSelected) Purple40 else Color.Transparent,
-                        shape = RoundedCornerShape(12.dp)
-                    )
-                    .border(
-                        width = 2.dp,
-                        color = if (isSelected) Purple40 else White.copy(alpha = 0.6f),
-                        shape = RoundedCornerShape(12.dp)
-                    ),
+                    .size(indicatorSize)
+                    .background(color = if (isSelected) Purple40 else Color.Transparent, shape = CircleShape)
+                    .border(width = 2.dp, color = if (isSelected) Purple40 else White.copy(alpha = 0.6f), shape = CircleShape),
                 contentAlignment = Alignment.Center
             ) {
                 if (isSelected) {
-                    Box(
-                        modifier = Modifier
-                            .size(10.dp)
-                            .background(White, RoundedCornerShape(5.dp))
-                    )
+                    Box(modifier = Modifier.size(indicatorSize * 0.4f).background(White, CircleShape))
                 }
             }
         }

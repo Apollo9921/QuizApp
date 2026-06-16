@@ -15,7 +15,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -24,6 +23,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImagePainter
@@ -35,9 +35,8 @@ import com.example.quizapp.presentation.components.BottomNavigationBar
 import com.example.quizapp.presentation.core.Black
 import com.example.quizapp.presentation.core.PurpleGrey40
 import com.example.quizapp.presentation.core.White
+import com.example.quizapp.presentation.utils.componentSizeByScreen
 import com.example.quizapp.presentation.utils.formatTotalCount
-import com.example.quizapp.presentation.utils.normal
-import com.example.quizapp.presentation.utils.small
 import com.example.quizapp.presentation.utils.widthOfScreen
 import org.koin.androidx.compose.koinViewModel
 
@@ -92,6 +91,7 @@ private fun ProfileScreen(
                     )
                     ShowProfile(user, painter, badgeState, onSettingsClick)
                 }
+
                 else -> {
 
                 }
@@ -111,25 +111,32 @@ private fun ShowProfile(
     val displayPercentage = (percentage * 100).toInt()
 
     val screenWidth = widthOfScreen()
-    val isSmall = screenWidth <= small
-    val isNormal = screenWidth <= normal
 
-    val topPadding = if (isSmall) 200.dp else if (isNormal) 280.dp else 360.dp
+    val maxLayoutWidth = if (screenWidth < 600.dp) Dp.Unspecified else 520.dp
+    val topPadding = componentSizeByScreen(baseSize = 240.dp)
+    val iconContainerSize = componentSizeByScreen(baseSize = 44.dp)
+    val badgeIconSize = componentSizeByScreen(baseSize = 60.dp)
 
-    Box(modifier = Modifier.fillMaxSize()) {
 
+    Box(
+        modifier = Modifier
+            .fillMaxHeight()
+            .fillMaxWidth()
+    ) {
         IconButton(
             onClick = onSettingsClick,
             modifier = Modifier
                 .statusBarsPadding()
                 .align(Alignment.TopEnd)
-                .padding(top = 8.dp, end = 16.dp)
+                .padding(top = 12.dp, end = 24.dp)
+                .size(componentSizeByScreen(baseSize = 40.dp))
                 .background(White.copy(alpha = 0.2f), CircleShape)
         ) {
             Icon(
                 imageVector = Icons.Default.Settings,
                 contentDescription = "Settings",
-                tint = White
+                tint = White,
+                modifier = Modifier.size(componentSizeByScreen(baseSize = 24.dp))
             )
         }
 
@@ -150,14 +157,14 @@ private fun ShowProfile(
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = topPadding - 20.dp)
+                .padding(top = topPadding - componentSizeByScreen(baseSize = 20.dp))
                 .clip(RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp))
                 .background(White)
                 .padding(horizontal = 24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             item {
-                Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(componentSizeByScreen(baseSize = 24.dp)))
 
                 Text(
                     text = user.name,
@@ -167,7 +174,7 @@ private fun ShowProfile(
                     textAlign = TextAlign.Center
                 )
 
-                Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(componentSizeByScreen(baseSize = 24.dp)))
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -178,7 +185,7 @@ private fun ShowProfile(
                         icon = painterResource(id = R.drawable.points),
                         title = stringResource(R.string.points),
                         value = formatTotalCount(user.totalPoints.toFloat()),
-                        accentColor = PurpleGrey40.copy(alpha = 0.08f)
+                        iconContainerSize = iconContainerSize
                     )
 
                     StatCard(
@@ -186,19 +193,20 @@ private fun ShowProfile(
                         icon = painterResource(id = R.drawable.daily),
                         title = stringResource(R.string.progressPercentage),
                         value = "$displayPercentage%",
-                        accentColor = PurpleGrey40.copy(alpha = 0.08f)
+                        iconContainerSize = iconContainerSize
                     )
                 }
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(componentSizeByScreen(baseSize = 16.dp)))
 
                 BadgeCard(
                     badgeIcon = painterResource(id = badgeState.badge),
                     badgeName = user.badge,
-                    progress = percentage.toFloat()
+                    progress = percentage.toFloat(),
+                    badgeIconSize = badgeIconSize
                 )
 
-                Spacer(modifier = Modifier.height(32.dp))
+                Spacer(modifier = Modifier.height(componentSizeByScreen(baseSize = 32.dp)))
             }
         }
     }
@@ -210,38 +218,40 @@ private fun StatCard(
     icon: Painter,
     title: String,
     value: String,
-    accentColor: Color
+    iconContainerSize: Dp
 ) {
     Card(
         modifier = modifier,
-        colors = CardDefaults.cardColors(containerColor = accentColor),
+        colors = CardDefaults.cardColors(containerColor = PurpleGrey40.copy(alpha = 0.08f)),
         shape = RoundedCornerShape(20.dp)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(componentSizeByScreen(baseSize = 16.dp)),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Box(
                 modifier = Modifier
-                    .size(44.dp)
+                    .size(iconContainerSize)
                     .background(White, CircleShape),
                 contentAlignment = Alignment.Center
             ) {
                 Image(
                     painter = icon,
                     contentDescription = null,
-                    modifier = Modifier.size(24.dp)
+                    modifier = Modifier.size(iconContainerSize * 0.55f)
                 )
             }
+            // APENAS labelSmall para o título do card
             Text(
                 text = title,
                 style = MaterialTheme.typography.labelSmall,
                 color = Black.copy(alpha = 0.6f),
                 fontWeight = FontWeight.Medium
             )
+            // APENAS labelMedium para o valor principal
             Text(
                 text = value,
                 style = MaterialTheme.typography.labelMedium,
@@ -256,7 +266,8 @@ private fun StatCard(
 private fun BadgeCard(
     badgeIcon: Painter,
     badgeName: String,
-    progress: Float
+    progress: Float,
+    badgeIconSize: Dp
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -267,14 +278,14 @@ private fun BadgeCard(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(componentSizeByScreen(baseSize = 16.dp)),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Image(
                 painter = badgeIcon,
                 contentDescription = "Badge Icon",
-                modifier = Modifier.size(60.dp)
+                modifier = Modifier.size(badgeIconSize)
             )
 
             Column(
@@ -283,13 +294,13 @@ private fun BadgeCard(
             ) {
                 Text(
                     text = stringResource(R.string.badge).uppercase(),
-                    style = MaterialTheme.typography.labelMedium,
+                    style = MaterialTheme.typography.displaySmall,
                     color = PurpleGrey40,
                     fontWeight = FontWeight.Bold
                 )
                 Text(
                     text = badgeName,
-                    style = MaterialTheme.typography.labelSmall,
+                    style = MaterialTheme.typography.labelMedium,
                     color = Black,
                     fontWeight = FontWeight.Bold
                 )
@@ -300,7 +311,7 @@ private fun BadgeCard(
                     progress = { progress.coerceIn(0f, 1f) },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(8.dp)
+                        .height(componentSizeByScreen(baseSize = 8.dp))
                         .clip(CircleShape),
                     color = PurpleGrey40,
                     trackColor = PurpleGrey40.copy(alpha = 0.15f)

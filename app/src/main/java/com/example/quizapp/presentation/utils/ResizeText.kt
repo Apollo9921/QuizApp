@@ -3,6 +3,7 @@ package com.example.quizapp.presentation.utils
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 
@@ -17,16 +18,21 @@ fun textSizeByScreen(baseSize: TextUnit): TextUnit {
     val mediumWidth = 840.dp
 
     return when {
-        screenWidth < smallWidth -> {
-            baseSize
-        }
+        screenWidth < smallWidth -> baseSize
+        screenWidth < mediumWidth -> (baseSize * 2)
+        else -> (baseSize * 2.5)
+    }
+}
 
-        screenWidth < mediumWidth -> {
-            (baseSize * 2)
-        }
+@Composable
+fun componentSizeByScreen(baseSize: Dp): Dp {
+    val screenWidth = widthOfScreen()
+    val smallWidth = 600.dp
+    val mediumWidth = 840.dp
 
-        else -> {
-            (baseSize * 2.5)
-        }
+    return when {
+        screenWidth < smallWidth -> baseSize
+        screenWidth < mediumWidth -> (baseSize * 1.8f)
+        else -> (baseSize * 2.2f)
     }
 }
