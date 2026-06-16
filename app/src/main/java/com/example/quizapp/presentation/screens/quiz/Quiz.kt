@@ -130,8 +130,11 @@ private fun ShowQuiz(
 
     LaunchedEffect(quizState.progress) {
         if (quizState.progress == 0) {
-            incorrectAnswer(state.currentPage)
-            state.animateScrollToPage(state.currentPage + 1)
+            val currentPage = state.currentPage
+            if (currentPage < data.size - 1) {
+                state.animateScrollToPage(currentPage + 1)
+            }
+            incorrectAnswer(currentPage)
         }
     }
 
@@ -174,13 +177,16 @@ private fun ShowQuiz(
                             .fillMaxWidth()
                             .padding(horizontal = 20.dp, vertical = 8.dp)
                             .clickable {
-                                if (answer == currentQuestion.correctAnswer) {
-                                    correctAnswer(state.currentPage)
-                                } else {
-                                    incorrectAnswer(state.currentPage)
-                                }
+                                val currentPage = state.currentPage
                                 coroutineScope.launch {
-                                    state.animateScrollToPage(state.currentPage + 1)
+                                    if (currentPage < data.size - 1) {
+                                        state.animateScrollToPage(currentPage + 1)
+                                    }
+                                    if (answer == currentQuestion.correctAnswer) {
+                                        correctAnswer(currentPage)
+                                    } else {
+                                        incorrectAnswer(currentPage)
+                                    }
                                 }
                             }
                     ) {

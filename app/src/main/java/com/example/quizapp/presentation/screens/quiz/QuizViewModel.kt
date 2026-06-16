@@ -83,10 +83,10 @@ class QuizViewModel(
                         val translatedQuiz = formatQuizUseCase.invoke(result.data)
                         if (translatedQuiz is AppResult.Success) {
                             _uiState.value = UIState.Success(translatedQuiz.data)
+                            timing()
                         } else {
                             _uiState.value = UIState.Error(R.string.unexpected_error)
                         }
-                        timing()
                     }
                 }
             } catch (e: Exception) {
