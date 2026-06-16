@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatDelegate
 import com.example.quizapp.data.network.dto.CloudQuizInputItem
 import com.example.quizapp.data.network.dto.TranslatedQuizResult
 import com.example.quizapp.domain.repository.CloudQuizTranslator
+import com.example.quizapp.domain.result.AppError
+import com.example.quizapp.domain.result.AppResult
 import com.google.firebase.functions.FirebaseFunctions
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
@@ -12,23 +14,27 @@ import java.util.Locale
 
 class CloudQuizTranslatorImpl(
     private val functions: FirebaseFunctions
-): CloudQuizTranslator {
+) : CloudQuizTranslator {
 
     override suspend fun translateQuizBlock(
         rawQuestions: List<CloudQuizInputItem>
-    ): List<TranslatedQuizResult> = withContext(Dispatchers.IO) {
+    ): AppResult<List<TranslatedQuizResult>> = withContext(Dispatchers.IO) {
 
         val currentLanguage = AppCompatDelegate.getApplicationLocales()[0]?.language
             ?: Locale.getDefault().language
 
+        if (rawQuestions.map { it.id.isEmpty() || it.question.isEmpty() || it.correctAnswer.isEmpty() || it.incorrectAnswers.isEmpty() }.isEmpty()) {
+            return@withContext AppResult.Error(AppError.Unknown)
+        }
+
         if (currentLanguage != "pt" && currentLanguage != "es") {
-            return@withContext rawQuestions.map {
+            return@withContext AppResult.Success(rawQuestions.map {
                 TranslatedQuizResult(
                     question = it.question,
                     correctAnswer = it.correctAnswer,
                     incorrectAnswers = it.incorrectAnswers
                 )
-            }
+            })
         }
 
         val data = hashMapOf(
@@ -57,6 +63,7 @@ class CloudQuizTranslatorImpl(
 
                 val question = itemMap?.get("question") as? String
                 val correctAnswer = itemMap?.get("correctAnswer") as? String
+
                 @Suppress("UNCHECKED_CAST")
                 val incorrectAnswers = itemMap?.get("incorrectAnswers") as? List<String>
 
@@ -71,14 +78,20 @@ class CloudQuizTranslatorImpl(
                 }
             }
 
-            return@withContext translatedQuestions ?: rawQuestions.map {
+            return@withContext AppResult.Success(translatedQuestions ?: rawQuestions.map {
                 TranslatedQuizResult(it.question, it.correctAnswer, it.incorrectAnswers)
-            }
+            })
 
         } catch (e: Exception) {
             e.printStackTrace()
-            return@withContext rawQuestions.map {
-                TranslatedQuizResult(it.question, it.correctAnswer, it.incorrectAnswers)
+            when (e) {
+                is com.google.firebase.functions.FirebaseFunctionsException -> {
+                    return@withContext AppResult.Error(AppError.Network)
+                }
+
+                else -> {
+                    return@withContext AppResult.Error(AppError.Unknown)
+                }
             }
         }
     }
