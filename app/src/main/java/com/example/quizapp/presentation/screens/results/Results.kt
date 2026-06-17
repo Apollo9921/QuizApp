@@ -334,7 +334,7 @@ private fun DetailsPieChartItem(
                     color = White,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Start,
-                    maxLines = 1
+                    maxLines = 2
                 )
 
                 Spacer(modifier = Modifier.height(2.dp))
