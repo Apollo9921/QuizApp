@@ -9,16 +9,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
@@ -26,6 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -47,7 +40,9 @@ import com.example.quizapp.presentation.core.PurpleGrey40
 import com.example.quizapp.presentation.core.Red
 import com.example.quizapp.presentation.core.White
 import com.example.quizapp.presentation.core.Yellow
+import com.example.quizapp.presentation.utils.componentSizeByScreen
 import com.example.quizapp.presentation.utils.formatTotalCount
+import com.example.quizapp.presentation.utils.widthOfScreen
 import org.koin.androidx.compose.koinViewModel
 
 private val categories = listOf(
@@ -70,6 +65,7 @@ fun ResultsRoute(
 ) {
     val state = viewModel.uiState.collectAsState().value
     val retry = { viewModel.fetchUserAndResults() }
+
     LaunchedEffect(Unit) {
         viewModel.fetchUserAndResults()
     }
@@ -81,6 +77,7 @@ fun ResultsRoute(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun Results(
     navHostController: NavHostController,
@@ -88,21 +85,32 @@ private fun Results(
     retry: () -> Unit
 ) {
     Scaffold(
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = {
+                    Text(
+                        text = stringResource(id = R.string.results),
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = White
+                    )
+                },
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = PurpleGrey40),
+                modifier = Modifier.statusBarsPadding()
+            )
+        },
         bottomBar = { BottomNavigationBar(navHostController) }
-    ) {
+    ) { paddingValues ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .background(PurpleGrey40)
-                .safeDrawingPadding()
-                .padding(bottom = it.calculateBottomPadding())
+                .padding(paddingValues),
+            contentAlignment = Alignment.TopCenter
         ) {
             when(state) {
                 is ResultsViewModel.UIState.Error -> {
-                    ErrorScreen(
-                        errorMessage = stringResource(id = state.message),
-                        onClick = retry
-                    )
+                    ErrorScreen(errorMessage = stringResource(id = state.message), onClick = retry)
                 }
                 ResultsViewModel.UIState.Loading -> {
                     Loading()
@@ -119,68 +127,60 @@ private fun Results(
 private fun ShowResults(user: User, results: List<Results>) {
     var data: Map<String, Int> = mapOf()
     val displayCount = minOf(results.size, categories.size)
+
     for (i in 0 until displayCount) {
         val correct = results[i].correctAnswers
         val incorrect = results[i].incorrectAnswers
-        if (i == 0) {
-            data = if (correct == 0 && incorrect == 0) {
-                mapOf(stringResource(id = categories[i]) to 0)
-            } else if (incorrect == 0 && correct > 0) {
-                mapOf(stringResource(id = categories[i]) to 100)
-            } else if (correct == 0 && incorrect > 0) {
-                mapOf(stringResource(id = categories[i]) to 0)
-            } else {
-                val percentage = (correct * 100) / (correct + incorrect)
-                mapOf(stringResource(id = categories[i]) to percentage)
-            }
-        } else {
-            data = if (correct == 0 && incorrect == 0) {
-                data + mapOf(stringResource(id = categories[i]) to 0)
-            } else if (incorrect == 0 && correct > 0) {
-                data + mapOf(stringResource(id = categories[i]) to 100)
-            } else if (correct == 0 && incorrect > 0) {
-                data + mapOf(stringResource(id = categories[i]) to 0)
-            } else {
-                val percentage = (correct * 100) / (correct + incorrect)
-                data + mapOf(stringResource(id = categories[i]) to percentage)
-            }
-        }
+        val percentage = if (correct == 0 && incorrect == 0) 0 else (correct * 100) / (correct + incorrect)
+        data = data + mapOf(stringResource(id = categories[i]) to percentage)
     }
+
+    val screenWidth = widthOfScreen()
+
+    val maxLayoutWidth = if (screenWidth < 600.dp) Dp.Unspecified else 840.dp
+    val columnsCount = when {
+        screenWidth < 600.dp -> 2
+        screenWidth < 840.dp -> 3
+        else -> 4
+    }
+
+    val chartSize = componentSizeByScreen(baseSize = 180.dp)
+    val chartStroke = componentSizeByScreen(baseSize = 16.dp)
 
     Column(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(start = 20.dp, end = 20.dp)
+            .fillMaxHeight()
+            .widthIn(max = maxLayoutWidth)
+            .fillMaxWidth()
+            .padding(horizontal = 24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(20.dp),
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Text(
-                style = MaterialTheme.typography.titleLarge,
-                text = stringResource(id = R.string.results),
-                color = White
-            )
-        }
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Text(
-                style = MaterialTheme.typography.labelMedium,
-                text = stringResource(
-                    id = R.string.totalAndTotalPossiblePoints,
-                    formatTotalCount(user.totalPoints.toFloat()),
-                    formatTotalCount(user.totalPointsPossible.toFloat())
-                ),
-                color = White
-            )
-        }
-        Spacer(modifier = Modifier.padding(20.dp))
+        Text(
+            style = MaterialTheme.typography.labelMedium,
+            text = stringResource(
+                id = R.string.totalAndTotalPossiblePoints,
+                formatTotalCount(user.totalPoints.toFloat()),
+                formatTotalCount(user.totalPointsPossible.toFloat())
+            ),
+            color = White.copy(alpha = 0.9f),
+            fontWeight = FontWeight.SemiBold,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.padding(vertical = 8.dp)
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
         PieChart(
-            data = data
+            data = data,
+            chartSize = chartSize,
+            chartBarWidth = chartStroke
+        )
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        DetailsPieChart(
+            data = data,
+            columnsCount = columnsCount
         )
     }
 }
@@ -188,142 +188,164 @@ private fun ShowResults(user: User, results: List<Results>) {
 @Composable
 private fun PieChart(
     data: Map<String, Int>,
-    radiusOuter: Dp = 80.dp,
-    chartBarWidth: Dp = 20.dp,
+    chartSize: Dp,
+    chartBarWidth: Dp,
     animDuration: Int = 1000,
 ) {
-
     val totalSum = data.values.sum()
     val floatValue = mutableListOf<Float>()
 
+    val averagePercentage = if (data.isNotEmpty()) data.values.average().toInt() else 0
+
     data.values.forEachIndexed { index, values ->
-        floatValue.add(index, 360 * values.toFloat() / totalSum.toFloat())
+        val share = if (totalSum == 0) 0f else 360 * values.toFloat() / totalSum.toFloat()
+        floatValue.add(index, share)
     }
 
-    val colors = listOf(
-        Purple40,
-        Pink40,
-        White,
-        Black,
-        Red,
-        Yellow,
-        DarkGreen,
-        Green,
-        Blue,
-        Orange
-    )
+    val colors = listOf(Purple40, Pink40, White, Yellow, Red, DarkGreen, Green, Blue, Orange, Black)
 
     var animationPlayed by remember { mutableStateOf(false) }
-
     var lastValue = 0f
 
     val animateSize by animateFloatAsState(
-        targetValue = if (animationPlayed) radiusOuter.value * 2f else 0f,
-        animationSpec = tween(
-            durationMillis = animDuration,
-            delayMillis = 0,
-            easing = LinearOutSlowInEasing
-        ), label = ""
+        targetValue = if (animationPlayed) chartSize.value else 0f,
+        animationSpec = tween(durationMillis = animDuration, easing = LinearOutSlowInEasing),
+        label = "size"
     )
 
     val animateRotation by animateFloatAsState(
-        targetValue = if (animationPlayed) 90f * 11f else 0f,
-        animationSpec = tween(
-            durationMillis = animDuration,
-            delayMillis = 0,
-            easing = LinearOutSlowInEasing
-        ), label = ""
+        targetValue = if (animationPlayed) 360f else 0f,
+        animationSpec = tween(durationMillis = animDuration, easing = LinearOutSlowInEasing),
+        label = "rotation"
     )
 
     LaunchedEffect(key1 = true) {
         animationPlayed = true
     }
 
-    Column(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally
+    Box(
+        modifier = Modifier.size(chartSize),
+        contentAlignment = Alignment.Center
     ) {
-        Box(
-            modifier = Modifier.size(animateSize.dp),
-            contentAlignment = Alignment.Center
+        Canvas(
+            modifier = Modifier
+                .size(animateSize.dp)
+                .rotate(animateRotation)
         ) {
-            Canvas(
-                modifier = Modifier
-                    .size(radiusOuter * 2f)
-                    .rotate(animateRotation)
-            ) {
+            if (totalSum == 0) {
+                drawArc(
+                    color = White.copy(alpha = 0.1f),
+                    startAngle = 0f,
+                    sweepAngle = 360f,
+                    useCenter = false,
+                    style = Stroke(chartBarWidth.toPx(), cap = StrokeCap.Round)
+                )
+            } else {
                 floatValue.forEachIndexed { index, value ->
                     drawArc(
-                        color = colors[index],
-                        lastValue,
-                        value,
+                        color = colors[index % colors.size],
+                        startAngle = lastValue,
+                        sweepAngle = value,
                         useCenter = false,
-                        style = Stroke(chartBarWidth.toPx(), cap = StrokeCap.Butt)
+                        style = Stroke(chartBarWidth.toPx(), cap = StrokeCap.Round)
                     )
                     lastValue += value
                 }
             }
         }
-    }
-    DetailsPieChart(
-        data = data,
-        colors = colors
-    )
-}
 
-@Composable
-fun DetailsPieChart(
-    data: Map<String, Int>,
-    colors: List<Color>
-) {
-    LazyVerticalGrid(
-        columns = GridCells.Fixed(2),
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(top = 20.dp)
-    ) {
-        items(data.size) { item ->
-            DetailsPieChartItem(
-                data = Pair(data.keys.elementAt(item), data.values.elementAt(item)),
-                color = colors[item % colors.size]
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Text(
+                text = "$averagePercentage%",
+                style = MaterialTheme.typography.labelMedium,
+                color = White,
+                fontWeight = FontWeight.ExtraBold
+            )
+            Text(
+                text = stringResource(id = R.string.overall_average),
+                style = MaterialTheme.typography.displaySmall,
+                color = White.copy(alpha = 0.6f),
+                fontWeight = FontWeight.Medium
             )
         }
     }
 }
 
 @Composable
-fun DetailsPieChartItem(
-    data: Pair<String, Int>,
-    height: Dp = 50.dp,
+private fun DetailsPieChart(
+    data: Map<String, Int>,
+    columnsCount: Int
+) {
+    val colors = listOf(Purple40, Pink40, White, Yellow, Red, DarkGreen, Green, Blue, Orange, Black)
+
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(columnsCount),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = PaddingValues(bottom = 24.dp)
+    ) {
+        items(data.size) { index ->
+            DetailsPieChartItem(
+                categoryName = data.keys.elementAt(index),
+                percentage = data.values.elementAt(index),
+                color = colors[index % colors.size]
+            )
+        }
+    }
+}
+
+@Composable
+private fun DetailsPieChartItem(
+    categoryName: String,
+    percentage: Int,
     color: Color
 ) {
-    Row(
+    val itemHeight = componentSizeByScreen(baseSize = 64.dp)
+    val indicatorWidth = componentSizeByScreen(baseSize = 6.dp)
+
+    Card(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(top = 10.dp)
+            .fillMaxWidth()
+            .height(itemHeight),
+        colors = CardDefaults.cardColors(containerColor = White.copy(alpha = 0.06f)),
+        shape = RoundedCornerShape(14.dp)
     ) {
-        Box(
-            modifier = Modifier
-                .background(
-                    color = color,
-                    shape = RoundedCornerShape(10.dp)
+        Row(
+            modifier = Modifier.fillMaxSize(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .width(indicatorWidth)
+                    .background(color, RoundedCornerShape(topStart = 14.dp, bottomStart = 14.dp))
+            )
+
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(horizontal = 14.dp, vertical = 6.dp),
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = categoryName,
+                    style = MaterialTheme.typography.labelSmall,
+                    color = White,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Start,
+                    maxLines = 1
                 )
-                .size(height)
-        )
-        Column(modifier = Modifier.fillMaxWidth()) {
-            Text(
-                style = MaterialTheme.typography.labelSmall,
-                modifier = Modifier.padding(start = 15.dp),
-                text = data.first,
-                color = Black,
-                textAlign = TextAlign.Start
-            )
-            Text(
-                style = MaterialTheme.typography.labelSmall,
-                modifier = Modifier.padding(start = 15.dp),
-                text = data.second.toString() + "%",
-                color = White
-            )
+
+                Spacer(modifier = Modifier.height(2.dp))
+
+                Text(
+                    text = "$percentage%",
+                    style = MaterialTheme.typography.displaySmall,
+                    color = White.copy(alpha = 0.6f),
+                    textAlign = TextAlign.Start
+                )
+            }
         }
     }
 }
