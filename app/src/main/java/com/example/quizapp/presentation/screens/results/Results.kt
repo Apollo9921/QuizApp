@@ -301,7 +301,7 @@ private fun DetailsPieChartItem(
     percentage: Int,
     color: Color
 ) {
-    val itemHeight = componentSizeByScreen(baseSize = 64.dp)
+    val itemHeight = componentSizeByScreen(baseSize = 70.dp)
     val indicatorWidth = componentSizeByScreen(baseSize = 6.dp)
 
     Card(
@@ -330,7 +330,7 @@ private fun DetailsPieChartItem(
             ) {
                 Text(
                     text = categoryName,
-                    style = MaterialTheme.typography.labelSmall,
+                    style = MaterialTheme.typography.displaySmall,
                     color = White,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Start,
@@ -341,7 +341,7 @@ private fun DetailsPieChartItem(
 
                 Text(
                     text = "$percentage%",
-                    style = MaterialTheme.typography.displaySmall,
+                    style = MaterialTheme.typography.labelSmall,
                     color = White.copy(alpha = 0.6f),
                     textAlign = TextAlign.Start
                 )
