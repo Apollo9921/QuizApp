@@ -3,7 +3,6 @@ package com.example.quizapp.presentation.screens.profile
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -37,8 +36,11 @@ import com.example.quizapp.presentation.core.PurpleGrey40
 import com.example.quizapp.presentation.core.White
 import com.example.quizapp.presentation.utils.componentSizeByScreen
 import com.example.quizapp.presentation.utils.formatTotalCount
-import com.example.quizapp.presentation.utils.widthOfScreen
 import org.koin.androidx.compose.koinViewModel
+import androidx.compose.ui.platform.LocalConfiguration
+import android.content.res.Configuration
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 
 @Composable
 fun ProfileRoute(
@@ -78,6 +80,7 @@ private fun ProfileScreen(
                 .fillMaxSize()
                 .background(PurpleGrey40)
                 .padding(bottom = paddingValues.calculateBottomPadding())
+                .verticalScroll(rememberScrollState())
         ) {
             when (uiState) {
                 is ProfileViewModel.UIState.Success -> {
@@ -110,60 +113,64 @@ private fun ShowProfile(
     val percentage = ((user.totalPoints * 100) / badgeState.badgeLevel.toDouble()) / 100.0
     val displayPercentage = (percentage * 100).toInt()
 
-    val screenWidth = widthOfScreen()
+    val configuration = LocalConfiguration.current
+    val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 
-    val maxLayoutWidth = if (screenWidth < 600.dp) Dp.Unspecified else 520.dp
-    val topPadding = componentSizeByScreen(baseSize = 240.dp)
+    val topPadding =
+        if (isLandscape) componentSizeByScreen(baseSize = 120.dp) else componentSizeByScreen(
+            baseSize = 240.dp
+        )
     val iconContainerSize = componentSizeByScreen(baseSize = 44.dp)
     val badgeIconSize = componentSizeByScreen(baseSize = 60.dp)
 
 
     Box(
-        modifier = Modifier
-            .fillMaxHeight()
-            .fillMaxWidth()
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.TopCenter
     ) {
-        IconButton(
-            onClick = onSettingsClick,
-            modifier = Modifier
-                .statusBarsPadding()
-                .align(Alignment.TopEnd)
-                .padding(top = 12.dp, end = 24.dp)
-                .size(componentSizeByScreen(baseSize = 40.dp))
-                .background(White.copy(alpha = 0.2f), CircleShape)
-        ) {
-            Icon(
-                imageVector = Icons.Default.Settings,
-                contentDescription = "Settings",
-                tint = White,
-                modifier = Modifier.size(componentSizeByScreen(baseSize = 24.dp))
-            )
-        }
-
         Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(topPadding),
-            contentAlignment = Alignment.Center
+            modifier = Modifier.fillMaxSize()
         ) {
-            Image(
-                painter = painter,
-                contentDescription = "Profile Avatar",
-                modifier = Modifier.fillMaxSize(0.65f),
-                contentScale = ContentScale.Fit
-            )
-        }
+            IconButton(
+                onClick = onSettingsClick,
+                modifier = Modifier
+                    .statusBarsPadding()
+                    .align(Alignment.TopEnd)
+                    .padding(top = 12.dp, end = 24.dp)
+                    .size(componentSizeByScreen(baseSize = 40.dp))
+                    .background(White.copy(alpha = 0.2f), CircleShape)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Settings,
+                    contentDescription = "Settings",
+                    tint = White,
+                    modifier = Modifier.size(componentSizeByScreen(baseSize = 24.dp))
+                )
+            }
 
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(top = topPadding - componentSizeByScreen(baseSize = 20.dp))
-                .clip(RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp))
-                .background(White)
-                .padding(horizontal = 24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            item {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(topPadding),
+                contentAlignment = Alignment.Center
+            ) {
+                Image(
+                    painter = painter,
+                    contentDescription = "Profile Avatar",
+                    modifier = Modifier.fillMaxSize(if (isLandscape) 0.8f else 0.65f),
+                    contentScale = ContentScale.Fit
+                )
+            }
+
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(top = topPadding)
+                    .clip(RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp))
+                    .background(White)
+                    .padding(horizontal = 24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
                 Spacer(modifier = Modifier.height(componentSizeByScreen(baseSize = 24.dp)))
 
                 Text(
@@ -244,14 +251,12 @@ private fun StatCard(
                     modifier = Modifier.size(iconContainerSize * 0.55f)
                 )
             }
-            // APENAS labelSmall para o título do card
             Text(
                 text = title,
                 style = MaterialTheme.typography.labelSmall,
                 color = Black.copy(alpha = 0.6f),
                 fontWeight = FontWeight.Medium
             )
-            // APENAS labelMedium para o valor principal
             Text(
                 text = value,
                 style = MaterialTheme.typography.labelMedium,

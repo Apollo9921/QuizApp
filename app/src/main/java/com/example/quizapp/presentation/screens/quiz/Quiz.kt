@@ -75,24 +75,7 @@ private fun StartQuiz(
         }
     }
 
-    Scaffold(
-        topBar = {
-            CenterAlignedTopAppBar(
-                title = {
-                    Text(
-                        text = stringResource(id = R.string.quiz),
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Bold,
-                        color = White
-                    )
-                },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = PurpleGrey40
-                ),
-                modifier = Modifier.statusBarsPadding()
-            )
-        }
-    ) { pv ->
+    Scaffold { pv ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -143,7 +126,7 @@ private fun ShowQuiz(
     }
 
     val screenWidth = widthOfScreen()
-    val maxLayoutWidth = if (screenWidth < 600.dp) Dp.Unspecified else 560.dp
+    val maxLayoutWidth = if (screenWidth < 600.dp) Dp.Unspecified else componentSizeByScreen(560.dp)
 
     Box(
         modifier = Modifier.fillMaxSize(),

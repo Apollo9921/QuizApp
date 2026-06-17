@@ -94,7 +94,7 @@ private fun CategoriesScreen(
         else -> 4
     }
 
-    val maxLayoutWidth = if (screenWidth < 600.dp) Dp.Unspecified else 900.dp
+    val maxLayoutWidth = if (screenWidth < 600.dp) Dp.Unspecified else  componentSizeByScreen(900.dp)
 
     val gridPadding = componentSizeByScreen(baseSize = 20.dp)
     val itemSpacingVertical = componentSizeByScreen(baseSize = 20.dp)

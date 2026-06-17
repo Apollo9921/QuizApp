@@ -7,6 +7,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -85,36 +86,25 @@ private fun Results(
     retry: () -> Unit
 ) {
     Scaffold(
-        topBar = {
-            CenterAlignedTopAppBar(
-                title = {
-                    Text(
-                        text = stringResource(id = R.string.results),
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Bold,
-                        color = White
-                    )
-                },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = PurpleGrey40),
-                modifier = Modifier.statusBarsPadding()
-            )
-        },
         bottomBar = { BottomNavigationBar(navHostController) }
     ) { paddingValues ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .background(PurpleGrey40)
-                .padding(paddingValues),
+                .safeDrawingPadding()
+                .padding(bottom = paddingValues.calculateBottomPadding()),
             contentAlignment = Alignment.TopCenter
         ) {
-            when(state) {
+            when (state) {
                 is ResultsViewModel.UIState.Error -> {
                     ErrorScreen(errorMessage = stringResource(id = state.message), onClick = retry)
                 }
+
                 ResultsViewModel.UIState.Loading -> {
                     Loading()
                 }
+
                 is ResultsViewModel.UIState.Success -> {
                     ShowResults(state.user, state.results)
                 }
@@ -131,13 +121,15 @@ private fun ShowResults(user: User, results: List<Results>) {
     for (i in 0 until displayCount) {
         val correct = results[i].correctAnswers
         val incorrect = results[i].incorrectAnswers
-        val percentage = if (correct == 0 && incorrect == 0) 0 else (correct * 100) / (correct + incorrect)
+        val percentage =
+            if (correct == 0 && incorrect == 0) 0 else (correct * 100) / (correct + incorrect)
         data = data + mapOf(stringResource(id = categories[i]) to percentage)
     }
 
     val screenWidth = widthOfScreen()
 
-    val maxLayoutWidth = if (screenWidth < 600.dp) Dp.Unspecified else 840.dp
+    val maxLayoutWidth =
+        if (screenWidth < 600.dp) Dp.Unspecified else componentSizeByScreen(baseSize = 840.dp)
     val columnsCount = when {
         screenWidth < 600.dp -> 2
         screenWidth < 840.dp -> 3
@@ -146,42 +138,52 @@ private fun ShowResults(user: User, results: List<Results>) {
 
     val chartSize = componentSizeByScreen(baseSize = 180.dp)
     val chartStroke = componentSizeByScreen(baseSize = 16.dp)
+    val colors = listOf(Purple40, Pink40, White, Yellow, Red, DarkGreen, Green, Blue, Orange, Black)
 
-    Column(
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(columnsCount),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
         modifier = Modifier
-            .fillMaxHeight()
             .widthIn(max = maxLayoutWidth)
-            .fillMaxWidth()
+            .fillMaxSize()
             .padding(horizontal = 24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+        contentPadding = PaddingValues(top = 16.dp, bottom = 24.dp)
     ) {
-        Text(
-            style = MaterialTheme.typography.labelMedium,
-            text = stringResource(
-                id = R.string.totalAndTotalPossiblePoints,
-                formatTotalCount(user.totalPoints.toFloat()),
-                formatTotalCount(user.totalPointsPossible.toFloat())
-            ),
-            color = White.copy(alpha = 0.9f),
-            fontWeight = FontWeight.SemiBold,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.padding(vertical = 8.dp)
-        )
+        item(span = { GridItemSpan(columnsCount) }) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(
+                    style = MaterialTheme.typography.labelMedium,
+                    text = stringResource(
+                        id = R.string.totalAndTotalPossiblePoints,
+                        formatTotalCount(user.totalPoints.toFloat()),
+                        formatTotalCount(user.totalPointsPossible.toFloat())
+                    ),
+                    color = White.copy(alpha = 0.9f),
+                    fontWeight = FontWeight.SemiBold,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(vertical = 8.dp)
+                )
 
-        Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
-        PieChart(
-            data = data,
-            chartSize = chartSize,
-            chartBarWidth = chartStroke
-        )
+                PieChart(
+                    data = data,
+                    chartSize = chartSize,
+                    chartBarWidth = chartStroke
+                )
 
-        Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(24.dp))
+            }
+        }
 
-        DetailsPieChart(
-            data = data,
-            columnsCount = columnsCount
-        )
+        items(data.size) { index ->
+            DetailsPieChartItem(
+                categoryName = data.keys.elementAt(index),
+                percentage = data.values.elementAt(index),
+                color = colors[index % colors.size]
+            )
+        }
     }
 }
 
@@ -266,30 +268,6 @@ private fun PieChart(
                 style = MaterialTheme.typography.displaySmall,
                 color = White.copy(alpha = 0.6f),
                 fontWeight = FontWeight.Medium
-            )
-        }
-    }
-}
-
-@Composable
-private fun DetailsPieChart(
-    data: Map<String, Int>,
-    columnsCount: Int
-) {
-    val colors = listOf(Purple40, Pink40, White, Yellow, Red, DarkGreen, Green, Blue, Orange, Black)
-
-    LazyVerticalGrid(
-        columns = GridCells.Fixed(columnsCount),
-        verticalArrangement = Arrangement.spacedBy(12.dp),
-        horizontalArrangement = Arrangement.spacedBy(12.dp),
-        modifier = Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(bottom = 24.dp)
-    ) {
-        items(data.size) { index ->
-            DetailsPieChartItem(
-                categoryName = data.keys.elementAt(index),
-                percentage = data.values.elementAt(index),
-                color = colors[index % colors.size]
             )
         }
     }

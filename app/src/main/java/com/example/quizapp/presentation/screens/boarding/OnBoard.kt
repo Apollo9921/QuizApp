@@ -7,7 +7,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -37,6 +39,7 @@ import com.example.quizapp.presentation.core.Purple40
 import com.example.quizapp.presentation.core.PurpleGrey40
 import com.example.quizapp.presentation.core.White
 import kotlinx.coroutines.*
+import android.content.res.Configuration
 
 @Composable
 fun OnBoard(navHostController: NavHostController) {
@@ -66,15 +69,14 @@ fun OnBoard(navHostController: NavHostController) {
     )
 
     val configuration = LocalConfiguration.current
-    val screenWidth = configuration.screenWidthDp
-    val isSmallScreen = screenWidth < 360
+    val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 
     Scaffold(
         bottomBar = {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 20.dp, vertical = 40.dp),
+                    .padding(horizontal = 20.dp, vertical = if (isLandscape) 16.dp else 40.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
@@ -82,19 +84,21 @@ fun OnBoard(navHostController: NavHostController) {
                     Text(
                         text = stringResource(id = R.string.back),
                         color = White,
-                        fontSize = if (isSmallScreen) 18.sp else 22.sp,
+                        fontSize = 22.sp,
                         modifier = Modifier
                             .padding(8.dp)
                             .clickable {
                                 coroutineScope.launch { state.animateScrollToPage(state.currentPage - 1) }
                             }
                     )
+                } else {
+                    Spacer(modifier = Modifier.size(1.dp))
                 }
                 if (state.currentPage < pageCount - 1) {
                     Text(
                         text = stringResource(id = R.string.next),
                         color = White,
-                        fontSize = if (isSmallScreen) 18.sp else 22.sp,
+                        fontSize = 22.sp,
                         modifier = Modifier
                             .padding(8.dp)
                             .clickable {
@@ -119,11 +123,14 @@ fun OnBoard(navHostController: NavHostController) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
                     .padding(horizontal = 20.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
             ) {
-                Spacer(modifier = Modifier.weight(1f))
-                val animationSize = if (isSmallScreen) 250.dp else 350.dp
+                Spacer(modifier = Modifier.height(24.dp))
+
+                val animationSize = if (isLandscape) 150.dp else 250.dp
                 Box(
                     contentAlignment = Alignment.Center,
                     modifier = Modifier.size(animationSize)
@@ -138,10 +145,10 @@ fun OnBoard(navHostController: NavHostController) {
                     style = MaterialTheme.typography.titleLarge,
                     text = stringResource(id = onBoardingTitle[page]),
                     color = White,
-                    modifier = Modifier.padding(top = 24.dp)
+                    modifier = Modifier.padding(top = 6.dp)
                 )
 
-                Spacer(modifier = Modifier.weight(0.5f))
+                Spacer(modifier = Modifier.height(24.dp))
 
                 if (page == pageCount - 1) {
                     Button(
@@ -153,13 +160,13 @@ fun OnBoard(navHostController: NavHostController) {
                         border = BorderStroke(width = 2.dp, color = White),
                         colors = ButtonDefaults.buttonColors(containerColor = Purple40),
                         modifier = Modifier
-                            .fillMaxWidth(0.8f)
-                            .height(if (isSmallScreen) 50.dp else 60.dp)
+                            .fillMaxWidth(if (isLandscape) 0.5f else 0.8f)
+                            .height(60.dp)
                     ) {
                         Text(
                             text = stringResource(id = R.string.getStarted),
                             color = White,
-                            fontSize = if (isSmallScreen) 18.sp else 22.sp,
+                            fontSize = 22.sp,
                             fontWeight = FontWeight.Bold
                         )
                     }

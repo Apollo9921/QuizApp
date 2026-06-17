@@ -3,7 +3,9 @@ package com.example.quizapp.presentation.screens.progress
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Leaderboard
 import androidx.compose.material3.*
@@ -29,6 +31,8 @@ import com.example.quizapp.presentation.navigation.Destination
 import com.example.quizapp.presentation.utils.componentSizeByScreen
 import com.example.quizapp.presentation.utils.widthOfScreen
 import org.koin.androidx.compose.koinViewModel
+import android.content.res.Configuration
+import androidx.compose.ui.platform.LocalConfiguration
 
 @Composable
 fun ProgressRoute(
@@ -58,34 +62,24 @@ private fun Progress(
     navHostController: NavHostController
 ) {
     val screenWidth = widthOfScreen()
-    val maxLayoutWidth = if (screenWidth < 600.dp) Dp.Unspecified else 520.dp
+    val maxLayoutWidth = if (screenWidth < 600.dp) Dp.Unspecified else componentSizeByScreen(520.dp)
 
-    val circleSize = componentSizeByScreen(baseSize = 240.dp)
+    val configuration = LocalConfiguration.current
+    val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+
+    val circleSize = if (isLandscape) componentSizeByScreen(baseSize = 180.dp) else componentSizeByScreen(baseSize = 240.dp)
     val strokeWidth = componentSizeByScreen(baseSize = 14.dp)
     val buttonHeight = componentSizeByScreen(baseSize = 56.dp)
 
     Scaffold(
-        topBar = {
-            CenterAlignedTopAppBar(
-                title = {
-                    Text(
-                        text = stringResource(id = R.string.progress),
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Bold,
-                        color = White
-                    )
-                },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = PurpleGrey40),
-                modifier = Modifier.statusBarsPadding()
-            )
-        },
         bottomBar = { BottomNavigationBar(navHostController) }
     ) { paddingValues ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .background(PurpleGrey40)
-                .padding(paddingValues),
+                .safeDrawingPadding()
+                .padding(bottom = paddingValues.calculateBottomPadding()),
             contentAlignment = Alignment.TopCenter
         ) {
             when (uiState) {
@@ -104,9 +98,10 @@ private fun Progress(
                             .fillMaxHeight()
                             .widthIn(max = maxLayoutWidth)
                             .fillMaxWidth()
+                            .verticalScroll(rememberScrollState())
                             .padding(horizontal = 24.dp, vertical = 24.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.SpaceBetween
+                        verticalArrangement = if (isLandscape) Arrangement.spacedBy(24.dp) else Arrangement.SpaceBetween
                     ) {
 
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {

@@ -5,8 +5,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
@@ -46,7 +48,7 @@ fun LevelDifficulty(navHostController: NavHostController, category: String) {
     val level = remember { mutableStateOf("") }
 
     val screenWidth = widthOfScreen()
-    val maxLayoutWidth = if (screenWidth < 600.dp) Dp.Unspecified else 560.dp
+    val maxLayoutWidth = if (screenWidth < 600.dp) Dp.Unspecified else componentSizeByScreen(560.dp)
     val cardHeight = componentSizeByScreen(baseSize = 72.dp)
 
     LaunchedEffect(selectedOption) {
@@ -55,10 +57,15 @@ fun LevelDifficulty(navHostController: NavHostController, category: String) {
 
     Scaffold(
         topBar = {
-            Box(modifier = Modifier.fillMaxWidth().background(PurpleGrey40)) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(PurpleGrey40)
+            ) {
                 Row(
                     modifier = Modifier
                         .statusBarsPadding()
+                        .navigationBarsPadding()
                         .widthIn(max = maxLayoutWidth)
                         .fillMaxWidth()
                         .align(Alignment.TopStart)
@@ -84,32 +91,21 @@ fun LevelDifficulty(navHostController: NavHostController, category: String) {
                     }
                 }
             }
-        },
-        bottomBar = {
-            Box(modifier = Modifier.fillMaxWidth().background(PurpleGrey40).navigationBarsPadding(), contentAlignment = Alignment.Center) {
-                Box(modifier = Modifier.widthIn(max = maxLayoutWidth).fillMaxWidth().padding(horizontal = 24.dp, vertical = 24.dp)) {
-                    Button(
-                        onClick = {
-                            navHostController.navigate(Destination.StartQuiz.passArgument(category, level.value))
-                        },
-                        shape = RoundedCornerShape(16.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = Purple40, contentColor = White),
-                        modifier = Modifier.fillMaxWidth().height(componentSizeByScreen(baseSize = 56.dp))
-                    ) {
-                        Text(
-                            text = stringResource(id = R.string.getStarted),
-                            style = MaterialTheme.typography.labelMedium,
-                            fontWeight = FontWeight.Bold,
-                            color = White
-                        )
-                    }
-                }
-            }
         }
     ) { paddingValues ->
-        Box(modifier = Modifier.fillMaxSize().background(PurpleGrey40).padding(paddingValues), contentAlignment = Alignment.TopCenter) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(PurpleGrey40)
+                .padding(paddingValues),
+            contentAlignment = Alignment.TopCenter
+        ) {
             Column(
-                modifier = Modifier.widthIn(max = maxLayoutWidth).fillMaxWidth().padding(horizontal = 24.dp),
+                modifier = Modifier
+                    .widthIn(max = maxLayoutWidth)
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(horizontal = 24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Spacer(modifier = Modifier.height(16.dp))
@@ -146,6 +142,49 @@ fun LevelDifficulty(navHostController: NavHostController, category: String) {
                         )
                     }
                 }
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(PurpleGrey40)
+                        .navigationBarsPadding(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .widthIn(max = maxLayoutWidth)
+                            .fillMaxWidth()
+                            .padding(horizontal = 24.dp, vertical = 24.dp)
+                    ) {
+                        Button(
+                            onClick = {
+                                navHostController.navigate(
+                                    Destination.StartQuiz.passArgument(
+                                        category,
+                                        level.value
+                                    )
+                                )
+                            },
+                            shape = RoundedCornerShape(16.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Purple40,
+                                contentColor = White
+                            ),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(componentSizeByScreen(baseSize = 56.dp))
+                        ) {
+                            Text(
+                                text = stringResource(id = R.string.getStarted),
+                                style = MaterialTheme.typography.labelMedium,
+                                fontWeight = FontWeight.Bold,
+                                color = White
+                            )
+                        }
+                    }
+                }
             }
         }
     }
@@ -173,7 +212,9 @@ private fun DifficultyCard(
         border = borderStroke
     ) {
         Row(
-            modifier = Modifier.fillMaxSize().padding(horizontal = 24.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 24.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
@@ -187,12 +228,23 @@ private fun DifficultyCard(
             Box(
                 modifier = Modifier
                     .size(indicatorSize)
-                    .background(color = if (isSelected) Purple40 else Color.Transparent, shape = CircleShape)
-                    .border(width = 2.dp, color = if (isSelected) Purple40 else White.copy(alpha = 0.6f), shape = CircleShape),
+                    .background(
+                        color = if (isSelected) Purple40 else Color.Transparent,
+                        shape = CircleShape
+                    )
+                    .border(
+                        width = 2.dp,
+                        color = if (isSelected) Purple40 else White.copy(alpha = 0.6f),
+                        shape = CircleShape
+                    ),
                 contentAlignment = Alignment.Center
             ) {
                 if (isSelected) {
-                    Box(modifier = Modifier.size(indicatorSize * 0.4f).background(White, CircleShape))
+                    Box(
+                        modifier = Modifier
+                            .size(indicatorSize * 0.4f)
+                            .background(White, CircleShape)
+                    )
                 }
             }
         }
