@@ -12,7 +12,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -45,18 +44,18 @@ fun StartQuizRoute(
     val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
     val quizState = viewModel.quizState.collectAsStateWithLifecycle().value
 
-    val correctAnswer = rememberSaveable {
+    val correctAnswer = remember {
         { currentPage: Int ->
             viewModel.incrementCorrectAnswer(currentPage, navHostController)
         }
     }
-    val incorrectAnswer = rememberSaveable {
+    val incorrectAnswer = remember {
         { currentPage: Int ->
             viewModel.incrementIncorrectAnswer(currentPage, navHostController)
         }
     }
-    val retry = rememberSaveable { { viewModel.getQuiz() } }
-    val resetValues = rememberSaveable { { viewModel.resetValues() } }
+    val retry = remember { { viewModel.getQuiz() } }
+    val resetValues = remember { { viewModel.resetValues() } }
 
     StartQuiz(uiState, quizState, correctAnswer, incorrectAnswer, resetValues, retry)
 }
@@ -84,7 +83,7 @@ private fun StartQuiz(
                 }
 
                 is QuizViewModel.UIState.Error -> {
-                    ErrorScreen(stringResource(uiState.errorMessage)) { retry() }
+                    ErrorScreen(stringResource(uiState.errorMessage)) { retry }
                 }
 
                 is QuizViewModel.UIState.Success -> {
