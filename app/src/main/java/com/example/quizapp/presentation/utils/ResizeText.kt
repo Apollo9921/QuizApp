@@ -1,19 +1,16 @@
 package com.example.quizapp.presentation.utils
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun widthOfScreen() =
-    LocalContext.current.resources.displayMetrics.widthPixels.dp / LocalDensity.current.density
+fun widthOfScreen() = LocalConfiguration.current.screenWidthDp.dp
 
 @Composable
-fun heightOfScreen() =
-    LocalContext.current.resources.displayMetrics.heightPixels.dp / LocalDensity.current.density
+fun heightOfScreen() = LocalConfiguration.current.screenHeightDp.dp
 
 @Composable
 fun textSizeByScreen(baseSize: TextUnit): TextUnit {
