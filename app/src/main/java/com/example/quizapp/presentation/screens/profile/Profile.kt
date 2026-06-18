@@ -10,7 +10,6 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -41,14 +40,15 @@ import androidx.compose.ui.platform.LocalConfiguration
 import android.content.res.Configuration
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 @Composable
 fun ProfileRoute(
     navHostController: NavHostController,
     viewModel: ProfileViewModel = koinViewModel<ProfileViewModel>()
 ) {
-    val uiState = viewModel.uiState.collectAsState().value
-    val badgeState = viewModel.badgeState.collectAsState().value
+    val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
+    val badgeState = viewModel.badgeState.collectAsStateWithLifecycle().value
     val fetchUser = { viewModel.fetchUser() }
 
     LaunchedEffect(Unit) {

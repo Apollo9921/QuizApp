@@ -13,6 +13,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -44,8 +45,8 @@ fun LevelDifficulty(navHostController: NavHostController, category: String) {
         R.string.hard_translatable
     )
 
-    var selectedOption by remember { mutableIntStateOf(levelsDifficulty[0]) }
-    val level = remember { mutableStateOf("") }
+    var selectedOption by rememberSaveable { mutableIntStateOf(levelsDifficulty[0]) }
+    val level = rememberSaveable { mutableStateOf("") }
 
     val screenWidth = widthOfScreen()
     val maxLayoutWidth = if (screenWidth < 600.dp) Dp.Unspecified else componentSizeByScreen(560.dp)

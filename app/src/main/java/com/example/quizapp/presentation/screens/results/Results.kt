@@ -12,6 +12,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
@@ -23,6 +24,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.example.quizapp.R
 import com.example.quizapp.domain.model.results.Results
@@ -64,7 +66,7 @@ fun ResultsRoute(
     navHostController: NavHostController,
     viewModel: ResultsViewModel = koinViewModel<ResultsViewModel>()
 ) {
-    val state = viewModel.uiState.collectAsState().value
+    val state = viewModel.uiState.collectAsStateWithLifecycle().value
     val retry = { viewModel.fetchUserAndResults() }
 
     LaunchedEffect(Unit) {
@@ -206,7 +208,7 @@ private fun PieChart(
 
     val colors = listOf(Purple40, Pink40, White, Yellow, Red, DarkGreen, Green, Blue, Orange, Black)
 
-    var animationPlayed by remember { mutableStateOf(false) }
+    var animationPlayed by rememberSaveable { mutableStateOf(false) }
     var lastValue = 0f
 
     val animateSize by animateFloatAsState(

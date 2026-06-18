@@ -12,6 +12,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -20,6 +21,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.example.quizapp.R
 import com.example.quizapp.data.network.dto.TranslatedQuizResult
@@ -40,21 +42,21 @@ fun StartQuizRoute(
     level: String,
     viewModel: QuizViewModel = koinViewModel { parametersOf(category, level) }
 ) {
-    val uiState = viewModel.uiState.collectAsState().value
-    val quizState = viewModel.quizState.collectAsState().value
+    val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
+    val quizState = viewModel.quizState.collectAsStateWithLifecycle().value
 
-    val correctAnswer = remember {
+    val correctAnswer = rememberSaveable {
         { currentPage: Int ->
             viewModel.incrementCorrectAnswer(currentPage, navHostController)
         }
     }
-    val incorrectAnswer = remember {
+    val incorrectAnswer = rememberSaveable {
         { currentPage: Int ->
             viewModel.incrementIncorrectAnswer(currentPage, navHostController)
         }
     }
-    val retry = remember { { viewModel.getQuiz() } }
-    val resetValues = remember { { viewModel.resetValues() } }
+    val retry = rememberSaveable { { viewModel.getQuiz() } }
+    val resetValues = rememberSaveable { { viewModel.resetValues() } }
 
     StartQuiz(uiState, quizState, correctAnswer, incorrectAnswer, resetValues, retry)
 }
@@ -69,12 +71,6 @@ private fun StartQuiz(
     resetValues: () -> Unit,
     retry: () -> Unit
 ) {
-    DisposableEffect(Unit) {
-        onDispose {
-            resetValues()
-        }
-    }
-
     Scaffold { pv ->
         Box(
             modifier = Modifier
@@ -140,7 +136,7 @@ private fun ShowQuiz(
                 .fillMaxSize()
         ) { pageNumber ->
             val currentQuestion = data[pageNumber]
-            val options = remember(pageNumber) {
+            val options = remember(currentQuestion.question) {
                 val list = currentQuestion.incorrectAnswers.toMutableList()
                 list.add(currentQuestion.correctAnswer)
                 list.shuffled()

@@ -11,7 +11,6 @@ import androidx.compose.material.icons.filled.Leaderboard
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.StrokeCap
@@ -33,13 +32,14 @@ import com.example.quizapp.presentation.utils.widthOfScreen
 import org.koin.androidx.compose.koinViewModel
 import android.content.res.Configuration
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 @Composable
 fun ProgressRoute(
     navHostController: NavHostController,
     viewModel: ProgressViewModel = koinViewModel<ProgressViewModel>()
 ) {
-    val uiState = viewModel.uiState.collectAsState().value
+    val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
     val fetchUser = { viewModel.fetchUser() }
     val navigateToLeaderboard = { navHostController.navigate(Destination.Leaderboard.route) }
 

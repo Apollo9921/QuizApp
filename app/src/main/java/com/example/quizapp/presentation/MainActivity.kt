@@ -26,17 +26,12 @@ class MainActivity : ComponentActivity() {
             QuizAppTheme {
                 val user = FirebaseAuth.getInstance().currentUser
                 navHostController = rememberNavController()
-                if (user != null) {
-                    AnimationNav(
-                        navHostController = navHostController,
-                        startDestination = Destination.Categories.route
-                    )
-                } else {
-                    AnimationNav(
-                        navHostController = navHostController,
-                        startDestination = Destination.OnBoard.route
-                    )
-                }
+                val startDestination =
+                    if (user != null) Destination.Categories.route else Destination.OnBoard.route
+                AnimationNav(
+                    navHostController = navHostController,
+                    startDestination = startDestination
+                )
             }
         }
     }

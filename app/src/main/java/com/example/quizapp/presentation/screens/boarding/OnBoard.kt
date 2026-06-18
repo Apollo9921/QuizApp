@@ -18,7 +18,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,6 +39,7 @@ import com.example.quizapp.presentation.core.PurpleGrey40
 import com.example.quizapp.presentation.core.White
 import kotlinx.coroutines.*
 import android.content.res.Configuration
+import androidx.compose.runtime.saveable.rememberSaveable
 
 @Composable
 fun OnBoard(navHostController: NavHostController) {
@@ -50,7 +50,7 @@ fun OnBoard(navHostController: NavHostController) {
     val state = rememberPagerState(pageCount = { pageCount })
     val coroutineScope = rememberCoroutineScope()
 
-    val onBoardingTitle = remember {
+    val onBoardingTitle = rememberSaveable {
         listOf(
             R.string.onBoard1,
             R.string.onBoard2,
@@ -60,13 +60,15 @@ fun OnBoard(navHostController: NavHostController) {
         )
     }
 
-    val onBoardingAnimation = listOf(
-        R.raw.welcome,
-        R.raw.questions,
-        R.raw.results,
-        R.raw.badges,
-        R.raw.start,
-    )
+    val onBoardingAnimation = rememberSaveable {
+        listOf(
+            R.raw.welcome,
+            R.raw.questions,
+            R.raw.results,
+            R.raw.badges,
+            R.raw.start,
+        )
+    }
 
     val configuration = LocalConfiguration.current
     val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE

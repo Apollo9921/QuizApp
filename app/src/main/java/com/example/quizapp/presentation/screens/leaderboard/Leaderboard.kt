@@ -7,6 +7,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -15,6 +16,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.example.quizapp.R
 import com.example.quizapp.domain.util.PlayerLevel
@@ -38,7 +40,7 @@ fun LeaderboardRoute(
     navHostController: NavHostController,
     viewModel: LeaderboardViewModel = koinViewModel<LeaderboardViewModel>()
 ) {
-    val state = viewModel.uiState.collectAsState().value
+    val state = viewModel.uiState.collectAsStateWithLifecycle().value
     val getTopPlayersByLevel = { badge: String -> viewModel.getTopPlayersByLevel(badge) }
     val changeTab = { position: Int -> viewModel.changeTab(position) }
     val filterChanged = { filter: String -> viewModel.changeFilter(filter) }
@@ -268,7 +270,7 @@ private fun FilterSelector(
     currentFilter: String,
     onFilterSelected: (String) -> Unit
 ) {
-    var expanded by remember { mutableStateOf(false) }
+    var expanded by rememberSaveable { mutableStateOf(false) }
 
     val filters = if (selectedTab == 0) {
         PlayerLevel.entries.map { it.badgeName }
