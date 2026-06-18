@@ -1,6 +1,8 @@
 package com.example.quizapp.presentation.navigation
 
 import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.EaseInOut
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -76,19 +78,49 @@ fun AnimationNav(navHostController: NavHostController, startDestination: String)
         ) {
             RegisterRoute(onNavigateBack = { navHostController.navigateUp() })
         }
-        composable(route = Destination.Progress.route) {
+        composable(
+            route = Destination.Progress.route,
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None },
+            popEnterTransition = { EnterTransition.None },
+            popExitTransition = { ExitTransition.None }
+        ) {
             ProgressRoute(navHostController = navHostController)
         }
-        composable(route = Destination.Categories.route) {
+        composable(
+            route = Destination.Categories.route,
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None },
+            popEnterTransition = { EnterTransition.None },
+            popExitTransition = { ExitTransition.None }
+        ) {
             CategoriesRoute(navHostController = navHostController)
         }
-        composable(route = Destination.Leaderboard.route) {
+        composable(
+            route = Destination.Leaderboard.route,
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None },
+            popEnterTransition = { EnterTransition.None },
+            popExitTransition = { ExitTransition.None }
+        ) {
             LeaderboardRoute(navHostController = navHostController)
         }
-        composable(route = Destination.Results.route) {
+        composable(
+            route = Destination.Results.route,
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None },
+            popEnterTransition = { EnterTransition.None },
+            popExitTransition = { ExitTransition.None }
+        ) {
             ResultsRoute(navHostController = navHostController)
         }
-        composable(route = Destination.Profile.route) {
+        composable(
+            route = Destination.Profile.route,
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None },
+            popEnterTransition = { EnterTransition.None },
+            popExitTransition = { ExitTransition.None }
+        ) {
             ProfileRoute(navHostController = navHostController)
         }
         composable(
