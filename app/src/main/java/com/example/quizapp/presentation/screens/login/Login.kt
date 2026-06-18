@@ -39,15 +39,17 @@ fun LoginRoute(
 ) {
     val state = viewModel.uiState.collectAsStateWithLifecycle().value
     val onLoginClick =
-        { email: String, password: String ->
-            viewModel.loginWithEmail(
-                email,
-                password,
-                navHostController
-            )
-        }
-    val onGoogleSignInClick = { viewModel.startSignInByGoogle(navHostController) }
-    val navigateToRegister = { navHostController.navigate(Destination.Register.route) }
+       remember {
+           { email: String, password: String ->
+               viewModel.loginWithEmail(
+                   email,
+                   password,
+                   navHostController
+               )
+           }
+       }
+    val onGoogleSignInClick = remember { { viewModel.startSignInByGoogle(navHostController) } }
+    val navigateToRegister = remember { { navHostController.navigate(Destination.Register.route) } }
 
     LoginScreen(
         state = state,
