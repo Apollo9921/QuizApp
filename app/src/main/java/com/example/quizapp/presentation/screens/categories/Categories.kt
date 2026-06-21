@@ -2,11 +2,10 @@ package com.example.quizapp.presentation.screens.categories
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
-import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -16,10 +15,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -27,7 +30,6 @@ import com.example.quizapp.R
 import com.example.quizapp.presentation.components.BottomNavigationBar
 import com.example.quizapp.presentation.isSplashScreenOpen
 import com.example.quizapp.presentation.navigation.Destination
-import com.example.quizapp.presentation.core.Black
 import com.example.quizapp.presentation.core.PurpleGrey40
 import com.example.quizapp.presentation.core.White
 import com.example.quizapp.presentation.utils.componentSizeByScreen
@@ -94,30 +96,24 @@ private fun CategoriesScreen(
         else -> 4
     }
 
-    val maxLayoutWidth = if (screenWidth < 600.dp) Dp.Unspecified else  componentSizeByScreen(900.dp)
-
-    val gridPadding = componentSizeByScreen(baseSize = 20.dp)
-    val itemSpacingVertical = componentSizeByScreen(baseSize = 20.dp)
-    val itemSpacingHorizontal = componentSizeByScreen(baseSize = 16.dp)
-    val cardCornerRadius = componentSizeByScreen(baseSize = 20.dp)
-    val cardBorderThickness = componentSizeByScreen(baseSize = 2.dp)
+    val maxLayoutWidth = if (screenWidth < 600.dp) Dp.Unspecified else componentSizeByScreen(720.dp)
 
     Scaffold(
-        bottomBar = { BottomNavigationBar(navHostController) }
+        bottomBar = { BottomNavigationBar(navHostController) },
+        containerColor = PurpleGrey40
     ) { paddingValues ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(PurpleGrey40)
                 .safeDrawingPadding()
                 .padding(bottom = paddingValues.calculateBottomPadding()),
             contentAlignment = Alignment.TopCenter
         ) {
-            LazyVerticalStaggeredGrid(
-                columns = StaggeredGridCells.Fixed(columnCount),
-                verticalItemSpacing = itemSpacingVertical,
-                horizontalArrangement = Arrangement.spacedBy(itemSpacingHorizontal),
-                contentPadding = PaddingValues(gridPadding),
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(columnCount),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                contentPadding = PaddingValues(horizontal = 24.dp, vertical = 20.dp),
                 modifier = Modifier
                     .fillMaxHeight()
                     .widthIn(max = maxLayoutWidth)
@@ -125,40 +121,51 @@ private fun CategoriesScreen(
             ) {
                 items(categories.size) { index ->
                     Card(
-                        shape = RoundedCornerShape(cardCornerRadius),
-                        border = BorderStroke(width = cardBorderThickness, color = White),
+                        shape = RoundedCornerShape(20.dp),
+                        border = BorderStroke(width = 1.dp, color = White.copy(alpha = 0.15f)),
                         colors = CardDefaults.cardColors(
-                            containerColor = White,
-                            contentColor = Black,
-                            disabledContainerColor = White,
-                            disabledContentColor = Black
+                            containerColor = White.copy(alpha = 0.06f)
                         ),
                         modifier = Modifier
                             .fillMaxWidth()
                             .aspectRatio(1f)
+                            .clip(RoundedCornerShape(20.dp))
                             .clickable { navigateToCategory(index) }
                     ) {
                         Column(
                             modifier = Modifier
                                 .fillMaxSize()
-                                .padding(componentSizeByScreen(baseSize = 8.dp)),
+                                .padding(12.dp),
                             verticalArrangement = Arrangement.Center,
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            Image(
-                                painter = painterResource(id = categoriesImages[index]),
-                                contentDescription = null,
-                                modifier = Modifier.fillMaxSize(0.5f),
-                                contentScale = ContentScale.Fit
-                            )
+                            Box(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .fillMaxWidth(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Image(
+                                    painter = painterResource(id = categoriesImages[index]),
+                                    contentDescription = null,
+                                    modifier = Modifier.fillMaxSize(0.65f),
+                                    contentScale = ContentScale.Fit
+                                )
+                            }
 
-                            Spacer(modifier = Modifier.height(componentSizeByScreen(baseSize = 8.dp)))
+                            Spacer(modifier = Modifier.height(4.dp))
 
                             Text(
                                 text = stringResource(id = categories[index]),
-                                color = Black,
+                                color = White,
                                 style = MaterialTheme.typography.labelSmall,
-                                modifier = Modifier.padding(horizontal = 4.dp)
+                                fontWeight = FontWeight.Bold,
+                                textAlign = TextAlign.Center,
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 4.dp)
                             )
                         }
                     }
