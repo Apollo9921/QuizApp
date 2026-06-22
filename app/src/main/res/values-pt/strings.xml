@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">QuizApp</string>
+    <string name="app_name">Quiz Rise</string>
     <string name="onBoard1">Bem-vindo ao aplicativo QuizApp</string>
     <string name="onBoard2">Responda a perguntas de diversas categorias e níveis diferentes.</string>
     <string name="onBoard3">Veja seus resultados</string>

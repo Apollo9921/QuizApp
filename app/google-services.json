@@ -7,9 +7,46 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:485509817884:android:72fc3f0ce3d5af1c98e1d9",
+        "android_client_info": {
+          "package_name": "com.apollo9921.quizrise"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "485509817884-i87os0iqsog8dlds9vr5egm2h7ojml01.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.apollo9921.quizrise",
+            "certificate_hash": "cc73d433493fd0180b3aa999075fc7b61c95729c"
+          }
+        },
+        {
+          "client_id": "485509817884-5neagpm6re9h9blj49khrgi5he3dr4m2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAtEK04FCV8rjghVquCGpOwgKWxt6Q-kTM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "485509817884-5neagpm6re9h9blj49khrgi5he3dr4m2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:485509817884:android:4427b7c0360b038198e1d9",
         "android_client_info": {
-          "package_name": "com.example.quizapp"
+          "package_name": "com.apollo9921.quizrise"
         }
       },
       "oauth_client": [
@@ -17,7 +54,7 @@
           "client_id": "485509817884-6dcsum5rrbf365krngflt50inddan339.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.quizapp",
+            "package_name": "com.apollo9921.quizrise",
             "certificate_hash": "cc73d433493fd0180b3aa999075fc7b61c95729c"
           }
         },

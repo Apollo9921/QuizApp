@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">QuizApp</string>
+    <string name="app_name">Quiz Rise</string>
     <string name="register">Registro</string>
     <string name="have_an_account">¿Ya tienes una cuenta? Inicia sesión</string>
     <string name="onBoard1">Bienvenido a la aplicación de preguntas</string>

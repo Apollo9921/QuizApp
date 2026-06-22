@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">QuizApp</string>
+    <string name="app_name" translatable="false">Quiz Rise</string>
     <string name="onBoard1">Welcome to the QuizApp</string>
     <string name="onBoard2">Answer questions from many categories, from different levels</string>
     <string name="onBoard3">See your results</string>
