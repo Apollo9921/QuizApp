@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.quizapp.R
+import com.example.quizapp.presentation.components.TopBar
 import com.example.quizapp.presentation.core.Black
 import com.example.quizapp.presentation.core.Purple40
 import com.example.quizapp.presentation.core.PurpleGrey40
@@ -58,40 +59,10 @@ fun LevelDifficulty(navHostController: NavHostController, category: String) {
 
     Scaffold(
         topBar = {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(PurpleGrey40)
-            ) {
-                Row(
-                    modifier = Modifier
-                        .statusBarsPadding()
-                        .navigationBarsPadding()
-                        .widthIn(max = maxLayoutWidth)
-                        .fillMaxWidth()
-                        .align(Alignment.TopStart)
-                        .padding(horizontal = 8.dp, vertical = 8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .size(componentSizeByScreen(baseSize = 50.dp))
-                            .background(White.copy(alpha = 0.1f), RoundedCornerShape(24.dp)),
-                    ) {
-                        IconButton(
-                            onClick = { navHostController.navigateUp() },
-                            modifier = Modifier.size(componentSizeByScreen(baseSize = 48.dp))
-                        ) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = "Back",
-                                tint = White,
-                                modifier = Modifier.size(componentSizeByScreen(baseSize = 24.dp))
-                            )
-                        }
-                    }
-                }
-            }
+            TopBar(
+                backgroundColor = PurpleGrey40,
+                isBackEnabled = true,
+                onBackClicked = { navHostController.navigateUp() })
         }
     ) { paddingValues ->
         Box(

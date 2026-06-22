@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.quizapp.R
+import com.example.quizapp.presentation.components.TopBar
 import com.example.quizapp.presentation.navigation.Destination
 import com.example.quizapp.presentation.core.Black
 import com.example.quizapp.presentation.core.PurpleGrey40
@@ -68,19 +69,11 @@ private fun QuizResultScreen(
 
     Scaffold(
         topBar = {
-            CenterAlignedTopAppBar(
-                title = {
-                    Text(
-                        text = stringResource(id = R.string.results),
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Bold,
-                        color = White
-                    )
-                },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = PurpleGrey40
-                ),
-                modifier = Modifier.statusBarsPadding()
+            TopBar(
+                backgroundColor = PurpleGrey40,
+                isBackEnabled = false,
+                onBackClicked = { false },
+                title = stringResource(id = R.string.results)
             )
         },
         containerColor = PurpleGrey40
