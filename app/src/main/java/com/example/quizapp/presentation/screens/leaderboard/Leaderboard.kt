@@ -104,12 +104,12 @@ private fun LeaderboardScreen(
         Box(
             modifier = Modifier
                 .fillMaxSize()
+                .navigationBarsPadding()
                 .padding(top = paddingValues.calculateTopPadding()),
             contentAlignment = Alignment.TopCenter
         ) {
             Box(
-                modifier = Modifier
-                    .fillMaxSize()
+                modifier = Modifier.fillMaxSize()
             ) {
                 Column(modifier = Modifier.fillMaxSize()) {
                     TabRow(
