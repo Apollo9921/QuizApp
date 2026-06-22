@@ -81,4 +81,5 @@
     <string name="overall_average">Média Geral</string>
     <string name="logout">Terminar Sessão</string>
     <string name="terms_private_policy">Termos e Política de Privacidade</string>
+    <string name="correct_answers">Respostas Corretas</string>
 </resources>

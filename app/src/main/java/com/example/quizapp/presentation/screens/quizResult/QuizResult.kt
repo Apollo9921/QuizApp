@@ -116,7 +116,7 @@ private fun QuizResultScreen(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            text = "Respostas Corretas",
+                            text = stringResource(R.string.correct_answers),
                             style = MaterialTheme.typography.labelSmall,
                             color = White.copy(alpha = 0.5f),
                             fontWeight = FontWeight.Bold,
