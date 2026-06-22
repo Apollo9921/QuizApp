@@ -2,21 +2,29 @@ package com.example.quizapp.presentation.screens.quizResult
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.quizapp.R
 import com.example.quizapp.presentation.navigation.Destination
-import com.example.quizapp.presentation.core.Purple40
+import com.example.quizapp.presentation.core.Black
 import com.example.quizapp.presentation.core.PurpleGrey40
 import com.example.quizapp.presentation.core.White
+import com.example.quizapp.presentation.utils.widthOfScreen
+import com.example.quizapp.presentation.utils.componentSizeByScreen
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -45,6 +53,7 @@ fun QuizResultRoute(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun QuizResultScreen(
     navHostController: NavHostController,
@@ -52,70 +61,121 @@ private fun QuizResultScreen(
     total: Int,
     pointsReceived: Int,
 ) {
+    BackHandler(enabled = true) {}
+
+    val screenWidth = widthOfScreen()
+    val maxLayoutWidth = if (screenWidth < 600.dp) Dp.Unspecified else componentSizeByScreen(480.dp)
+
     Scaffold(
-        topBar = { TopBar() }
-    ) { it ->
-        BackHandler(enabled = true) {}
-        Column(
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = {
+                    Text(
+                        text = stringResource(id = R.string.results),
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = White
+                    )
+                },
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = PurpleGrey40
+                ),
+                modifier = Modifier.statusBarsPadding()
+            )
+        },
+        containerColor = PurpleGrey40
+    ) { paddingValues ->
+        Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(PurpleGrey40)
-                .padding(top = it.calculateTopPadding()),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+                .padding(paddingValues)
+                .padding(horizontal = 24.dp),
+            contentAlignment = Alignment.Center
         ) {
-            Text(
-                style = MaterialTheme.typography.labelMedium,
-                text = "$correctAnswers/$total",
-                color = White
-            )
-            Spacer(modifier = Modifier.padding(20.dp))
-            Text(
-                style = MaterialTheme.typography.titleLarge,
-                text = stringResource(id = R.string.pointsReceived, pointsReceived),
-                color = White
-            )
-            Spacer(modifier = Modifier.padding(20.dp))
-            Button(
-                onClick = {
-                    navHostController.navigate(Destination.Categories.route)
-                },
-                shape = RoundedCornerShape(20.dp),
-                border = BorderStroke(width = 2.dp, color = White),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Purple40,
-                    contentColor = Purple40,
-                    disabledContentColor = Purple40,
-                    disabledContainerColor = Purple40
-                ),
+            Column(
                 modifier = Modifier
+                    .widthIn(max = maxLayoutWidth)
                     .fillMaxWidth()
-                    .padding(start = 40.dp, end = 40.dp)
+                    .verticalScroll(rememberScrollState()),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
             ) {
-                Text(
-                    style = MaterialTheme.typography.labelMedium,
-                    text = stringResource(id = R.string.finish),
-                    color = White,
-                    modifier = Modifier.padding(10.dp)
-                )
+
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(28.dp),
+                    border = BorderStroke(1.dp, White.copy(alpha = 0.15f)),
+                    colors = CardDefaults.cardColors(
+                        containerColor = White.copy(alpha = 0.06f)
+                    )
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 36.dp, horizontal = 24.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = "Respostas Corretas",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = White.copy(alpha = 0.5f),
+                            fontWeight = FontWeight.Bold,
+                            textAlign = TextAlign.Center
+                        )
+
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        Text(
+                            text = "$correctAnswers / $total",
+                            style = MaterialTheme.typography.titleLarge,
+                            color = White,
+                            fontWeight = FontWeight.Black,
+                            textAlign = TextAlign.Center
+                        )
+
+                        Spacer(modifier = Modifier.height(24.dp))
+                        HorizontalDivider(color = White.copy(alpha = 0.1f), modifier = Modifier.padding(horizontal = 16.dp))
+                        Spacer(modifier = Modifier.height(24.dp))
+
+                        Text(
+                            text = stringResource(id = R.string.pointsReceived, pointsReceived).uppercase(),
+                            style = MaterialTheme.typography.labelMedium,
+                            color = White,
+                            fontWeight = FontWeight.ExtraBold,
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(componentSizeByScreen(baseSize = 40.dp)))
+
+                Card(
+                    shape = RoundedCornerShape(20.dp),
+                    colors = CardDefaults.cardColors(containerColor = White),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(componentSizeByScreen(baseSize = 54.dp))
+                        .clip(RoundedCornerShape(20.dp))
+                        .clickable {
+                            navHostController.navigate(Destination.Categories.route) {
+                                popUpTo(Destination.Categories.route) { inclusive = true }
+                            }
+                        }
+                ) {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.finish),
+                            color = Black,
+                            style = MaterialTheme.typography.labelMedium,
+                            fontWeight = FontWeight.Bold,
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                }
             }
         }
-    }
-}
-
-@Composable
-private fun TopBar() {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(PurpleGrey40)
-            .padding(20.dp),
-        horizontalArrangement = Arrangement.Center
-    ) {
-        Text(
-            style = MaterialTheme.typography.titleLarge,
-            text = stringResource(id = R.string.results),
-            color = White
-        )
     }
 }
