@@ -1,20 +1,25 @@
 package com.example.quizapp.presentation.screens.profile
 
+import android.content.res.Configuration
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -23,6 +28,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
@@ -30,17 +36,13 @@ import coil.request.ImageRequest
 import com.example.quizapp.R
 import com.example.quizapp.domain.model.user.User
 import com.example.quizapp.presentation.components.BottomNavigationBar
-import com.example.quizapp.presentation.core.Black
+import com.example.quizapp.presentation.components.SettingsDialog
 import com.example.quizapp.presentation.core.PurpleGrey40
 import com.example.quizapp.presentation.core.White
+import com.example.quizapp.presentation.core.getTypography
 import com.example.quizapp.presentation.utils.componentSizeByScreen
 import com.example.quizapp.presentation.utils.formatTotalCount
 import org.koin.androidx.compose.koinViewModel
-import androidx.compose.ui.platform.LocalConfiguration
-import android.content.res.Configuration
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 @Composable
 fun ProfileRoute(
@@ -54,15 +56,27 @@ fun ProfileRoute(
     LaunchedEffect(Unit) {
         fetchUser()
     }
+    var showSettings by remember { mutableStateOf(false) }
 
     ProfileScreen(
         navHostController = navHostController,
         uiState = uiState,
         badgeState = badgeState,
-        onSettingsClick = {
-            //TODO NAVIGATE TO SETTINGS
-        }
+        onSettingsClick = { showSettings = true }
     )
+
+    if (showSettings) {
+        SettingsDialog(
+            onDismissRequest = { showSettings = false },
+            onPrivacyPolicyClick = {
+                // TODO: Open Privacy Policy Link
+            },
+            onLogoutClick = {
+                showSettings = false
+                // TODO: Call ViewModel to logout the session
+            }
+        )
+    }
 }
 
 @Composable
@@ -73,12 +87,12 @@ private fun ProfileScreen(
     onSettingsClick: () -> Unit = {}
 ) {
     Scaffold(
-        bottomBar = { BottomNavigationBar(navHostController) }
+        bottomBar = { BottomNavigationBar(navHostController) },
+        containerColor = PurpleGrey40
     ) { paddingValues ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(PurpleGrey40)
                 .padding(bottom = paddingValues.calculateBottomPadding())
                 .verticalScroll(rememberScrollState())
         ) {
@@ -94,10 +108,7 @@ private fun ProfileScreen(
                     )
                     ShowProfile(user, painter, badgeState, onSettingsClick)
                 }
-
-                else -> {
-
-                }
+                else -> {}
             }
         }
     }
@@ -116,21 +127,15 @@ private fun ShowProfile(
     val configuration = LocalConfiguration.current
     val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 
-    val topPadding =
-        if (isLandscape) componentSizeByScreen(baseSize = 120.dp) else componentSizeByScreen(
-            baseSize = 240.dp
-        )
+    val topPadding = if (isLandscape) componentSizeByScreen(baseSize = 120.dp) else componentSizeByScreen(baseSize = 240.dp)
     val iconContainerSize = componentSizeByScreen(baseSize = 44.dp)
     val badgeIconSize = componentSizeByScreen(baseSize = 60.dp)
-
 
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.TopCenter
     ) {
-        Box(
-            modifier = Modifier.fillMaxSize()
-        ) {
+        Box(modifier = Modifier.fillMaxSize()) {
             IconButton(
                 onClick = onSettingsClick,
                 modifier = Modifier
@@ -138,7 +143,7 @@ private fun ShowProfile(
                     .align(Alignment.TopEnd)
                     .padding(top = 12.dp, end = 24.dp)
                     .size(componentSizeByScreen(baseSize = 40.dp))
-                    .background(White.copy(alpha = 0.2f), CircleShape)
+                    .background(White.copy(alpha = 0.12f), CircleShape)
             ) {
                 Icon(
                     imageVector = Icons.Default.Settings,
@@ -167,16 +172,16 @@ private fun ShowProfile(
                     .fillMaxSize()
                     .padding(top = topPadding)
                     .clip(RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp))
-                    .background(White)
+                    .background(PurpleGrey40)
                     .padding(horizontal = 24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Spacer(modifier = Modifier.height(componentSizeByScreen(baseSize = 24.dp)))
+                Spacer(modifier = Modifier.height(componentSizeByScreen(baseSize = 16.dp)))
 
                 Text(
                     text = user.name,
                     style = MaterialTheme.typography.titleLarge,
-                    color = Black,
+                    color = White,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center
                 )
@@ -204,7 +209,7 @@ private fun ShowProfile(
                     )
                 }
 
-                Spacer(modifier = Modifier.height(componentSizeByScreen(baseSize = 16.dp)))
+                Spacer(modifier = Modifier.height(16.dp))
 
                 BadgeCard(
                     badgeIcon = painterResource(id = badgeState.badge),
@@ -213,7 +218,7 @@ private fun ShowProfile(
                     badgeIconSize = badgeIconSize
                 )
 
-                Spacer(modifier = Modifier.height(componentSizeByScreen(baseSize = 32.dp)))
+                Spacer(modifier = Modifier.height(32.dp))
             }
         }
     }
@@ -229,7 +234,8 @@ private fun StatCard(
 ) {
     Card(
         modifier = modifier,
-        colors = CardDefaults.cardColors(containerColor = PurpleGrey40.copy(alpha = 0.08f)),
+        border = BorderStroke(width = 1.dp, color = White.copy(alpha = 0.15f)),
+        colors = CardDefaults.cardColors(containerColor = White.copy(alpha = 0.06f)),
         shape = RoundedCornerShape(20.dp)
     ) {
         Column(
@@ -242,11 +248,12 @@ private fun StatCard(
             Box(
                 modifier = Modifier
                     .size(iconContainerSize)
-                    .background(White, CircleShape),
+                    .background(White.copy(alpha = 0.12f), CircleShape),
                 contentAlignment = Alignment.Center
             ) {
                 Image(
                     painter = icon,
+                    colorFilter = ColorFilter.tint(White),
                     contentDescription = null,
                     modifier = Modifier.size(iconContainerSize * 0.55f)
                 )
@@ -254,13 +261,13 @@ private fun StatCard(
             Text(
                 text = title,
                 style = MaterialTheme.typography.labelSmall,
-                color = Black.copy(alpha = 0.6f),
+                color = White.copy(alpha = 0.6f),
                 fontWeight = FontWeight.Medium
             )
             Text(
                 text = value,
                 style = MaterialTheme.typography.labelMedium,
-                color = Black,
+                color = White,
                 fontWeight = FontWeight.Bold
             )
         }
@@ -276,9 +283,9 @@ private fun BadgeCard(
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = White),
-        shape = RoundedCornerShape(20.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        border = BorderStroke(width = 1.dp, color = White.copy(alpha = 0.15f)),
+        colors = CardDefaults.cardColors(containerColor = White.copy(alpha = 0.06f)),
+        shape = RoundedCornerShape(20.dp)
     ) {
         Row(
             modifier = Modifier
@@ -300,13 +307,13 @@ private fun BadgeCard(
                 Text(
                     text = stringResource(R.string.badge).uppercase(),
                     style = MaterialTheme.typography.displaySmall,
-                    color = PurpleGrey40,
+                    color = White.copy(alpha = 0.5f),
                     fontWeight = FontWeight.Bold
                 )
                 Text(
                     text = badgeName,
                     style = MaterialTheme.typography.labelMedium,
-                    color = Black,
+                    color = White,
                     fontWeight = FontWeight.Bold
                 )
 
@@ -318,8 +325,8 @@ private fun BadgeCard(
                         .fillMaxWidth()
                         .height(componentSizeByScreen(baseSize = 8.dp))
                         .clip(CircleShape),
-                    color = PurpleGrey40,
-                    trackColor = PurpleGrey40.copy(alpha = 0.15f)
+                    color = White,
+                    trackColor = White.copy(alpha = 0.15f)
                 )
             }
         }
@@ -328,29 +335,15 @@ private fun BadgeCard(
 
 @Preview(showBackground = true)
 @Composable
-private fun ProfileScreenPreview() {
-    val mockUser = User(
-        name = "Golden Hercules",
-        totalPoints = 750,
-        badge = "Newbie"
-    )
+private fun ProfileScreenDarkPreview() {
+    val mockUser = User(name = "Golden Hercules", totalPoints = 750, badge = "Newbie")
+    val mockBadge = ProfileViewModel.Badge(badge = R.drawable.newbie, badgeLevel = 1000)
 
-    val mockBadge = ProfileViewModel.Badge(
-        badge = R.drawable.newbie,
-        badgeLevel = 1000
-    )
-
-    MaterialTheme {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(PurpleGrey40)
-        ) {
-            val dummyPainter = rememberAsyncImagePainter(model = "")
-
+    MaterialTheme(typography = getTypography()) {
+        Box(modifier = Modifier.fillMaxSize().background(PurpleGrey40)) {
             ShowProfile(
                 user = mockUser,
-                painter = dummyPainter,
+                painter = rememberAsyncImagePainter(model = ""),
                 badgeState = mockBadge,
                 onSettingsClick = {}
             )

@@ -79,4 +79,6 @@
     <string name="keep_answer_correctly">Continua a responder acertadamente para chegares ao topo.</string>
     <string name="choose_level_difficulty">Escolhe a dificuldade ideal para o teu desafio de hoje.</string>
     <string name="overall_average">Média Geral</string>
+    <string name="logout">Terminar Sessão</string>
+    <string name="terms_private_policy">Termos e Política de Privacidade</string>
 </resources>
