@@ -24,10 +24,6 @@ class ResultsViewModel(
         data class Error(val message: Int) : UIState()
     }
 
-    init {
-        fetchUserAndResults()
-    }
-
     fun fetchUserAndResults() {
         viewModelScope.launch {
             try {

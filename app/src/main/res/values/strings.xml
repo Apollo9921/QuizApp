@@ -87,4 +87,11 @@
     <string name="tab_category">By Category</string>
     <string name="current_user">%1$s (You)</string>
     <string name="user_position">%1$d º</string>
+    <string name="almost_level_up">Almost Level Up!</string>
+    <string name="keep_answer_correctly">Keep answering correctly to reach the top.</string>
+    <string name="choose_level_difficulty">Choose the ideal difficulty for your challenge today.</string>
+    <string name="overall_average">Overall Average</string>
+    <string name="logout">Logout</string>
+    <string name="terms_private_policy">Terms and Privacy Policy</string>
+    <string name="correct_answers">Correct Answers</string>
 </resources>

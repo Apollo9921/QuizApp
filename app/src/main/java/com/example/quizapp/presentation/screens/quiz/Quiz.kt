@@ -7,21 +7,29 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.example.quizapp.R
 import com.example.quizapp.data.network.dto.TranslatedQuizResult
 import com.example.quizapp.presentation.components.ErrorScreen
 import com.example.quizapp.presentation.components.Loading
-import com.example.quizapp.presentation.core.Black
 import com.example.quizapp.presentation.core.PurpleGrey40
 import com.example.quizapp.presentation.core.White
+import com.example.quizapp.presentation.utils.componentSizeByScreen
+import com.example.quizapp.presentation.utils.widthOfScreen
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
@@ -33,29 +41,26 @@ fun StartQuizRoute(
     level: String,
     viewModel: QuizViewModel = koinViewModel { parametersOf(category, level) }
 ) {
-    val uiState = viewModel.uiState.collectAsState().value
-    val quizState = viewModel.quizState.collectAsState().value
+    val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
+    val quizState = viewModel.quizState.collectAsStateWithLifecycle().value
+
     val correctAnswer = remember {
         { currentPage: Int ->
-            viewModel.incrementCorrectAnswer(
-                currentPage,
-                navHostController
-            )
+            viewModel.incrementCorrectAnswer(currentPage, navHostController)
         }
     }
     val incorrectAnswer = remember {
         { currentPage: Int ->
-            viewModel.incrementIncorrectAnswer(
-                currentPage,
-                navHostController
-            )
+            viewModel.incrementIncorrectAnswer(currentPage, navHostController)
         }
     }
     val retry = remember { { viewModel.getQuiz() } }
     val resetValues = remember { { viewModel.resetValues() } }
+
     StartQuiz(uiState, quizState, correctAnswer, incorrectAnswer, resetValues, retry)
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun StartQuiz(
     uiState: QuizViewModel.UIState,
@@ -65,61 +70,38 @@ private fun StartQuiz(
     resetValues: () -> Unit,
     retry: () -> Unit
 ) {
-    DisposableEffect(Unit) {
-        onDispose {
-            resetValues()
-        }
-    }
+    Scaffold { pv ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(PurpleGrey40)
+                .padding(pv)
+        ) {
+            when (uiState) {
+                QuizViewModel.UIState.Loading -> {
+                    Loading(message = stringResource(R.string.loading_translations))
+                }
 
-    Scaffold(
-        topBar = { TopBar() },
-        modifier = Modifier
-            .fillMaxSize()
-            .background(PurpleGrey40)
-            .padding(20.dp)
-    ) { pv ->
-        when (uiState) {
-            QuizViewModel.UIState.Loading -> {
-                Loading(message = stringResource(R.string.loading_translations))
-            }
+                is QuizViewModel.UIState.Error -> {
+                    ErrorScreen(stringResource(uiState.errorMessage)) { retry }
+                }
 
-            is QuizViewModel.UIState.Error -> {
-                ErrorScreen(stringResource(uiState.errorMessage)) { retry() }
-            }
-
-            is QuizViewModel.UIState.Success -> {
-                ShowQuiz(
-                    pv,
-                    uiState.quiz,
-                    correctAnswer,
-                    incorrectAnswer,
-                    quizState
-                )
+                is QuizViewModel.UIState.Success -> {
+                    ShowQuiz(
+                        data = uiState.quiz,
+                        correctAnswer = correctAnswer,
+                        incorrectAnswer = incorrectAnswer,
+                        quizState = quizState
+                    )
+                }
             }
         }
-    }
-}
-
-@Composable
-private fun TopBar() {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(PurpleGrey40),
-        horizontalArrangement = Arrangement.Center
-    ) {
-        Text(
-            style = MaterialTheme.typography.titleLarge,
-            text = stringResource(id = R.string.quiz),
-            color = White
-        )
     }
 }
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun ShowQuiz(
-    it: PaddingValues,
     data: List<TranslatedQuizResult>,
     correctAnswer: (Int) -> Unit,
     incorrectAnswer: (Int) -> Unit,
@@ -138,18 +120,22 @@ private fun ShowQuiz(
         }
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(PurpleGrey40)
-            .padding(top = it.calculateTopPadding())
+    val screenWidth = widthOfScreen()
+    val maxLayoutWidth = if (screenWidth < 600.dp) Dp.Unspecified else componentSizeByScreen(560.dp)
+
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.TopCenter
     ) {
         HorizontalPager(
             state = state,
-            userScrollEnabled = false
+            userScrollEnabled = false,
+            modifier = Modifier
+                .widthIn(max = maxLayoutWidth)
+                .fillMaxSize()
         ) { pageNumber ->
             val currentQuestion = data[pageNumber]
-            val options = remember(pageNumber) {
+            val options = remember(currentQuestion.question) {
                 val list = currentQuestion.incorrectAnswers.toMutableList()
                 list.add(currentQuestion.correctAnswer)
                 list.shuffled()
@@ -157,25 +143,49 @@ private fun ShowQuiz(
 
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(horizontal = 24.dp, vertical = 16.dp)
             ) {
-                Text(
-                    text = currentQuestion.question,
-                    color = White,
-                    style = MaterialTheme.typography.labelMedium,
-                    modifier = Modifier.padding(16.dp)
-                )
-
-                Spacer(modifier = Modifier.padding(10.dp))
-
-                options.forEach { answer ->
-                    Card(
-                        shape = RoundedCornerShape(20.dp),
-                        border = BorderStroke(width = 3.dp, color = White),
-                        colors = CardDefaults.cardColors(containerColor = Black),
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = CardDefaults.cardColors(containerColor = White.copy(alpha = 0.08f)),
+                    shape = RoundedCornerShape(24.dp)
+                ) {
+                    Text(
+                        text = currentQuestion.question,
+                        color = White,
+                        style = MaterialTheme.typography.labelMedium,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 20.dp, vertical = 8.dp)
+                            .padding(24.dp)
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(componentSizeByScreen(baseSize = 24.dp)))
+
+                options.forEachIndexed { index, answer ->
+                    val optionLetter = when (index) {
+                        0 -> "A"
+                        1 -> "B"
+                        2 -> "C"
+                        3 -> "D"
+                        else -> ""
+                    }
+
+                    Card(
+                        shape = RoundedCornerShape(20.dp),
+                        border = BorderStroke(width = 1.dp, color = White.copy(alpha = 0.15f)),
+                        colors = CardDefaults.cardColors(
+                            containerColor = White.copy(alpha = 0.06f)
+                        ),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 6.dp)
+                            .clip(RoundedCornerShape(20.dp))
                             .clickable {
                                 val currentPage = state.currentPage
                                 coroutineScope.launch {
@@ -190,25 +200,61 @@ private fun ShowQuiz(
                                 }
                             }
                     ) {
-                        Text(
-                            text = answer,
-                            color = White,
-                            style = MaterialTheme.typography.labelMedium,
-                            modifier = Modifier.padding(20.dp)
-                        )
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 18.dp, vertical = 16.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(16.dp)
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .size(componentSizeByScreen(baseSize = 36.dp))
+                                    .background(
+                                        color = White.copy(alpha = 0.12f),
+                                        shape = RoundedCornerShape(10.dp)
+                                    ),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = optionLetter,
+                                    color = White.copy(alpha = 0.85f),
+                                    style = MaterialTheme.typography.labelSmall,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
+
+                            Text(
+                                text = answer,
+                                color = White,
+                                style = MaterialTheme.typography.labelMedium,
+                                fontWeight = FontWeight.Medium,
+                                textAlign = TextAlign.Start,
+                                modifier = Modifier.weight(1f)
+                            )
+                        }
                     }
                 }
-                Spacer(modifier = Modifier.weight(1f))
+
+                Spacer(modifier = Modifier.height(componentSizeByScreen(baseSize = 40.dp)))
+
                 Text(
                     text = "${quizState.progress}",
                     color = White,
-                    style = MaterialTheme.typography.titleLarge
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.ExtraBold
                 )
+
+                Spacer(modifier = Modifier.height(4.dp))
+
                 Text(
                     text = "Question ${pageNumber + 1} / ${data.size}",
-                    color = White,
-                    style = MaterialTheme.typography.labelMedium
+                    color = White.copy(alpha = 0.6f),
+                    style = MaterialTheme.typography.labelSmall,
+                    fontWeight = FontWeight.Medium
                 )
+
+                Spacer(modifier = Modifier.height(24.dp))
             }
         }
     }

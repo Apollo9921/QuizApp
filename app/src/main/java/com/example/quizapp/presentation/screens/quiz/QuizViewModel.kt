@@ -29,6 +29,7 @@ class QuizViewModel(
     val quizState: StateFlow<QuizState> = _quizState
 
     private var timerJob: Job? = null
+    private var hasNavigatedToResult = false
 
     data class QuizState(
         var progress: Int = 20,
@@ -131,7 +132,8 @@ class QuizViewModel(
 
     private fun checkCurrentPage(currentPage: Int, navHostController: NavHostController) {
         val previousState = _uiState.value as UIState.Success
-        if (currentPage >= previousState.quiz.size - 1) {
+        if (currentPage >= previousState.quiz.size - 1 && !hasNavigatedToResult) {
+            hasNavigatedToResult = true
             navHostController.navigate(
                 Destination.QuizResult.passArgument(
                     category = category,
@@ -145,6 +147,7 @@ class QuizViewModel(
 
     fun resetValues() {
         timerJob?.cancel()
+        hasNavigatedToResult = false
         _quizState.value = QuizState()
     }
 }

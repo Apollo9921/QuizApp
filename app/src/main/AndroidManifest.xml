@@ -18,7 +18,7 @@
         <activity
             android:name=".presentation.MainActivity"
             android:exported="true"
-            android:screenOrientation="portrait"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|density|keyboard|keyboardHidden|navigation|uiMode|fontScale"
             android:theme="@style/Theme.QuizApp.MySplash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

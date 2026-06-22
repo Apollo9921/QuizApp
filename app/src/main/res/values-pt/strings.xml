@@ -75,4 +75,11 @@
     <string name="tab_category">Por Categoria</string>
     <string name="current_user">%1$s (Tu)</string>
     <string name="user_position">%1$d º</string>
+    <string name="almost_level_up">Quase a Subir de Nível!</string>
+    <string name="keep_answer_correctly">Continua a responder acertadamente para chegares ao topo.</string>
+    <string name="choose_level_difficulty">Escolhe a dificuldade ideal para o teu desafio de hoje.</string>
+    <string name="overall_average">Média Geral</string>
+    <string name="logout">Terminar Sessão</string>
+    <string name="terms_private_policy">Termos e Política de Privacidade</string>
+    <string name="correct_answers">Respostas Corretas</string>
 </resources>
