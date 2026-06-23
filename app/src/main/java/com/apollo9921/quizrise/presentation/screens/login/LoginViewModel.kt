@@ -193,7 +193,7 @@ class LoginViewModel(
             }
 
             is AppError.InvalidCredentials -> {
-                _uiState.value = UIState.Error(message = R.string.invalid_credential)
+                _uiState.value = UIState.Error(message = R.string.login_failed)
             }
 
             is AppError.UserNotFound -> {
