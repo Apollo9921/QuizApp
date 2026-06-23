@@ -9,10 +9,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.apollo9921.quizrise" />
+                  <option name="mobileSdkAppId" value="1:485509817884:android:72fc3f0ce3d5af1c98e1d9" />
+                  <option name="projectId" value="quiz-eb5d1" />
+                  <option name="projectNumber" value="485509817884" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

@@ -62,6 +62,10 @@ class LoginViewModel(
     fun loginWithEmail(email: String, password: String, navHostController: NavHostController) {
         viewModelScope.launch {
             _uiState.value = UIState.Loading
+            if (email.isEmpty() || password.isEmpty()) {
+                _uiState.value = UIState.Error(message = R.string.empty_fields)
+                return@launch
+            }
             val result = authRepository.loginWithEmail(email, password)
             when (result) {
                 is AppResult.Error -> {
@@ -189,7 +193,15 @@ class LoginViewModel(
             }
 
             is AppError.InvalidCredentials -> {
-                _uiState.value = UIState.Error(message = R.string.invalid_credential)
+                _uiState.value = UIState.Error(message = R.string.login_failed)
+            }
+
+            is AppError.UserNotFound -> {
+                _uiState.value = UIState.Error(message = R.string.user_not_found)
+            }
+
+            is AppError.EmptyFields -> {
+                _uiState.value = UIState.Error(message = R.string.empty_fields)
             }
 
             else -> {

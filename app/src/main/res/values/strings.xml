@@ -94,4 +94,6 @@
     <string name="logout">Logout</string>
     <string name="terms_private_policy">Terms and Privacy Policy</string>
     <string name="correct_answers">Correct Answers</string>
+    <string name="user_not_found">This account does not exist</string>
+    <string name="user_already_exists">User already exists</string>
 </resources>

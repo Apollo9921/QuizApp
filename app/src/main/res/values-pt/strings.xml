@@ -82,4 +82,6 @@
     <string name="logout">Terminar Sessão</string>
     <string name="terms_private_policy">Termos e Política de Privacidade</string>
     <string name="correct_answers">Respostas Corretas</string>
+    <string name="user_not_found">Esta conta não existe</string>
+    <string name="user_already_exists">Utilizador já existe</string>
 </resources>

@@ -47,6 +47,10 @@ class RegisterViewModel(
                         is AppError.PasswordMismatch -> {
                             _uiState.value = UIState.Error(message = R.string.password_mismatch)
                         }
+                        is AppError.UserAlreadyExists -> {
+                            _uiState.value = UIState.Error(message = R.string.user_already_exists)
+                        }
+
                         else -> {
                             _uiState.value = UIState.Error(message = R.string.unexpected_error)
                         }
