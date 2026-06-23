@@ -1,8 +1,6 @@
 package com.apollo9921.quizrise.presentation
 
-import android.content.res.Configuration
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.remember
@@ -21,11 +19,8 @@ class MainActivity : ComponentActivity() {
     private lateinit var navHostController: NavHostController
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        installSplashScreen()
         super.onCreate(savedInstanceState)
-        Log.d("FoldDebug", "onCreate called, savedInstanceState=$savedInstanceState")
-        installSplashScreen().setKeepOnScreenCondition {
-            isSplashScreenOpen
-        }
         setContent {
             QuizAppTheme {
                 navHostController = rememberNavController()
@@ -39,10 +34,5 @@ class MainActivity : ComponentActivity() {
                 )
             }
         }
-    }
-
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
-        Log.d("FoldDebug", "onConfigurationChanged called, newConfig=$newConfig")
     }
 }
