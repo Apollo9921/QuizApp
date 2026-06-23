@@ -27,5 +27,9 @@ sealed interface AppError {
 
     data object NoCategoryOrLevelDefined : AppError
 
+    data object UserNotFound : AppError
+
+    data object UserAlreadyExists : AppError
+
     data object Unknown : AppError
 }

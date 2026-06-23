@@ -3,7 +3,10 @@ package com.apollo9921.quizrise.data.repository
 import com.apollo9921.quizrise.domain.repository.AuthRepository
 import com.apollo9921.quizrise.domain.result.AppError
 import com.apollo9921.quizrise.domain.result.AppResult
+import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.CoroutineDispatcher
@@ -27,8 +30,18 @@ class AuthRepositoryImpl(
             } else {
                 AppResult.Error(AppError.Unknown)
             }
-        } catch (_: Exception) {
-            AppResult.Error(AppError.Unknown)
+        } catch (e: Exception) {
+            when (e) {
+                is FirebaseNetworkException -> AppResult.Error(AppError.Network)
+
+                is FirebaseAuthInvalidCredentialsException ->
+                    AppResult.Error(AppError.InvalidCredentials)
+
+                is com.google.firebase.auth.FirebaseAuthUserCollisionException ->
+                    AppResult.Error(AppError.UserAlreadyExists)
+
+                else -> AppResult.Error(AppError.Unknown)
+            }
         }
     }
 
@@ -41,8 +54,11 @@ class AuthRepositoryImpl(
             } else {
                 AppResult.Error(AppError.Unknown)
             }
-        } catch (_: Exception) {
-            AppResult.Error(AppError.Unknown)
+        } catch (e: Exception) {
+            when (e) {
+                is FirebaseNetworkException -> AppResult.Error(AppError.Network)
+                else -> AppResult.Error(AppError.Unknown)
+            }
         }
     }
 
@@ -57,8 +73,13 @@ class AuthRepositoryImpl(
             } else {
                 AppResult.Error(AppError.Unknown)
             }
-        } catch (_: Exception) {
-            AppResult.Error(AppError.Unknown)
+        } catch (e: Exception) {
+            when (e) {
+                is FirebaseNetworkException -> AppResult.Error(AppError.Network)
+                is FirebaseAuthInvalidUserException -> AppResult.Error(AppError.UserNotFound)
+                is FirebaseAuthInvalidCredentialsException -> AppResult.Error(AppError.InvalidCredentials)
+                else -> AppResult.Error(AppError.Unknown)
+            }
         }
     }
 
