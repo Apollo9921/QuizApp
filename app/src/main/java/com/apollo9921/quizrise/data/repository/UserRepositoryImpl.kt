@@ -244,4 +244,8 @@ class UserRepositoryImpl(
             }
         }
     }
+
+    override suspend fun clearAllData() {
+        userDAO.clearAllData()
+    }
 }

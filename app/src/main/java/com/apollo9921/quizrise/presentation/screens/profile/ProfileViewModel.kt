@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import com.apollo9921.quizrise.domain.model.user.User
+import com.apollo9921.quizrise.domain.usecase.ClearAllDataUseCase
 import com.apollo9921.quizrise.domain.usecase.FetchBadgeImageUseCase
 import com.apollo9921.quizrise.domain.usecase.FetchUserUseCase
 import com.apollo9921.quizrise.domain.usecase.FetchBadgeUseCase
@@ -18,7 +19,8 @@ class ProfileViewModel(
     private val fetchUserUseCase: FetchUserUseCase,
     private val fetchBadgeImageUseCase: FetchBadgeImageUseCase,
     private val fetchBadgeUseCase: FetchBadgeUseCase,
-    private val firebaseAuth: FirebaseAuth
+    private val firebaseAuth: FirebaseAuth,
+    private val clearAllDataUseCase: ClearAllDataUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<UIState>(UIState.Idle)
@@ -55,16 +57,18 @@ class ProfileViewModel(
     }
 
     fun logout(navHostController: NavHostController) {
-        try {
-            firebaseAuth.signOut()
-            _uiState.value = UIState.Idle
-            navHostController.navigate(Destination.Login.route) {
-                popUpTo(0) { inclusive = true }
-                launchSingleTop = true
+        viewModelScope.launch {
+            try {
+                firebaseAuth.signOut()
+                clearAllDataUseCase.invoke()
+                _uiState.value = UIState.Idle
+                navHostController.navigate(Destination.Login.route) {
+                    popUpTo(0) { inclusive = true }
+                    launchSingleTop = true
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
-        } catch (e: Exception) {
-            e.printStackTrace()
         }
     }
-
 }

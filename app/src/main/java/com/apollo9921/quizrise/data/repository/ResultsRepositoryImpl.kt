@@ -41,4 +41,8 @@ class ResultsRepositoryImpl(
         }
     }
 
+    override suspend fun clearAllData() {
+        resultsDAO.clearAllData()
+    }
+
 }

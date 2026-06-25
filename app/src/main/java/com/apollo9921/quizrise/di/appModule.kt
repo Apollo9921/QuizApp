@@ -18,6 +18,7 @@ import com.apollo9921.quizrise.domain.repository.LeaderboardRepository
 import com.apollo9921.quizrise.domain.repository.QuizRepository
 import com.apollo9921.quizrise.domain.repository.ResultsRepository
 import com.apollo9921.quizrise.domain.repository.UserRepository
+import com.apollo9921.quizrise.domain.usecase.ClearAllDataUseCase
 import com.apollo9921.quizrise.domain.usecase.FetchBadgeImageUseCase
 import com.apollo9921.quizrise.domain.usecase.FetchBadgeUseCase
 import com.apollo9921.quizrise.domain.usecase.FetchResultsUseCase
@@ -96,7 +97,7 @@ val viewModelModule = module {
     viewModel { QuizViewModel(get(), get(), get(), get()) }
     viewModel { ProgressViewModel(get(), get()) }
     viewModel { QuizResultViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
-    viewModel { ProfileViewModel(get(), get(), get(), get()) }
+    viewModel { ProfileViewModel(get(), get(), get(), get(), get()) }
     viewModel { LoginViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { RegisterViewModel(get()) }
     viewModel { LeaderboardViewModel(get(), get(), get()) }
@@ -123,4 +124,5 @@ val useCaseModule = module {
     factory { GetTopPlayersByLevelUseCase(get()) }
     factory { GetTopPlayersByCategoryUseCase(get()) }
     factory { FetchResultsUseCase(get()) }
+    factory { ClearAllDataUseCase(get(), get()) }
 }
