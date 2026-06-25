@@ -20,4 +20,7 @@ interface UserDAO {
 
     @Query("UPDATE user_table SET badge =:badge WHERE name =:name")
     fun updateBadge(badge: String, name: String)
+
+    @Query("DELETE FROM user_table")
+    suspend fun clearAllData()
 }

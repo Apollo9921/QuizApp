@@ -13,28 +13,15 @@ class UserManager(val dataStore: DataStore<Preferences>) {
 
     companion object {
         val IS_LOADED_KEY = booleanPreferencesKey("IS_LOADED")
-        val USER_NAME_KEY = stringPreferencesKey("USER_NAME")
     }
 
-    suspend fun storeToDataStore(isLoaded: Boolean, userName: String) {
+    suspend fun storeToDataStore(isLoaded: Boolean) {
         dataStore.edit {
             it[IS_LOADED_KEY] = isLoaded
-            it[USER_NAME_KEY] = userName
         }
     }
 
     val userFlow: Flow<Boolean> = dataStore.data.map {
-        if (it[IS_LOADED_KEY] != null) {
-            it[IS_LOADED_KEY]
-        } else {
-           false
-        }!!
-    }
-    val userName: Flow<String?> = dataStore.data.map {
-        if (it[USER_NAME_KEY] != null) {
-            it[USER_NAME_KEY]
-        } else {
-            ""
-        }!!
+        (it[IS_LOADED_KEY] == true)
     }
 }

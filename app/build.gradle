@@ -176,4 +176,7 @@ dependencies {
 
     // Firebase Cloud
     implementation("com.google.firebase:firebase-functions-ktx:21.0.0")
+
+    // Browser Tabs
+    implementation("androidx.browser:browser:1.8.0")
 }

@@ -1,6 +1,8 @@
 package com.apollo9921.quizrise.presentation.screens.profile
 
 import android.content.res.Configuration
+import android.net.Uri
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -52,6 +54,9 @@ fun ProfileRoute(
     val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
     val badgeState = viewModel.badgeState.collectAsStateWithLifecycle().value
     val fetchUser = { viewModel.fetchUser() }
+    val logout = { viewModel.logout(navHostController) }
+
+    val context = LocalContext.current
 
     LaunchedEffect(Unit) {
         fetchUser()
@@ -69,11 +74,14 @@ fun ProfileRoute(
         SettingsDialog(
             onDismissRequest = { showSettings = false },
             onPrivacyPolicyClick = {
-                // TODO: Open Privacy Policy Link
+                val customTabsIntent = CustomTabsIntent.Builder()
+                    .setShowTitle(true)
+                    .build()
+                customTabsIntent.launchUrl(context, Uri.parse("https://apollo9921.github.io/quizrise-privacy-policy/"))
             },
             onLogoutClick = {
                 showSettings = false
-                // TODO: Call ViewModel to logout the session
+                logout()
             }
         )
     }

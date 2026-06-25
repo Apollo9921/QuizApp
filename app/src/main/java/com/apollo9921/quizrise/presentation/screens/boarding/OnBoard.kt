@@ -40,6 +40,8 @@ import kotlinx.coroutines.*
 import android.content.res.Configuration
 import androidx.compose.runtime.saveable.rememberSaveable
 import com.apollo9921.quizrise.R
+import com.apollo9921.quizrise.presentation.dataStore.UserManager
+import com.apollo9921.quizrise.presentation.dataStore.dataStoreUser
 
 @Composable
 fun OnBoard(navHostController: NavHostController) {
@@ -155,8 +157,12 @@ fun OnBoard(navHostController: NavHostController) {
                 if (page == pageCount - 1) {
                     Button(
                         onClick = {
-                            navHostController.popBackStack()
-                            navHostController.navigate(Destination.Login.route)
+                            coroutineScope.launch {
+                                val userManager = UserManager(navHostController.context.dataStoreUser)
+                                userManager.storeToDataStore(true)
+                                navHostController.popBackStack()
+                                navHostController.navigate(Destination.Login.route)
+                            }
                         },
                         shape = RoundedCornerShape(20.dp),
                         border = BorderStroke(width = 2.dp, color = White),

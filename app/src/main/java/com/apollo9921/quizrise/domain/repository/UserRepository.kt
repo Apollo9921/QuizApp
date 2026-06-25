@@ -13,4 +13,5 @@ interface UserRepository {
     suspend fun updateUserAndResults(user: User, results: Results): AppResult<Unit>
     suspend fun getUser(): AppResult<User>
     suspend fun getResults(): AppResult<List<Results>>
+    suspend fun clearAllData()
 }
