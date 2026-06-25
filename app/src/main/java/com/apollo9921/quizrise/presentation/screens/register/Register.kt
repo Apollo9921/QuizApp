@@ -39,159 +39,160 @@ fun RegisterRoute(
     var password by rememberSaveable { mutableStateOf("") }
     var confirmPassword by rememberSaveable { mutableStateOf("") }
 
-    Box(
+    Column(
         modifier = Modifier
             .fillMaxSize()
             .background(PurpleGrey40)
+            .verticalScroll(rememberScrollState())
+            .padding(horizontal = 24.dp)
             .safeDrawingPadding(),
-        contentAlignment = Alignment.Center
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
-        Column(
-            modifier = Modifier
-                .widthIn(max = 500.dp)
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Text(
-                style = MaterialTheme.typography.titleLarge,
-                text = stringResource(R.string.create_account),
-                color = White
-            )
+        Text(
+            style = MaterialTheme.typography.titleLarge,
+            text = stringResource(R.string.create_account),
+            color = White
+        )
 
-            Spacer(modifier = Modifier.height(32.dp))
+        Spacer(modifier = Modifier.padding(32.dp))
 
-            OutlinedTextField(
-                value = email,
-                onValueChange = { email = it },
-                label = {
-                    Text(
-                        style = MaterialTheme.typography.labelSmall,
-                        text = stringResource(R.string.email_field),
-                        color = White
-                    )
-                },
-                leadingIcon = { Icon(Icons.Default.Email, contentDescription = null, tint = White) },
-                modifier = Modifier.fillMaxWidth(),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-                singleLine = true,
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = White,
-                    unfocusedBorderColor = White.copy(alpha = 0.7f),
-                    cursorColor = White,
-                    focusedTextColor = White,
-                    unfocusedTextColor = White
-                )
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            OutlinedTextField(
-                value = password,
-                onValueChange = { password = it },
-                label = {
-                    Text(
-                        style = MaterialTheme.typography.labelSmall,
-                        text = stringResource(R.string.password_field),
-                        color = White
-                    )
-                },
-                leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null, tint = White) },
-                modifier = Modifier.fillMaxWidth(),
-                visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                trailingIcon = {
-                    IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                        Icon(
-                            imageVector = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
-                            contentDescription = null,
-                            tint = White
-                        )
-                    }
-                },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                singleLine = true,
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = White,
-                    unfocusedBorderColor = White.copy(alpha = 0.7f),
-                    cursorColor = White,
-                    focusedTextColor = White,
-                    unfocusedTextColor = White
-                )
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            OutlinedTextField(
-                value = confirmPassword,
-                onValueChange = { confirmPassword = it },
-                label = {
-                    Text(
-                        style = MaterialTheme.typography.labelSmall,
-                        text = stringResource(R.string.confirm_password_field),
-                        color = White
-                    )
-                },
-                leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null, tint = White) },
-                modifier = Modifier.fillMaxWidth(),
-                visualTransformation = PasswordVisualTransformation(),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                singleLine = true,
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = White,
-                    unfocusedBorderColor = White.copy(alpha = 0.7f),
-                    cursorColor = White,
-                    focusedTextColor = White,
-                    unfocusedTextColor = White
-                )
-            )
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            if (state is RegisterViewModel.UIState.Error) {
+        OutlinedTextField(
+            value = email,
+            onValueChange = { email = it },
+            label = {
                 Text(
-                    text = stringResource(state.message),
-                    color = MaterialTheme.colorScheme.error,
-                    modifier = Modifier.padding(bottom = 16.dp)
+                    style = MaterialTheme.typography.displaySmall,
+                    text = stringResource(R.string.email_field),
+                    color = White
                 )
-            }
+            },
+            leadingIcon = { Icon(Icons.Default.Email, contentDescription = null, tint = White) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+            singleLine = true,
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = White,
+                unfocusedBorderColor = White,
+                cursorColor = White,
+                focusedTextColor = White,
+                unfocusedTextColor = White
+            )
+        )
 
-            Button(
-                onClick = {
-                    viewModel.onRegisterClick(
-                        email,
-                        password,
-                        confirmPassword,
-                        onNavigateBack
-                    )
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(50.dp),
-                enabled = state !is RegisterViewModel.UIState.Loading
-            ) {
-                if (state is RegisterViewModel.UIState.Loading) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.size(24.dp),
-                        color = MaterialTheme.colorScheme.onPrimary
-                    )
-                } else {
-                    Text(
-                        style = MaterialTheme.typography.labelMedium,
-                        text = stringResource(R.string.register),
-                        color = White
+        Spacer(modifier = Modifier.padding(16.dp))
+
+        OutlinedTextField(
+            value = password,
+            onValueChange = { password = it },
+            label = {
+                Text(
+                    style = MaterialTheme.typography.displaySmall,
+                    text = stringResource(R.string.password_field),
+                    color = White
+                )
+            },
+            leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null, tint = White) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+            trailingIcon = {
+                IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                    Icon(
+                        imageVector = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
+                        contentDescription = null,
+                        tint = White
                     )
                 }
-            }
+            },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+            singleLine = true,
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = White,
+                unfocusedBorderColor = White,
+                cursorColor = White,
+                focusedTextColor = White,
+                unfocusedTextColor = White
+            )
+        )
 
-            TextButton(onClick = onNavigateBack) {
+        Spacer(modifier = Modifier.padding(16.dp))
+
+        OutlinedTextField(
+            value = confirmPassword,
+            onValueChange = { confirmPassword = it },
+            label = {
+                Text(
+                    style = MaterialTheme.typography.displaySmall,
+                    text = stringResource(R.string.confirm_password_field),
+                    color = White
+                )
+            },
+            leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null, tint = White) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+            visualTransformation = PasswordVisualTransformation(),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+            singleLine = true,
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = White,
+                unfocusedBorderColor = White,
+                cursorColor = White,
+                focusedTextColor = White,
+                unfocusedTextColor = White
+            )
+        )
+
+        Spacer(modifier = Modifier.padding(24.dp))
+
+        if (state is RegisterViewModel.UIState.Error) {
+            Text(
+                style = MaterialTheme.typography.displaySmall,
+                text = stringResource(state.message),
+                color = MaterialTheme.colorScheme.error,
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
+        }
+
+        Button(
+            onClick = {
+                viewModel.onRegisterClick(
+                    email,
+                    password,
+                    confirmPassword,
+                    onNavigateBack
+                )
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+                .padding(horizontal = 16.dp, vertical = 16.dp),
+            enabled = state !is RegisterViewModel.UIState.Loading
+        ) {
+            if (state is RegisterViewModel.UIState.Loading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(24.dp),
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
+            } else {
                 Text(
                     style = MaterialTheme.typography.labelSmall,
-                    text = stringResource(R.string.have_an_account),
+                    text = stringResource(R.string.register),
                     color = White
                 )
             }
+        }
+
+        TextButton(onClick = onNavigateBack) {
+            Text(
+                style = MaterialTheme.typography.displaySmall,
+                text = stringResource(R.string.have_an_account),
+                color = White
+            )
         }
     }
 }
