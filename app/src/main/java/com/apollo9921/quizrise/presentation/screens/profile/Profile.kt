@@ -54,6 +54,7 @@ fun ProfileRoute(
     val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
     val badgeState = viewModel.badgeState.collectAsStateWithLifecycle().value
     val fetchUser = { viewModel.fetchUser() }
+    val logout = { viewModel.logout(navHostController) }
 
     val context = LocalContext.current
 
@@ -80,7 +81,7 @@ fun ProfileRoute(
             },
             onLogoutClick = {
                 showSettings = false
-                // TODO: Call ViewModel to logout the session
+                logout()
             }
         )
     }
