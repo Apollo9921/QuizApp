@@ -25,7 +25,6 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
@@ -42,6 +41,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import com.apollo9921.quizrise.R
 import com.apollo9921.quizrise.presentation.dataStore.UserManager
 import com.apollo9921.quizrise.presentation.dataStore.dataStoreUser
+import com.apollo9921.quizrise.presentation.utils.componentSizeByScreen
 
 @Composable
 fun OnBoard(navHostController: NavHostController) {
@@ -86,9 +86,9 @@ fun OnBoard(navHostController: NavHostController) {
             ) {
                 if (state.currentPage > 0) {
                     Text(
+                        style = MaterialTheme.typography.labelMedium,
                         text = stringResource(id = R.string.back),
                         color = White,
-                        fontSize = 22.sp,
                         modifier = Modifier
                             .padding(8.dp)
                             .clickable {
@@ -100,9 +100,9 @@ fun OnBoard(navHostController: NavHostController) {
                 }
                 if (state.currentPage < pageCount - 1) {
                     Text(
+                        style = MaterialTheme.typography.labelMedium,
                         text = stringResource(id = R.string.next),
                         color = White,
-                        fontSize = 22.sp,
                         modifier = Modifier
                             .padding(8.dp)
                             .clickable {
@@ -134,7 +134,7 @@ fun OnBoard(navHostController: NavHostController) {
             ) {
                 Spacer(modifier = Modifier.height(24.dp))
 
-                val animationSize = if (isLandscape) 150.dp else 250.dp
+                val animationSize = if (isLandscape) componentSizeByScreen(150.dp) else componentSizeByScreen(250.dp)
                 Box(
                     contentAlignment = Alignment.Center,
                     modifier = Modifier.size(animationSize)
@@ -172,9 +172,9 @@ fun OnBoard(navHostController: NavHostController) {
                             .height(60.dp)
                     ) {
                         Text(
+                            style = MaterialTheme.typography.labelMedium,
                             text = stringResource(id = R.string.getStarted),
                             color = White,
-                            fontSize = 22.sp,
                             fontWeight = FontWeight.Bold
                         )
                     }
