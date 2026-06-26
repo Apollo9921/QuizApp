@@ -8,7 +8,8 @@ fun UserEntity.toUser(): User {
         name = name,
         totalPoints = totalPoints,
         totalPointsPossible = totalPointsPossible,
-        badge = badge
+        badge = badge,
+        session = session
     )
 }
 
@@ -17,6 +18,7 @@ fun User.toUserEntity(): UserEntity {
         name = name,
         totalPoints = totalPoints,
         totalPointsPossible = totalPointsPossible,
-        badge = badge
+        badge = badge,
+        session = session
     )
 }

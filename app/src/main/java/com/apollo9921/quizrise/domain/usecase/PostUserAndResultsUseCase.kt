@@ -10,12 +10,13 @@ import com.apollo9921.quizrise.domain.util.QuizCategory
 class PostUserAndResultsUseCase(
     private val repository: UserRepository
 ) {
-    suspend operator fun invoke(name: String): AppResult<Unit> {
+    suspend operator fun invoke(name: String, session: String): AppResult<Unit> {
         val user = User(
             name = name,
             totalPoints = 0,
             totalPointsPossible = 0,
-            badge = PlayerLevel.RECRUIT.badgeName
+            badge = PlayerLevel.RECRUIT.badgeName,
+            session = session
         )
 
         val resultsList = QuizCategory.entries.map { categoryRes ->

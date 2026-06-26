@@ -7,12 +7,13 @@ import com.apollo9921.quizrise.domain.util.PlayerLevel
 class InsertNewUserUseCase(
     private val repository: UserRepository
 ) {
-    suspend operator fun invoke(name: String) {
+    suspend operator fun invoke(name: String, session: String) {
         val user = User(
             name = name,
             totalPoints = 0,
             totalPointsPossible = 0,
-            badge = PlayerLevel.RECRUIT.badgeName
+            badge = PlayerLevel.RECRUIT.badgeName,
+            session = session
         )
         repository.insertUser(user)
     }

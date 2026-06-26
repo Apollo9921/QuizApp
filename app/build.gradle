@@ -54,7 +54,7 @@ android {
                     "\"${localProperties.getProperty("GOOGLE_SERVER_CLIENT_ID") ?: ""}\""
             )
             buildConfigField "String", "BASE_URL", "\"https://the-trivia-api.com/v2/\""
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.debug
         }
