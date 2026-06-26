@@ -34,7 +34,8 @@ import com.apollo9921.quizrise.presentation.core.White
 fun SettingsDialog(
     onDismissRequest: () -> Unit,
     onPrivacyPolicyClick: () -> Unit,
-    onLogoutClick: () -> Unit
+    onLogoutClick: () -> Unit,
+    onDeleteAccountClick: () -> Unit
 ) {
     Dialog(onDismissRequest = onDismissRequest) {
         Card(
@@ -95,6 +96,16 @@ fun SettingsDialog(
                         fontWeight = FontWeight.Bold
                     )
                 }
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                Text(
+                    text = stringResource(id = R.string.delete_account_btn),
+                    style = MaterialTheme.typography.displaySmall,
+                    color = White.copy(alpha = 0.4f),
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.clickable { onDeleteAccountClick() }
+                )
 
                 Spacer(modifier = Modifier.height(24.dp))
 

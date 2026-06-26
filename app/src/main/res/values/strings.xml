@@ -96,4 +96,13 @@
     <string name="correct_answers">Correct Answers</string>
     <string name="user_not_found">This account does not exist</string>
     <string name="user_already_exists">User already exists</string>
+    <string name="important_warning">Important Warning</string>
+    <string name="warning_message">This action is completely irreversible. By deleting your account you will permanently lose access to:</string>
+    <string name="all_points_warning">All your accumulated points.</string>
+    <string name="progress_warning">Your progress, level and badges (Badges).</string>
+    <string name="history_warning">Your QuizRise history.</string>
+    <string name="leaderboard_warning">Your leaderboard position.</string>
+    <string name="keep_account">Keep My Account</string>
+    <string name="delete_account">Yes, delete permanently</string>
+    <string name="delete_account_btn">Delete Account</string>
 </resources>

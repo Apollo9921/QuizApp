@@ -248,4 +248,41 @@ class UserRepositoryImpl(
     override suspend fun clearAllData() {
         userDAO.clearAllData()
     }
+
+    override suspend fun deleteAccount(): AppResult<Unit> {
+        return withContext(ioDispatcher) {
+            try {
+                val currentUser = FirebaseAuth.getInstance().currentUser
+                    ?: return@withContext AppResult.Error(AppError.Unauthorized)
+
+                val userId = currentUser.uid
+                val userRef = firestore.collection("users").document(userId)
+                val resultsRef = userRef.collection("results")
+
+                val resultsSnapshot = resultsRef.get().await()
+
+                val batch = firestore.batch()
+
+                for (document in resultsSnapshot.documents) {
+                    batch.delete(document.reference)
+                }
+
+                batch.delete(userRef)
+                batch.commit().await()
+                currentUser.delete().await()
+                AppResult.Success(Unit)
+
+            } catch (e: Exception) {
+                when (e) {
+                    is HttpRequestTimeoutException -> AppResult.Error(AppError.Timeout)
+                    is ConnectTimeoutException -> AppResult.Error(AppError.NoInternetConnection)
+                    is IOException -> AppResult.Error(AppError.Network)
+                    is com.google.firebase.auth.FirebaseAuthRecentLoginRequiredException -> {
+                        AppResult.Error(AppError.Unauthorized)
+                    }
+                    else -> AppResult.Error(AppError.Unknown)
+                }
+            }
+        }
+    }
 }
