@@ -45,6 +45,7 @@ import com.apollo9921.quizrise.presentation.utils.componentSizeByScreen
 import com.apollo9921.quizrise.presentation.utils.formatTotalCount
 import org.koin.androidx.compose.koinViewModel
 import com.apollo9921.quizrise.R
+import com.apollo9921.quizrise.presentation.navigation.Destination
 
 @Composable
 fun ProfileRoute(
@@ -82,6 +83,10 @@ fun ProfileRoute(
             onLogoutClick = {
                 showSettings = false
                 logout()
+            },
+            onDeleteAccountClick = {
+                showSettings = false
+                navHostController.navigate(Destination.DeleteAccount.route)
             }
         )
     }

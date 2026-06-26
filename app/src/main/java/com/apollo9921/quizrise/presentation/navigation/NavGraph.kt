@@ -16,6 +16,7 @@ import com.apollo9921.quizrise.presentation.screens.progress.ProgressRoute
 import com.apollo9921.quizrise.presentation.screens.categories.CategoriesRoute
 import com.apollo9921.quizrise.presentation.screens.profile.ProfileRoute
 import com.apollo9921.quizrise.presentation.screens.boarding.OnBoard
+import com.apollo9921.quizrise.presentation.screens.deleteAccount.DeleteAccountRoute
 import com.apollo9921.quizrise.presentation.screens.leaderboard.LeaderboardRoute
 import com.apollo9921.quizrise.presentation.screens.login.LoginRoute
 import com.apollo9921.quizrise.presentation.screens.quizLevel.LevelDifficulty
@@ -122,6 +123,23 @@ fun AnimationNav(navHostController: NavHostController, startDestination: String)
             popExitTransition = { ExitTransition.None }
         ) {
             ProfileRoute(navHostController = navHostController)
+        }
+        composable(
+            route = Destination.DeleteAccount.route,
+            enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Left,
+                    animationSpec = tween(700)
+                )
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Right,
+                    animationSpec = tween(700)
+                )
+            }
+        ) {
+            DeleteAccountRoute(navHostController = navHostController)
         }
         composable(
             route = Destination.LevelDifficulty.route,

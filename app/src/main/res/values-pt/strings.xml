@@ -84,4 +84,13 @@
     <string name="correct_answers">Respostas Corretas</string>
     <string name="user_not_found">Esta conta não existe</string>
     <string name="user_already_exists">Utilizador já existe</string>
+    <string name="important_warning">Aviso importante</string>
+    <string name="warning_message">Esta ação é completamente irreversível. Ao eliminares a tua conta, perderás permanentemente:</string>
+    <string name="all_points_warning">Todos os teus pontos acumulados.</string>
+    <string name="progress_warning">O teu progresso, nível e medalhas (Badges).</string>
+    <string name="history_warning">O teu registo histórico no QuizRise.</string>
+    <string name="leaderboard_warning">A tua posição no Leaderboard global.</string>
+    <string name="keep_account">Manter a Minha Conta</string>
+    <string name="delete_account">Sim, eliminar permanentemente</string>
+    <string name="delete_account_btn">Eliminar Conta</string>
 </resources>
