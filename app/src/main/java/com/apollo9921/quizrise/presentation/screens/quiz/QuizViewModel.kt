@@ -7,6 +7,7 @@ import com.apollo9921.quizrise.R
 import com.apollo9921.quizrise.data.network.dto.TranslatedQuizResult
 import com.apollo9921.quizrise.domain.result.AppError
 import com.apollo9921.quizrise.domain.result.AppResult
+import com.apollo9921.quizrise.domain.usecase.FetchUserUseCase
 import com.apollo9921.quizrise.domain.usecase.FormatQuizUseCase
 import com.apollo9921.quizrise.domain.usecase.GetQuizUseCase
 import com.apollo9921.quizrise.presentation.navigation.Destination
@@ -19,6 +20,7 @@ import kotlinx.coroutines.launch
 class QuizViewModel(
     private val getQuizUseCase: GetQuizUseCase,
     private val formatQuizUseCase: FormatQuizUseCase,
+    private val fetchUserUseCase: FetchUserUseCase,
     val category: String,
     val level: String
 ) : ViewModel() {
@@ -35,6 +37,7 @@ class QuizViewModel(
         var progress: Int = 20,
         var correctAnswers: Int = 0,
         var incorrectAnswers: Int = 0,
+        val session: String = ""
     )
 
     init {
@@ -51,7 +54,11 @@ class QuizViewModel(
         viewModelScope.launch {
             try {
                 _uiState.value = UIState.Loading
-                val result = getQuizUseCase.invoke(category, level)
+                val userResult = fetchUserUseCase.invoke()
+                if (userResult.isSuccess) {
+                    _quizState.value = _quizState.value.copy(session = userResult.getOrThrow().session)
+                }
+                val result = getQuizUseCase.invoke(category, level, _quizState.value.session)
 
                 when (result) {
                     is AppResult.Error -> {

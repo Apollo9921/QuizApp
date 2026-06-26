@@ -8,5 +8,6 @@ data class User(
     val name: String = "",
     val totalPoints: Int = 0,
     val totalPointsPossible: Int = 0,
-    val badge: String = ""
+    val badge: String = "",
+    val session: String = ""
 )

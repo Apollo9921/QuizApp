@@ -9,5 +9,6 @@ data class UserEntity(
     val name: String,
     val totalPoints: Int,
     val totalPointsPossible: Int,
-    val badge: String
+    val badge: String,
+    val session: String
 )

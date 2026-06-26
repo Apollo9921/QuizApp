@@ -12,7 +12,7 @@ class GetQuizUseCase(
     private val repository: QuizRepository,
     private val context: Context
 ) {
-    suspend operator fun invoke(categoryResId: String, levelResId: String): AppResult<List<Quiz>> {
+    suspend operator fun invoke(categoryResId: String, levelResId: String, session: String): AppResult<List<Quiz>> {
         val categoryKey = when (categoryResId) {
             context.getString(R.string.artsAndLiterature_translatable) -> QuizConstants.CATEGORY_ARTS_LITERATURE
             context.getString(R.string.science_translatable) -> QuizConstants.CATEGORY_SCIENCE
@@ -34,6 +34,6 @@ class GetQuizUseCase(
             else -> return AppResult.Error(AppError.NoCategoryOrLevelDefined)
         }
 
-        return repository.getQuiz(categoryKey, levelKey)
+        return repository.getQuiz(categoryKey, levelKey, session)
     }
 }
