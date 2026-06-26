@@ -11,9 +11,12 @@ class DeleteAccountUseCase(
 ) {
     suspend operator fun invoke(): AppResult<Unit> {
         try {
-            userRepository.clearAllData()
-            resultsRepository.clearAllData()
-            return userRepository.deleteAccount()
+            val result = userRepository.deleteAccount()
+            if (result is AppResult.Success) {
+                userRepository.clearAllData()
+                resultsRepository.clearAllData()
+            }
+            return result
         } catch (_: Exception) {
             return AppResult.Error(AppError.Unknown)
         }
