@@ -39,6 +39,11 @@ android {
                     "GOOGLE_SERVER_CLIENT_ID",
                     "\"${localProperties.getProperty("GOOGLE_SERVER_CLIENT_ID") ?: ""}\""
             )
+            buildConfigField(
+                    "String",
+                    "TRIVIA_API_KEY",
+                    "\"${localProperties.getProperty("TRIVIA_API_KEY") ?: ""}\""
+            )
             buildConfigField "String", "BASE_URL", "\"https://the-trivia-api.com/v2/\""
         }
         release {
@@ -52,6 +57,11 @@ android {
                     "String",
                     "GOOGLE_SERVER_CLIENT_ID",
                     "\"${localProperties.getProperty("GOOGLE_SERVER_CLIENT_ID") ?: ""}\""
+            )
+            buildConfigField(
+                    "String",
+                    "TRIVIA_API_KEY",
+                    "\"${localProperties.getProperty("TRIVIA_API_KEY") ?: ""}\""
             )
             buildConfigField "String", "BASE_URL", "\"https://the-trivia-api.com/v2/\""
             minifyEnabled true
