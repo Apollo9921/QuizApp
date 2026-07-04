@@ -35,7 +35,7 @@ import com.apollo9921.quizrise.presentation.core.White
 import com.apollo9921.quizrise.presentation.utils.componentSizeByScreen
 
 @Composable
-fun QuizTooltipIcon(text: String) {
+fun QuizTooltipIcon(text: String, position: Arrangement.Horizontal = Arrangement.Start) {
     var showTooltip by remember { mutableStateOf(false) }
 
     Row(
@@ -43,7 +43,7 @@ fun QuizTooltipIcon(text: String) {
             .statusBarsPadding()
             .navigationBarsPadding()
             .fillMaxWidth(),
-        horizontalArrangement = Arrangement.Start
+        horizontalArrangement = position
     ) {
         Box {
             IconButton(

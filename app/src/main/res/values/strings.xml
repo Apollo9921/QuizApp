@@ -108,4 +108,5 @@
     <string name="tooltip_categories">Choose one of the following categories to start the quiz. Each category includes unique questions to test your knowledge!</string>
     <string name="tooltip_profile">Here you can see your progress, level and badges.</string>
     <string name="tooltip_results">Here you can see your results by average of all categories and the percentage of each category.</string>
+    <string name="tooltip_leaderboard">Here you can see the top 100 players by level and category.</string>
 </resources>
