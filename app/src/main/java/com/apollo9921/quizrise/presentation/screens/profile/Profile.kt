@@ -45,6 +45,7 @@ import com.apollo9921.quizrise.presentation.utils.componentSizeByScreen
 import com.apollo9921.quizrise.presentation.utils.formatTotalCount
 import org.koin.androidx.compose.koinViewModel
 import com.apollo9921.quizrise.R
+import com.apollo9921.quizrise.presentation.components.QuizTooltipIcon
 import com.apollo9921.quizrise.presentation.navigation.Destination
 
 @Composable
@@ -149,6 +150,7 @@ private fun ShowProfile(
         contentAlignment = Alignment.TopCenter
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
+            QuizTooltipIcon(text = stringResource(R.string.tooltip_profile))
             IconButton(
                 onClick = onSettingsClick,
                 modifier = Modifier
@@ -243,7 +245,7 @@ private fun StatCard(
     icon: Painter,
     title: String,
     value: String,
-    iconContainerSize: Dp
+    iconContainerSize: Dp,
 ) {
     Card(
         modifier = modifier,
@@ -292,7 +294,7 @@ private fun BadgeCard(
     badgeIcon: Painter,
     badgeName: String,
     progress: Float,
-    badgeIconSize: Dp
+    badgeIconSize: Dp,
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),

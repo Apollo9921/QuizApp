@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name" translatable="false">Quiz Rise</string>
-    <string name="onBoard1">Welcome to the QuizApp</string>
+    <string name="onBoard1">Welcome to the Quiz Rise</string>
     <string name="onBoard2">Answer questions from many categories, from different levels</string>
     <string name="onBoard3">See your results</string>
     <string name="onBoard4">Improve your knowledge and receive new badges</string>
@@ -105,4 +105,8 @@
     <string name="keep_account">Keep My Account</string>
     <string name="delete_account">Yes, delete permanently</string>
     <string name="delete_account_btn">Delete Account</string>
+    <string name="tooltip_categories">Choose one of the following categories to start the quiz. Each category includes unique questions to test your knowledge!</string>
+    <string name="tooltip_profile">Here you can see your progress, level and badges.</string>
+    <string name="tooltip_results">Here you can see your results by average of all categories and the percentage of each category.</string>
+    <string name="tooltip_leaderboard">Here you can see the top 100 players by level and category.</string>
 </resources>

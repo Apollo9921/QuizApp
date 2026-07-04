@@ -2,6 +2,7 @@ package com.apollo9921.quizrise.presentation.screens.leaderboard
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -34,6 +35,7 @@ import com.apollo9921.quizrise.presentation.screens.leaderboard.LeaderboardViewM
 import com.apollo9921.quizrise.presentation.screens.leaderboard.LeaderboardViewModel.LeaderboardUiState
 import org.koin.androidx.compose.koinViewModel
 import com.apollo9921.quizrise.R
+import com.apollo9921.quizrise.presentation.components.QuizTooltipIcon
 
 @Composable
 fun LeaderboardRoute(
@@ -97,6 +99,10 @@ private fun LeaderboardScreen(
                 title = stringResource(R.string.leaderboard_title),
                 isBackEnabled = true,
                 onBackClicked = navigateBack
+            )
+            QuizTooltipIcon(
+                text = stringResource(R.string.tooltip_leaderboard),
+                position = Arrangement.End
             )
         },
         containerColor = LeaderboardBackground

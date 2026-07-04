@@ -92,5 +92,9 @@
     <string name="leaderboard_warning">Tu posición en la clasificación mundial.</string>
     <string name="keep_account">Conservar mi cuenta</string>
     <string name="delete_account">Sí, eliminar permanentemente</string>
-    <string name="delete_account_btn">Eliminar Cuenta</string>"
+    <string name="delete_account_btn">Eliminar Cuenta</string>
+    <string name="tooltip_categories">Elige una de las siguientes categorías para comenzar el cuestionario. ¡Cada categoría incluye preguntas únicas para poner a prueba tus conocimientos!</string>
+    <string name="tooltip_profile">Aquí puedes ver tu progreso, nivel y insignias.</string>
+    <string name="tooltip_results">Aquí puedes ver tus resultados por promedio de todas las categorías y el porcentaje de cada categoría.</string>
+    <string name="tooltip_leaderboard">Aquí puedes ver a los 100 mejores jugadores por nivel y categoría.</string>
 </resources>
