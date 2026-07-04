@@ -4,15 +4,12 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -26,15 +23,15 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.apollo9921.quizrise.R
 import com.apollo9921.quizrise.presentation.components.BottomNavigationBar
+import com.apollo9921.quizrise.presentation.components.QuizTooltipIcon
 import com.apollo9921.quizrise.presentation.isSplashScreenOpen
 import com.apollo9921.quizrise.presentation.navigation.Destination
 import com.apollo9921.quizrise.presentation.core.PurpleGrey40
 import com.apollo9921.quizrise.presentation.core.White
 import com.apollo9921.quizrise.presentation.utils.componentSizeByScreen
 import com.apollo9921.quizrise.presentation.utils.widthOfScreen
-import com.apollo9921.quizrise.R
-
 
 @Composable
 fun CategoriesRoute(navHostController: NavHostController) {
@@ -82,6 +79,7 @@ fun CategoriesRoute(navHostController: NavHostController) {
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun CategoriesScreen(
     navHostController: NavHostController,
@@ -101,6 +99,7 @@ private fun CategoriesScreen(
 
     Scaffold(
         bottomBar = { BottomNavigationBar(navHostController) },
+        topBar = { QuizTooltipIcon(text = stringResource(id = R.string.tooltip_categories)) },
         containerColor = PurpleGrey40
     ) { paddingValues ->
         Box(

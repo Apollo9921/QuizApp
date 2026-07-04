@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Quiz Rise</string>
-    <string name="onBoard1">Bem-vindo ao aplicativo QuizApp</string>
+    <string name="onBoard1">Bem-vindo ao aplicativo Quiz Rise</string>
     <string name="onBoard2">Responda a perguntas de diversas categorias e níveis diferentes.</string>
     <string name="onBoard3">Veja seus resultados</string>
     <string name="onBoard4">Aprimore seus conhecimentos e receba novos distintivos.</string>
@@ -93,4 +93,5 @@
     <string name="keep_account">Manter a Minha Conta</string>
     <string name="delete_account">Sim, eliminar permanentemente</string>
     <string name="delete_account_btn">Eliminar Conta</string>
+    <string name="tooltip_categories">Escolhe uma das categorias abaixo para começares o teu quiz. Cada categoria possui perguntas exclusivas para testar o teu conhecimento!</string>
 </resources>
