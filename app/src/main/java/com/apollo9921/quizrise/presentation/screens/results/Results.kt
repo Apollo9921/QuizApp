@@ -47,6 +47,7 @@ import com.apollo9921.quizrise.presentation.utils.formatTotalCount
 import com.apollo9921.quizrise.presentation.utils.widthOfScreen
 import org.koin.androidx.compose.koinViewModel
 import com.apollo9921.quizrise.R
+import com.apollo9921.quizrise.presentation.components.QuizTooltipIcon
 
 private val categories = listOf(
     R.string.artsAndLiterature_translatable,
@@ -153,6 +154,7 @@ private fun ShowResults(user: User, results: List<Results>) {
         contentPadding = PaddingValues(top = 16.dp, bottom = 24.dp)
     ) {
         item(span = { GridItemSpan(columnsCount) }) {
+            QuizTooltipIcon(text = stringResource(id = R.string.tooltip_results))
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
                     style = MaterialTheme.typography.labelMedium,
