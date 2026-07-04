@@ -5,7 +5,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -30,6 +32,7 @@ import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import com.apollo9921.quizrise.presentation.core.Pink40
 import com.apollo9921.quizrise.presentation.core.White
+import com.apollo9921.quizrise.presentation.utils.componentSizeByScreen
 
 @Composable
 fun QuizTooltipIcon(text: String) {
@@ -38,12 +41,15 @@ fun QuizTooltipIcon(text: String) {
     Row(
         modifier = Modifier
             .statusBarsPadding()
+            .navigationBarsPadding()
             .fillMaxWidth(),
-        horizontalArrangement = Arrangement.End
+        horizontalArrangement = Arrangement.Start
     ) {
         Box {
             IconButton(
-                onClick = { showTooltip = !showTooltip }
+                onClick = { showTooltip = !showTooltip },
+                modifier = Modifier
+                    .size(componentSizeByScreen(baseSize = 40.dp))
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.Help,

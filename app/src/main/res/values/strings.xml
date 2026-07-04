@@ -106,4 +106,5 @@
     <string name="delete_account">Yes, delete permanently</string>
     <string name="delete_account_btn">Delete Account</string>
     <string name="tooltip_categories">Choose one of the following categories to start the quiz. Each category includes unique questions to test your knowledge!</string>
+    <string name="tooltip_profile">Here you can see your progress, level and badges.</string>
 </resources>

@@ -94,4 +94,5 @@
     <string name="delete_account">Sim, eliminar permanentemente</string>
     <string name="delete_account_btn">Eliminar Conta</string>
     <string name="tooltip_categories">Escolhe uma das categorias abaixo para começares o teu quiz. Cada categoria possui perguntas exclusivas para testar o teu conhecimento!</string>
+    <string name="tooltip_profile">Aqui podes ver o teu progresso, nível e medalhas.</string>
 </resources>
