@@ -40,6 +40,7 @@ import com.apollo9921.quizrise.domain.usecase.UpdateBadgeUseCase
 import com.apollo9921.quizrise.domain.usecase.UpdatePointsUseCase
 import com.apollo9921.quizrise.domain.usecase.UpdateResultsUseCase
 import com.apollo9921.quizrise.domain.usecase.UpdateUserAndResultsUseCase
+import com.apollo9921.quizrise.domain.usecase.UpdateUserSessionUseCase
 import com.apollo9921.quizrise.presentation.screens.deleteAccount.DeleteAccountViewModel
 import com.apollo9921.quizrise.presentation.screens.leaderboard.LeaderboardViewModel
 import com.apollo9921.quizrise.presentation.screens.profile.ProfileViewModel
@@ -97,7 +98,7 @@ val repositoryModule = module {
 }
 
 val viewModelModule = module {
-    viewModel { QuizViewModel(get(), get(), get(), get(), get()) }
+    viewModel { QuizViewModel(get(), get(), get(), get(), get(), get(), get()) }
     viewModel { ProgressViewModel(get(), get()) }
     viewModel { QuizResultViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { ProfileViewModel(get(), get(), get(), get(), get()) }
@@ -131,4 +132,5 @@ val useCaseModule = module {
     factory { ClearAllDataUseCase(get(), get()) }
     factory { PostSessionUseCase(get()) }
     factory { DeleteAccountUseCase(get(), get()) }
+    factory { UpdateUserSessionUseCase(get()) }
 }
