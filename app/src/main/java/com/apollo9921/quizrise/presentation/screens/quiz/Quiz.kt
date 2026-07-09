@@ -83,7 +83,10 @@ private fun StartQuiz(
                 }
 
                 is QuizViewModel.UIState.Error -> {
-                    ErrorScreen(stringResource(uiState.errorMessage)) { retry }
+                    ErrorScreen(
+                        errorMessage = stringResource(uiState.errorMessage),
+                        onClick = { retry() }
+                    )
                 }
 
                 is QuizViewModel.UIState.Success -> {
