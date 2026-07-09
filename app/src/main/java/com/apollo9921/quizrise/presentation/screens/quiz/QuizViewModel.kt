@@ -10,6 +10,8 @@ import com.apollo9921.quizrise.domain.result.AppResult
 import com.apollo9921.quizrise.domain.usecase.FetchUserUseCase
 import com.apollo9921.quizrise.domain.usecase.FormatQuizUseCase
 import com.apollo9921.quizrise.domain.usecase.GetQuizUseCase
+import com.apollo9921.quizrise.domain.usecase.PostSessionUseCase
+import com.apollo9921.quizrise.domain.usecase.UpdateUserSessionUseCase
 import com.apollo9921.quizrise.presentation.navigation.Destination
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -21,6 +23,8 @@ class QuizViewModel(
     private val getQuizUseCase: GetQuizUseCase,
     private val formatQuizUseCase: FormatQuizUseCase,
     private val fetchUserUseCase: FetchUserUseCase,
+    private val postSessionUseCase: PostSessionUseCase,
+    private val updateUserSessionUseCase: UpdateUserSessionUseCase,
     val category: String,
     val level: String
 ) : ViewModel() {
@@ -56,7 +60,8 @@ class QuizViewModel(
                 _uiState.value = UIState.Loading
                 val userResult = fetchUserUseCase.invoke()
                 if (userResult.isSuccess) {
-                    _quizState.value = _quizState.value.copy(session = userResult.getOrThrow().session)
+                    _quizState.value =
+                        _quizState.value.copy(session = userResult.getOrThrow().session)
                 }
                 val result = getQuizUseCase.invoke(category, level, _quizState.value.session)
 
@@ -64,23 +69,30 @@ class QuizViewModel(
                     is AppResult.Error -> {
                         when (result.error) {
                             is AppError.NoCategoryOrLevelDefined -> {
-                                _uiState.value = UIState.Error(R.string.no_category_or_level_defined)
+                                _uiState.value =
+                                    UIState.Error(R.string.no_category_or_level_defined)
                             }
+
                             is AppError.NoInternetConnection -> {
                                 _uiState.value = UIState.Error(R.string.no_internet_connection)
                             }
+
                             is AppError.Network -> {
                                 _uiState.value = UIState.Error(R.string.network_error)
                             }
+
                             is AppError.Server -> {
                                 _uiState.value = UIState.Error(R.string.server_error)
                             }
+
                             is AppError.ServerDown -> {
                                 _uiState.value = UIState.Error(R.string.server_down)
                             }
+
                             is AppError.Unknown -> {
                                 _uiState.value = UIState.Error(R.string.unexpected_error)
                             }
+
                             else -> {
                                 _uiState.value = UIState.Error(R.string.unexpected_error)
                             }
@@ -88,12 +100,29 @@ class QuizViewModel(
                     }
 
                     is AppResult.Success -> {
-                        val translatedQuiz = formatQuizUseCase.invoke(result.data)
-                        if (translatedQuiz is AppResult.Success) {
-                            _uiState.value = UIState.Success(translatedQuiz.data)
-                            timing()
+                        if (result.data.isEmpty()) {
+                            val newSession = postSessionUseCase.invoke()
+                            if (newSession is AppResult.Success) {
+                                val result = updateUserSessionUseCase.invoke(newSession.data.id, userResult.getOrThrow())
+                                if (result is AppResult.Error) {
+                                    _uiState.value = UIState.Error(R.string.unexpected_error)
+                                    return@launch
+                                } else {
+                                    _quizState.value = _quizState.value.copy(session = newSession.data.id)
+                                    getQuiz()
+                                    return@launch
+                                }
+                            } else {
+                                _uiState.value = UIState.Error(R.string.unexpected_error)
+                            }
                         } else {
-                            _uiState.value = UIState.Error(R.string.unexpected_error)
+                            val translatedQuiz = formatQuizUseCase.invoke(result.data)
+                            if (translatedQuiz is AppResult.Success) {
+                                _uiState.value = UIState.Success(translatedQuiz.data)
+                                timing()
+                            } else {
+                                _uiState.value = UIState.Error(R.string.unexpected_error)
+                            }
                         }
                     }
                 }

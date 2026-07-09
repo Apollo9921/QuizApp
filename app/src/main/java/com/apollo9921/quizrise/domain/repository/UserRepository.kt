@@ -15,4 +15,6 @@ interface UserRepository {
     suspend fun getResults(): AppResult<List<Results>>
     suspend fun clearAllData()
     suspend fun deleteAccount(): AppResult<Unit>
+    suspend fun postSession(session: String, user: User): AppResult<Unit>
+    suspend fun updateSession(session: String, user: User) : Result<Unit>
 }

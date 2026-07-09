@@ -280,8 +280,52 @@ class UserRepositoryImpl(
                     is com.google.firebase.auth.FirebaseAuthRecentLoginRequiredException -> {
                         AppResult.Error(AppError.Unauthorized)
                     }
+
                     else -> AppResult.Error(AppError.Unknown)
                 }
+            }
+        }
+    }
+
+    override suspend fun postSession(session: String, user: User): AppResult<Unit> {
+        return withContext(ioDispatcher) {
+            val currentUser = FirebaseAuth.getInstance().currentUser
+
+            if (currentUser == null) {
+                return@withContext AppResult.Error(AppError.Unauthorized)
+            }
+
+            val userId = currentUser.uid
+
+            try {
+                val userRef = firestore.collection("users").document(userId)
+
+                val batch = firestore.batch()
+
+                batch.update(
+                    userRef,
+                    "session", session,
+                )
+
+                batch.commit().await()
+                AppResult.Success(Unit)
+
+            } catch (_: Exception) {
+                AppResult.Error(AppError.Unknown)
+            }
+        }
+    }
+
+    override suspend fun updateSession(
+        session: String,
+        user: User
+    ): Result<Unit> {
+        return withContext(ioDispatcher) {
+            try {
+                val result = userDAO.updateSession(session, user.name)
+                Result.success(result)
+            } catch (e: Exception) {
+                Result.failure(e)
             }
         }
     }
