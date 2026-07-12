@@ -31,6 +31,7 @@
 -dontwarn com.google.android.libraries.identity.googleid.**
 
 -keep class androidx.credentials.** { *; }
+-keep class com.google.android.gms.auth.api.** { *; }
 
 # Ignorar avisos de classes em falta do SLF4J
 -dontwarn org.slf4j.impl.StaticLoggerBinder

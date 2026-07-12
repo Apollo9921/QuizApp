@@ -1,4 +1,5 @@
 name: Android CI
+
 on:
   push:
     branches: [ "master", "main" ]
@@ -29,7 +30,7 @@ jobs:
           TRIVIA_API_KEY: ${{ secrets.TRIVIA_API_KEY }}
         run: |
           echo "GOOGLE_SERVER_CLIENT_ID=$GOOGLE_CLIENT_ID" > local.properties
-          echo "TRIVIA_API_KEY=$TRIVIA_API_KEY" > local.properties
+          echo "TRIVIA_API_KEY=$TRIVIA_API_KEY" >> local.properties
 
       - name: Run Unit Tests
         run: ./gradlew testDebugUnitTest
