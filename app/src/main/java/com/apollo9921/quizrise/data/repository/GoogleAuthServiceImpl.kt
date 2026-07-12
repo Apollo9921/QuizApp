@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
-import androidx.credentials.exceptions.NoCredentialException
 import com.apollo9921.quizrise.BuildConfig
 import com.apollo9921.quizrise.domain.repository.GoogleAuthService
 import com.apollo9921.quizrise.domain.result.AppError
@@ -21,14 +20,12 @@ class GoogleAuthServiceImpl(
 
         return try {
             executeGetCredential(credentialManager, filterAuthorized = true)
-        } catch (_: NoCredentialException) {
+        } catch (_: Exception) {
             try {
                 executeGetCredential(credentialManager, filterAuthorized = false)
             } catch (_: Exception) {
                 AppResult.Error(AppError.Unknown)
             }
-        } catch (_: Exception) {
-            AppResult.Error(AppError.Unknown)
         }
     }
 
@@ -57,7 +54,7 @@ class GoogleAuthServiceImpl(
         val googleIdOption = GetGoogleIdOption.Builder()
             .setServerClientId(BuildConfig.GOOGLE_SERVER_CLIENT_ID)
             .setFilterByAuthorizedAccounts(filterByAuthorizedAccounts)
-            .setAutoSelectEnabled(true)
+            .setAutoSelectEnabled(false)
             .build()
 
         return GetCredentialRequest.Builder()
