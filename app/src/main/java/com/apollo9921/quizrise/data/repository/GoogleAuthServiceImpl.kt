@@ -4,15 +4,20 @@ import android.content.Context
 import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
+import androidx.credentials.exceptions.GetCredentialException
 import com.apollo9921.quizrise.BuildConfig
 import com.apollo9921.quizrise.domain.repository.GoogleAuthService
 import com.apollo9921.quizrise.domain.result.AppError
 import com.apollo9921.quizrise.domain.result.AppResult
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
+import kotlinx.coroutines.suspendCancellableCoroutine
 
 class GoogleAuthServiceImpl(
-    private val context: Context
+    private val context: Context,
+    private val launcherHolder: GoogleSignInLauncherHolder
 ) : GoogleAuthService {
 
     override suspend fun getGoogleIdToken(): AppResult<String> {
@@ -20,11 +25,15 @@ class GoogleAuthServiceImpl(
 
         return try {
             executeGetCredential(credentialManager, filterAuthorized = true)
-        } catch (_: Exception) {
+        } catch (e: GetCredentialException) {
             try {
                 executeGetCredential(credentialManager, filterAuthorized = false)
-            } catch (_: Exception) {
-                AppResult.Error(AppError.Unknown)
+            } catch (e2: GetCredentialException) {
+                if (e2.type == "android.credentials.GetCredentialException.TYPE_NO_CREDENTIAL") {
+                    legacyGoogleSignIn()
+                } else {
+                    AppResult.Error(AppError.Unknown)
+                }
             }
         }
     }
@@ -60,5 +69,19 @@ class GoogleAuthServiceImpl(
         return GetCredentialRequest.Builder()
             .addCredentialOption(googleIdOption)
             .build()
+    }
+
+    private suspend fun legacyGoogleSignIn(): AppResult<String> {
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(BuildConfig.GOOGLE_SERVER_CLIENT_ID)
+            .requestEmail()
+            .build()
+
+        val client = GoogleSignIn.getClient(context, gso)
+        client.signOut()
+
+        return suspendCancellableCoroutine { continuation ->
+            launcherHolder.launch(client.signInIntent, continuation)
+        }
     }
 }

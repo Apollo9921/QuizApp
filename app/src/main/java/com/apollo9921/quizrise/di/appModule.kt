@@ -7,6 +7,7 @@ import com.apollo9921.quizrise.data.network.instance.Instance
 import com.apollo9921.quizrise.data.repository.AuthRepositoryImpl
 import com.apollo9921.quizrise.data.repository.CloudQuizTranslatorImpl
 import com.apollo9921.quizrise.data.repository.GoogleAuthServiceImpl
+import com.apollo9921.quizrise.data.repository.GoogleSignInLauncherHolder
 import com.apollo9921.quizrise.data.repository.LeaderboardRepositoryImpl
 import com.apollo9921.quizrise.data.repository.QuizRepositoryImpl
 import com.apollo9921.quizrise.data.repository.ResultsRepositoryImpl
@@ -92,9 +93,10 @@ val repositoryModule = module {
     single<UserRepository> { UserRepositoryImpl(get(), get(), get()) }
     single<QuizRepository> { QuizRepositoryImpl(get()) }
     single<AuthRepository> { AuthRepositoryImpl(get(), get()) }
-    single<GoogleAuthService> { GoogleAuthServiceImpl(androidContext()) }
+    single<GoogleAuthService> { GoogleAuthServiceImpl(androidContext(), get()) }
     single<CloudQuizTranslator> { CloudQuizTranslatorImpl(get()) }
     single<LeaderboardRepository> { LeaderboardRepositoryImpl(get()) }
+    single { GoogleSignInLauncherHolder() }
 }
 
 val viewModelModule = module {

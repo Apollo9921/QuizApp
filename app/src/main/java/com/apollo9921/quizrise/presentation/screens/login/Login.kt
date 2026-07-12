@@ -1,5 +1,7 @@
 package com.apollo9921.quizrise.presentation.screens.login
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
@@ -33,6 +35,8 @@ import com.apollo9921.quizrise.presentation.navigation.Destination
 import com.google.android.gms.common.SignInButton
 import org.koin.androidx.compose.koinViewModel
 import com.apollo9921.quizrise.R
+import com.apollo9921.quizrise.data.repository.GoogleSignInLauncherHolder
+import org.koin.compose.koinInject
 
 @Composable
 fun LoginRoute(
@@ -40,6 +44,21 @@ fun LoginRoute(
     viewModel: LoginViewModel = koinViewModel<LoginViewModel>()
 ) {
     val state = viewModel.uiState.collectAsStateWithLifecycle().value
+
+    val launcherHolder: GoogleSignInLauncherHolder = koinInject()
+    val googleSignInLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        launcherHolder.handleResult(result.resultCode, result.data)
+    }
+
+    DisposableEffect(googleSignInLauncher) {
+        launcherHolder.registerLauncher(googleSignInLauncher)
+        onDispose {
+            launcherHolder.clearLauncher()
+        }
+    }
+
     val onLoginClick =
         remember {
             { email: String, password: String ->
@@ -60,7 +79,6 @@ fun LoginRoute(
         navigateToRegister = navigateToRegister
     )
 }
-
 @Composable
 private fun LoginScreen(
     state: LoginViewModel.UIState,
