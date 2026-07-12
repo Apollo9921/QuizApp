@@ -17,8 +17,8 @@ android {
         applicationId "com.apollo9921.quizrise"
         minSdk 24
         targetSdk 35
-        versionCode 3
-        versionName "1.0.2"
+        versionCode 12
+        versionName "1.0.4"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -26,14 +26,14 @@ android {
         }
     }
 
+    def localProperties = new java.util.Properties()
+    def localPropertiesFile = rootProject.file("local.properties")
+    if (localPropertiesFile.exists()) {
+        localProperties.load(localPropertiesFile.newInputStream())
+    }
+
     buildTypes {
         debug {
-            def localProperties = new java.util.Properties()
-            def localPropertiesFile = rootProject.file("local.properties")
-            if (localPropertiesFile.exists()) {
-                localProperties.load(localPropertiesFile.newInputStream())
-            }
-
             buildConfigField(
                     "String",
                     "GOOGLE_SERVER_CLIENT_ID",
@@ -44,15 +44,10 @@ android {
                     "TRIVIA_API_KEY",
                     "\"${localProperties.getProperty("TRIVIA_API_KEY") ?: ""}\""
             )
-            buildConfigField "String", "BASE_URL", "\"https://the-trivia-api.com/v2/\""
+            buildConfigField("String", "BASE_URL", "\"https://the-trivia-api.com/v2/\"")
         }
-        release {
-            def localProperties = new java.util.Properties()
-            def localPropertiesFile = rootProject.file("local.properties")
-            if (localPropertiesFile.exists()) {
-                localProperties.load(localPropertiesFile.newInputStream())
-            }
 
+        release {
             buildConfigField(
                     "String",
                     "GOOGLE_SERVER_CLIENT_ID",
@@ -63,10 +58,11 @@ android {
                     "TRIVIA_API_KEY",
                     "\"${localProperties.getProperty("TRIVIA_API_KEY") ?: ""}\""
             )
-            buildConfigField "String", "BASE_URL", "\"https://the-trivia-api.com/v2/\""
+            buildConfigField("String", "BASE_URL", "\"https://the-trivia-api.com/v2/\"")
+
             minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.debug
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            signingConfig = signingConfigs.getByName("debug")
         }
     }
     compileOptions {
@@ -189,4 +185,6 @@ dependencies {
 
     // Browser Tabs
     implementation("androidx.browser:browser:1.8.0")
+
+    implementation 'com.google.android.gms:play-services-auth:21.3.0'
 }
