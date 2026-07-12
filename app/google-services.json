@@ -22,40 +22,19 @@
           }
         },
         {
-          "client_id": "485509817884-5neagpm6re9h9blj49khrgi5he3dr4m2.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAtEK04FCV8rjghVquCGpOwgKWxt6Q-kTM"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "485509817884-5neagpm6re9h9blj49khrgi5he3dr4m2.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:485509817884:android:4427b7c0360b038198e1d9",
-        "android_client_info": {
-          "package_name": "com.apollo9921.quizrise"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "485509817884-6dcsum5rrbf365krngflt50inddan339.apps.googleusercontent.com",
+          "client_id": "485509817884-k6t9vkem3j1t1ap87l983loed8q1itia.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.apollo9921.quizrise",
-            "certificate_hash": "cc73d433493fd0180b3aa999075fc7b61c95729c"
+            "certificate_hash": "a7f67e616f5823cc81dd3dbdf0d4a0832650ceb7"
+          }
+        },
+        {
+          "client_id": "485509817884-p6t8qle98hmmul9nk7ibu31c910h8lq2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.apollo9921.quizrise",
+            "certificate_hash": "65fb7a4a66268d825119379aa86e5af9b3bc1263"
           }
         },
         {
