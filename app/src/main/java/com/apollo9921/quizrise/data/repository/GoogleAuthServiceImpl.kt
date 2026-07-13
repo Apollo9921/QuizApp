@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
+import androidx.credentials.exceptions.GetCredentialCancellationException
 import androidx.credentials.exceptions.GetCredentialException
 import com.apollo9921.quizrise.BuildConfig
 import com.apollo9921.quizrise.domain.repository.GoogleAuthService
@@ -29,10 +30,10 @@ class GoogleAuthServiceImpl(
             try {
                 executeGetCredential(credentialManager, filterAuthorized = false)
             } catch (e2: GetCredentialException) {
-                if (e2.type == "android.credentials.GetCredentialException.TYPE_NO_CREDENTIAL") {
-                    legacyGoogleSignIn()
-                } else {
+                if (e2 is GetCredentialCancellationException) {
                     AppResult.Error(AppError.Unknown)
+                } else {
+                    legacyGoogleSignIn()
                 }
             }
         }
@@ -78,7 +79,6 @@ class GoogleAuthServiceImpl(
             .build()
 
         val client = GoogleSignIn.getClient(context, gso)
-        client.signOut()
 
         return suspendCancellableCoroutine { continuation ->
             launcherHolder.launch(client.signInIntent, continuation)
