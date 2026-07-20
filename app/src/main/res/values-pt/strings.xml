@@ -97,4 +97,5 @@
     <string name="tooltip_profile">Aqui podes ver o teu progresso, nível e medalhas.</string>
     <string name="tooltip_results">Aqui podes ver os teus resultados por média de todas as categorias e a percentagem de cada categoria.</string>
     <string name="tooltip_leaderboard">Aqui você pode ver os 100 melhores jogadores por nível e categoria.</string>
+    <string name="guest_mode">Entrar no Modo de Convidado</string>
 </resources>

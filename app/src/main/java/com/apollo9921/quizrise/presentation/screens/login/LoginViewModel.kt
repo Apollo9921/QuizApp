@@ -15,6 +15,7 @@ import com.apollo9921.quizrise.domain.usecase.InsertUserUseCase
 import com.apollo9921.quizrise.domain.usecase.InsertNewUserUseCase
 import com.apollo9921.quizrise.domain.usecase.PostSessionUseCase
 import com.apollo9921.quizrise.domain.usecase.PostUserAndResultsUseCase
+import com.apollo9921.quizrise.domain.usecase.PostUserAnonymouslyUseCase
 import com.apollo9921.quizrise.presentation.navigation.Destination
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,6 +32,7 @@ class LoginViewModel(
     private val insertNewResultsUseCase: InsertNewResultsUseCase,
     private val postUserAndResultsUseCase: PostUserAndResultsUseCase,
     private val postSessionUseCase: PostSessionUseCase,
+    private val postUserAnonymouslyUseCase: PostUserAnonymouslyUseCase,
     private val firebaseAuth: FirebaseAuth
 ) : ViewModel() {
 
@@ -111,6 +113,25 @@ class LoginViewModel(
 
                 is AppResult.Success<*> -> {
                     checkIfUserExists(navHostController)
+                }
+            }
+        }
+    }
+
+    fun signInAnonymously(navHostController: NavHostController) {
+        viewModelScope.launch {
+            _uiState.value = UIState.Loading
+            val name = generateRandomName()
+            val result = postUserAnonymouslyUseCase.invoke(name, "")
+            when (result) {
+                is AppResult.Error -> {
+                    firebaseAuth.signOut()
+                    getTypeOfError(result.error)
+                }
+                is AppResult.Success<*> -> {
+                    _uiState.value = UIState.Idle
+                    navHostController.popBackStack()
+                    navHostController.navigate(Destination.Categories.route)
                 }
             }
         }

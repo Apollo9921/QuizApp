@@ -25,6 +25,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -71,11 +72,13 @@ fun LoginRoute(
         }
     val onGoogleSignInClick = remember { { viewModel.startSignInByGoogle(navHostController) } }
     val navigateToRegister = remember { { navHostController.navigate(Destination.Register.route) } }
+    val signInAnonymously = remember { { viewModel.signInAnonymously(navHostController) } }
 
     LoginScreen(
         state = state,
         onLoginClick = onLoginClick,
         onGoogleSignInClick = onGoogleSignInClick,
+        signInAnonymously = signInAnonymously,
         navigateToRegister = navigateToRegister
     )
 }
@@ -84,6 +87,7 @@ private fun LoginScreen(
     state: LoginViewModel.UIState,
     onLoginClick: (String, String) -> Unit,
     onGoogleSignInClick: () -> Unit,
+    signInAnonymously: () -> Unit,
     navigateToRegister: () -> Unit
 ) {
     var email by rememberSaveable { mutableStateOf("") }
@@ -206,6 +210,17 @@ private fun LoginScreen(
                     text = stringResource(R.string.login_btn),
                 )
             }
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        TextButton(onClick = { signInAnonymously() }) {
+            Text(
+                style = MaterialTheme.typography.labelSmall,
+                text = stringResource(R.string.guest_mode),
+                color = White,
+                textDecoration = TextDecoration.Underline
+            )
         }
 
         Spacer(modifier = Modifier.height(24.dp))

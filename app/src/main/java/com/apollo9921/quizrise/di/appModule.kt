@@ -37,6 +37,7 @@ import com.apollo9921.quizrise.domain.usecase.InsertNewUserUseCase
 import com.apollo9921.quizrise.domain.usecase.PostSessionUseCase
 import com.apollo9921.quizrise.domain.usecase.PostUserUseCase
 import com.apollo9921.quizrise.domain.usecase.PostUserAndResultsUseCase
+import com.apollo9921.quizrise.domain.usecase.PostUserAnonymouslyUseCase
 import com.apollo9921.quizrise.domain.usecase.UpdateBadgeUseCase
 import com.apollo9921.quizrise.domain.usecase.UpdatePointsUseCase
 import com.apollo9921.quizrise.domain.usecase.UpdateResultsUseCase
@@ -104,7 +105,7 @@ val viewModelModule = module {
     viewModel { ProgressViewModel(get(), get()) }
     viewModel { QuizResultViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { ProfileViewModel(get(), get(), get(), get(), get()) }
-    viewModel { LoginViewModel(get(), get(), get(), get(), get(), get(), get(), get(), get(), get()) }
+    viewModel { LoginViewModel(get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { RegisterViewModel(get()) }
     viewModel { LeaderboardViewModel(get(), get(), get()) }
     viewModel { ResultsViewModel(get(), get()) }
@@ -135,4 +136,5 @@ val useCaseModule = module {
     factory { PostSessionUseCase(get()) }
     factory { DeleteAccountUseCase(get(), get()) }
     factory { UpdateUserSessionUseCase(get()) }
+    factory { PostUserAnonymouslyUseCase(get(), get(), get()) }
 }

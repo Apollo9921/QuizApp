@@ -97,4 +97,5 @@
     <string name="tooltip_profile">Aquí puedes ver tu progreso, nivel y insignias.</string>
     <string name="tooltip_results">Aquí puedes ver tus resultados por promedio de todas las categorías y el porcentaje de cada categoría.</string>
     <string name="tooltip_leaderboard">Aquí puedes ver a los 100 mejores jugadores por nivel y categoría.</string>
+    <string name="guest_mode">Entrar en modo invitado</string>
 </resources>

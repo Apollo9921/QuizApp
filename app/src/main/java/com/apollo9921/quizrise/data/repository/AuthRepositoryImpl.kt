@@ -100,4 +100,20 @@ class AuthRepositoryImpl(
             }
         }
     }
+
+    override suspend fun signInAnonymously(): AppResult<Unit> {
+        return try {
+            val result = auth.signInAnonymously().await()
+            if (result.user != null) {
+                AppResult.Success(Unit)
+            } else {
+                AppResult.Error(AppError.Unknown)
+            }
+        } catch (e: Exception) {
+            when (e) {
+                is FirebaseNetworkException -> AppResult.Error(AppError.Network)
+                else -> AppResult.Error(AppError.Unknown)
+            }
+        }
+    }
 }
