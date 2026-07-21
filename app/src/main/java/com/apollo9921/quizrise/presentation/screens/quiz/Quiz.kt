@@ -36,6 +36,7 @@ import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import com.apollo9921.quizrise.R
 import com.apollo9921.quizrise.presentation.components.GuestLimitBottomSheet
+import com.apollo9921.quizrise.presentation.navigation.Destination
 
 @Composable
 fun StartQuizRoute(
@@ -61,6 +62,8 @@ fun StartQuizRoute(
     val resetValues = remember { { viewModel.resetValues() } }
     val goBack = remember { { navHostController.navigateUp() } }
     val signInByGoogle = remember { { viewModel.startSignInByGoogle(navHostController) } }
+    val navigateToRegister =
+        remember { { navHostController.navigate(Destination.Register.passArgument(isAnonymous = true)) } }
 
     StartQuiz(
         uiState,
@@ -70,7 +73,8 @@ fun StartQuizRoute(
         resetValues,
         retry,
         goBack,
-        signInByGoogle
+        signInByGoogle,
+        navigateToRegister
     )
 }
 
@@ -84,7 +88,8 @@ private fun StartQuiz(
     resetValues: () -> Unit,
     retry: () -> Unit,
     goBack: () -> Boolean,
-    signInByGoogle: () -> Unit
+    signInByGoogle: () -> Unit,
+    navigateToRegister: () -> Unit
 ) {
     Scaffold { pv ->
         Box(
@@ -104,7 +109,7 @@ private fun StartQuiz(
                             isVisible = true,
                             onDismissRequest = { goBack() },
                             onGoogleSignInClick = { signInByGoogle() },
-                            onEmailRegisterClick = { }
+                            onEmailRegisterClick = { navigateToRegister() }
                         )
                         if (uiState.showToast) {
                             Toast.makeText(

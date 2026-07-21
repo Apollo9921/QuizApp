@@ -71,7 +71,7 @@ fun LoginRoute(
             }
         }
     val onGoogleSignInClick = remember { { viewModel.startSignInByGoogle(navHostController) } }
-    val navigateToRegister = remember { { navHostController.navigate(Destination.Register.route) } }
+    val navigateToRegister = remember { { navHostController.navigate(Destination.Register.passArgument(isAnonymous = false)) } }
     val signInAnonymously = remember { { viewModel.signInAnonymously(navHostController) } }
 
     LoginScreen(

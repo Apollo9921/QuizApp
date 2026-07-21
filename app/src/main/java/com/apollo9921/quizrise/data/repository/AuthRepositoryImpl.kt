@@ -4,6 +4,7 @@ import com.apollo9921.quizrise.domain.repository.AuthRepository
 import com.apollo9921.quizrise.domain.result.AppError
 import com.apollo9921.quizrise.domain.result.AppResult
 import com.google.firebase.FirebaseNetworkException
+import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
@@ -46,6 +47,29 @@ class AuthRepositoryImpl(
         }
     }
 
+    override suspend fun registerWithEmailByAnonymouslyAccount(
+        email: String,
+        password: String
+    ): AppResult<Unit> {
+        return try {
+            val credential = EmailAuthProvider.getCredential(email, password)
+            auth.currentUser?.linkWithCredential(credential)?.await()
+            AppResult.Success(Unit)
+        } catch (e: Exception) {
+            when (e) {
+                is FirebaseNetworkException -> AppResult.Error(AppError.Network)
+
+                is FirebaseAuthInvalidCredentialsException ->
+                    AppResult.Error(AppError.InvalidCredentials)
+
+                is FirebaseAuthUserCollisionException ->
+                    AppResult.Error(AppError.UserAlreadyExists)
+
+                else -> AppResult.Error(AppError.Unknown)
+            }
+        }
+    }
+
     override suspend fun signInWithGoogleByAnonymouslyAccount(idToken: String): AppResult<Unit> {
         return try {
             val credential = GoogleAuthProvider.getCredential(idToken, null)
@@ -72,7 +96,6 @@ class AuthRepositoryImpl(
             }
         } catch (e: Exception) {
             when (e) {
-                is FirebaseAuthUserCollisionException -> AppResult.Error(AppError.UserAlreadyExists)
                 is FirebaseNetworkException -> AppResult.Error(AppError.Network)
                 else -> AppResult.Error(AppError.Unknown)
             }

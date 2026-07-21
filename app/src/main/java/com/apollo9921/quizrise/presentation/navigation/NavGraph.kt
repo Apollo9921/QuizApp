@@ -64,6 +64,11 @@ fun AnimationNav(navHostController: NavHostController, startDestination: String)
         }
         composable(
             route = Destination.Register.route,
+            arguments = listOf(
+                navArgument("isAnonymous") {
+                    type = NavType.BoolType
+                }
+            ),
             enterTransition = {
                 slideIntoContainer(
                     AnimatedContentTransitionScope.SlideDirection.Left,
@@ -77,7 +82,12 @@ fun AnimationNav(navHostController: NavHostController, startDestination: String)
                 )
             }
         ) {
-            RegisterRoute(onNavigateBack = { navHostController.navigateUp() })
+            val isAnonymous = it.arguments?.getBoolean("isAnonymous")
+            RegisterRoute(
+                isAnonymous = isAnonymous == true,
+                onNavigateBack = { navHostController.navigateUp() },
+                navigateToCategories = { navHostController.navigate(Destination.Categories.route) }
+            )
         }
         composable(
             route = Destination.Progress.route,

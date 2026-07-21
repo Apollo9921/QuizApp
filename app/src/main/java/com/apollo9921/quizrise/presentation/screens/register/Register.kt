@@ -30,8 +30,10 @@ import com.apollo9921.quizrise.R
 
 @Composable
 fun RegisterRoute(
+    isAnonymous: Boolean,
     onNavigateBack: () -> Unit,
-    viewModel: RegisterViewModel = koinViewModel()
+    viewModel: RegisterViewModel = koinViewModel(),
+    navigateToCategories: () -> Unit
 ) {
     val state = viewModel.uiState.collectAsStateWithLifecycle().value
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
@@ -164,7 +166,9 @@ fun RegisterRoute(
                     email,
                     password,
                     confirmPassword,
-                    onNavigateBack
+                    onNavigateBack,
+                    isAnonymous,
+                    navigateToCategories
                 )
             },
             modifier = Modifier
@@ -187,12 +191,14 @@ fun RegisterRoute(
             }
         }
 
-        TextButton(onClick = onNavigateBack) {
-            Text(
-                style = MaterialTheme.typography.displaySmall,
-                text = stringResource(R.string.have_an_account),
-                color = White
-            )
+        if (!isAnonymous) {
+            TextButton(onClick = onNavigateBack) {
+                Text(
+                    style = MaterialTheme.typography.displaySmall,
+                    text = stringResource(R.string.have_an_account),
+                    color = White
+                )
+            }
         }
     }
 }

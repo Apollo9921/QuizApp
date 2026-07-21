@@ -31,12 +31,21 @@ class RegisterViewModelTest {
         val email = "test@example.com"
         val password = "password"
         val confirmPassword = "password"
+        val isAnonymous = false
         val onNavigateBack = {}
+        val navigateToCategories = {}
 
-        coEvery { postUserUseCase.invoke(email, password, confirmPassword) } returns AppResult.Success(Unit)
+        coEvery { postUserUseCase.invoke(email, password, confirmPassword, isAnonymous) } returns AppResult.Success(Unit)
 
         // --- ACT ---
-        viewModel.onRegisterClick(email, password, confirmPassword, onNavigateBack)
+        viewModel.onRegisterClick(
+            email,
+            password,
+            confirmPassword,
+            onNavigateBack,
+            isAnonymous,
+            navigateToCategories
+        )
 
         // --- ASSERT ---
         assert(viewModel.uiState.value is RegisterViewModel.UIState.Idle)
@@ -48,12 +57,21 @@ class RegisterViewModelTest {
         val email = ""
         val password = ""
         val confirmPassword = ""
+        val isAnonymous = false
         val onNavigateBack = {}
+        val navigateToCategories = {}
 
-        coEvery { postUserUseCase.invoke(email, password, confirmPassword) } returns AppResult.Error(AppError.EmptyFields)
+        coEvery { postUserUseCase.invoke(email, password, confirmPassword, isAnonymous) } returns AppResult.Error(AppError.EmptyFields)
 
         // --- ACT ---
-        viewModel.onRegisterClick(email, password, confirmPassword, onNavigateBack)
+        viewModel.onRegisterClick(
+            email,
+            password,
+            confirmPassword,
+            onNavigateBack,
+            isAnonymous,
+            navigateToCategories
+        )
 
         // --- ASSERT ---
         assert(viewModel.uiState.value is RegisterViewModel.UIState.Error)
@@ -66,12 +84,21 @@ class RegisterViewModelTest {
         val email = "test@"
         val password = "password"
         val confirmPassword = "password"
+        val isAnonymous = false
         val onNavigateBack = {}
+        val navigateToCategories = {}
 
-        coEvery { postUserUseCase.invoke(email, password, confirmPassword) } returns AppResult.Error(AppError.InvalidEmailFormat)
+        coEvery { postUserUseCase.invoke(email, password, confirmPassword, isAnonymous) } returns AppResult.Error(AppError.InvalidEmailFormat)
 
         // --- ACT ---
-        viewModel.onRegisterClick(email, password, confirmPassword, onNavigateBack)
+        viewModel.onRegisterClick(
+            email,
+            password,
+            confirmPassword,
+            onNavigateBack,
+            isAnonymous,
+            navigateToCategories
+        )
 
         // --- ASSERT ---
         assert(viewModel.uiState.value is RegisterViewModel.UIState.Error)
@@ -84,12 +111,21 @@ class RegisterViewModelTest {
         val email = "test@example.com"
         val password = "1234"
         val confirmPassword = "1234"
+        val isAnonymous = false
         val onNavigateBack = {}
+        val navigateToCategories = {}
 
-        coEvery { postUserUseCase.invoke(email, password, confirmPassword) } returns AppResult.Error(AppError.PasswordLength)
+        coEvery { postUserUseCase.invoke(email, password, confirmPassword, isAnonymous) } returns AppResult.Error(AppError.PasswordLength)
 
         // --- ACT ---
-        viewModel.onRegisterClick(email, password, confirmPassword, onNavigateBack)
+        viewModel.onRegisterClick(
+            email,
+            password,
+            confirmPassword,
+            onNavigateBack,
+            isAnonymous,
+            navigateToCategories
+        )
 
         // --- ASSERT ---
         assert(viewModel.uiState.value is RegisterViewModel.UIState.Error)
@@ -102,12 +138,21 @@ class RegisterViewModelTest {
         val email = "test@example.com"
         val password = "1234567"
         val confirmPassword = "12341111"
+        val isAnonymous = false
         val onNavigateBack = {}
+        val navigateToCategories = {}
 
-        coEvery { postUserUseCase.invoke(email, password, confirmPassword) } returns AppResult.Error(AppError.PasswordMismatch)
+        coEvery { postUserUseCase.invoke(email, password, confirmPassword, isAnonymous) } returns AppResult.Error(AppError.PasswordMismatch)
 
         // --- ACT ---
-        viewModel.onRegisterClick(email, password, confirmPassword, onNavigateBack)
+        viewModel.onRegisterClick(
+            email,
+            password,
+            confirmPassword,
+            onNavigateBack,
+            isAnonymous,
+            navigateToCategories
+        )
 
         // --- ASSERT ---
         assert(viewModel.uiState.value is RegisterViewModel.UIState.Error)
@@ -120,12 +165,21 @@ class RegisterViewModelTest {
         val email = "test@example.com"
         val password = "1234567"
         val confirmPassword = "1234567"
+        val isAnonymous = false
         val onNavigateBack = {}
+        val navigateToCategories = {}
 
-        coEvery { postUserUseCase.invoke(email, password, confirmPassword) } returns AppResult.Error(AppError.UserAlreadyExists)
+        coEvery { postUserUseCase.invoke(email, password, confirmPassword, isAnonymous) } returns AppResult.Error(AppError.UserAlreadyExists)
 
         // --- ACT ---
-        viewModel.onRegisterClick(email, password, confirmPassword, onNavigateBack)
+        viewModel.onRegisterClick(
+            email,
+            password,
+            confirmPassword,
+            onNavigateBack,
+            isAnonymous,
+            navigateToCategories
+        )
 
         // --- ASSERT ---
         assert(viewModel.uiState.value is RegisterViewModel.UIState.Error)
@@ -138,12 +192,21 @@ class RegisterViewModelTest {
         val email = "test@example.com"
         val password = "1234567"
         val confirmPassword = "1234567"
+        val isAnonymous = false
         val onNavigateBack = {}
+        val navigateToCategories = {}
 
-        coEvery { postUserUseCase.invoke(email, password, confirmPassword) } returns AppResult.Error(AppError.Unknown)
+        coEvery { postUserUseCase.invoke(email, password, confirmPassword, isAnonymous) } returns AppResult.Error(AppError.Unknown)
 
         // --- ACT ---
-        viewModel.onRegisterClick(email, password, confirmPassword, onNavigateBack)
+        viewModel.onRegisterClick(
+            email,
+            password,
+            confirmPassword,
+            onNavigateBack,
+            isAnonymous,
+            navigateToCategories
+        )
 
         // --- ASSERT ---
         assert(viewModel.uiState.value is RegisterViewModel.UIState.Error)
