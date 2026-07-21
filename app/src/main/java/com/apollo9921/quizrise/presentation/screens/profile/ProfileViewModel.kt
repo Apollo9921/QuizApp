@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import com.apollo9921.quizrise.domain.model.user.User
 import com.apollo9921.quizrise.domain.usecase.ClearAllDataUseCase
+import com.apollo9921.quizrise.domain.usecase.DeleteAccountUseCase
 import com.apollo9921.quizrise.domain.usecase.FetchBadgeImageUseCase
 import com.apollo9921.quizrise.domain.usecase.FetchUserUseCase
 import com.apollo9921.quizrise.domain.usecase.FetchBadgeUseCase
@@ -20,7 +21,8 @@ class ProfileViewModel(
     private val fetchBadgeImageUseCase: FetchBadgeImageUseCase,
     private val fetchBadgeUseCase: FetchBadgeUseCase,
     private val firebaseAuth: FirebaseAuth,
-    private val clearAllDataUseCase: ClearAllDataUseCase
+    private val clearAllDataUseCase: ClearAllDataUseCase,
+    private val deleteAccountUseCase: DeleteAccountUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<UIState>(UIState.Idle)
@@ -59,6 +61,12 @@ class ProfileViewModel(
     fun logout(navHostController: NavHostController) {
         viewModelScope.launch {
             try {
+                val user = firebaseAuth.currentUser
+                if (user != null) {
+                    if (user.isAnonymous) {
+                        deleteAccountUseCase.invoke()
+                    }
+                }
                 firebaseAuth.signOut()
                 clearAllDataUseCase.invoke()
                 _uiState.value = UIState.Idle
