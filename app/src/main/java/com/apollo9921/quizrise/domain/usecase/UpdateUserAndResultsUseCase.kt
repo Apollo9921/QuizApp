@@ -7,10 +7,14 @@ import com.apollo9921.quizrise.domain.model.user.User
 import com.apollo9921.quizrise.domain.repository.UserRepository
 import com.apollo9921.quizrise.domain.result.AppResult
 import com.apollo9921.quizrise.domain.util.QuizCategory
+import com.apollo9921.quizrise.presentation.dataStore.UserManager
+import com.apollo9921.quizrise.presentation.dataStore.dataStoreUser
+import com.google.firebase.auth.FirebaseAuth
 
 class UpdateUserAndResultsUseCase(
     private val context: Context,
-    private val repository: UserRepository
+    private val repository: UserRepository,
+    private val firebaseAuth: FirebaseAuth
 ) {
     suspend operator fun invoke(user: User, results: Results): AppResult<Unit> {
         val categoryName = when (results.category) {
@@ -25,6 +29,14 @@ class UpdateUserAndResultsUseCase(
             context.getString(R.string.societyAndCulture_translatable) -> QuizCategory.SOCIETY_AND_CULTURE.categoryName
             context.getString(R.string.sportAndLeisure_translatable) -> QuizCategory.SPORT_AND_LEISURE.categoryName
             else -> results.category
+        }
+
+        val authUser = firebaseAuth.currentUser
+        if (authUser != null) {
+            if (authUser.isAnonymous) {
+                val userManager = UserManager(dataStore = context.dataStoreUser)
+                userManager.updateQuizAllowed()
+            }
         }
 
         val updatedResults = results.copy(category = categoryName)

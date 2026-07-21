@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import com.apollo9921.quizrise.R
 import com.apollo9921.quizrise.data.network.dto.TranslatedQuizResult
+import com.apollo9921.quizrise.domain.repository.AuthRepository
+import com.apollo9921.quizrise.domain.repository.GoogleAuthService
 import com.apollo9921.quizrise.domain.result.AppError
 import com.apollo9921.quizrise.domain.result.AppResult
 import com.apollo9921.quizrise.domain.usecase.FetchUserUseCase
@@ -25,6 +27,8 @@ class QuizViewModel(
     private val fetchUserUseCase: FetchUserUseCase,
     private val postSessionUseCase: PostSessionUseCase,
     private val updateUserSessionUseCase: UpdateUserSessionUseCase,
+    private val googleAuthService: GoogleAuthService,
+    private val authRepository: AuthRepository,
     val category: String,
     val level: String
 ) : ViewModel() {
@@ -51,7 +55,7 @@ class QuizViewModel(
     sealed class UIState {
         data object Loading : UIState()
         data class Success(val quiz: List<TranslatedQuizResult>) : UIState()
-        data class Error(val errorMessage: Int) : UIState()
+        data class Error(val errorMessage: Int, val showToast: Boolean = false) : UIState()
     }
 
     fun getQuiz() {
@@ -91,6 +95,10 @@ class QuizViewModel(
 
                             is AppError.Unknown -> {
                                 _uiState.value = UIState.Error(R.string.unexpected_error)
+                            }
+
+                            is AppError.AnonymousUserExpiredQuiz -> {
+                                _uiState.value = UIState.Error(R.string.anonymous_quiz_expired)
                             }
 
                             else -> {
@@ -185,5 +193,72 @@ class QuizViewModel(
         timerJob?.cancel()
         hasNavigatedToResult = false
         _quizState.value = QuizState()
+    }
+
+    fun startSignInByGoogle(navHostController: NavHostController) {
+        viewModelScope.launch {
+            _uiState.value = UIState.Loading
+            val result = googleAuthService.getGoogleIdToken()
+            when (result) {
+                is AppResult.Error -> {
+                    when(result.error) {
+                        is AppError.NoInternetConnection -> {
+                            _uiState.value = UIState.Error(R.string.no_internet_connection, showToast = true)
+                        }
+                        is AppError.Network -> {
+                            _uiState.value = UIState.Error(R.string.network_error, showToast = true)
+                        }
+                        is AppError.Server -> {
+                            _uiState.value = UIState.Error(R.string.server_error, showToast = true)
+                        }
+                        is AppError.ServerDown -> {
+                            _uiState.value = UIState.Error(R.string.server_down, showToast = true)
+                        }
+                        else -> {
+                            _uiState.value = UIState.Error(R.string.unexpected_error, showToast = true)
+                        }
+                    }
+                }
+
+                is AppResult.Success<*> -> {
+                    signInWithGoogle(result.data.toString(), navHostController)
+                }
+            }
+        }
+    }
+
+    private fun signInWithGoogle(idToken: String, navHostController: NavHostController) {
+        viewModelScope.launch {
+            val result = authRepository.signInWithGoogleByAnonymouslyAccount(idToken)
+            when (result) {
+                is AppResult.Error -> {
+                    when(result.error) {
+                        is AppError.NoInternetConnection -> {
+                            _uiState.value = UIState.Error(R.string.no_internet_connection, showToast = true)
+                        }
+                        is AppError.Network -> {
+                            _uiState.value = UIState.Error(R.string.network_error, showToast = true)
+                        }
+                        is AppError.Server -> {
+                            _uiState.value = UIState.Error(R.string.server_error, showToast = true)
+                        }
+                        is AppError.ServerDown -> {
+                            _uiState.value = UIState.Error(R.string.server_down, showToast = true)
+                        }
+                        is AppError.UserAlreadyExists -> {
+                            _uiState.value = UIState.Error(R.string.user_already_exists, showToast = true)
+                        }
+                        else -> {
+                            _uiState.value = UIState.Error(R.string.unexpected_error, showToast = true)
+                        }
+                    }
+                }
+
+                is AppResult.Success<*> -> {
+                    navHostController.popBackStack()
+                    navHostController.navigate(Destination.Categories.route)
+                }
+            }
+        }
     }
 }

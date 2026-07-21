@@ -1,5 +1,6 @@
 package com.apollo9921.quizrise.presentation.screens.quiz
 
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -15,6 +16,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -33,6 +35,8 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import com.apollo9921.quizrise.R
+import com.apollo9921.quizrise.presentation.components.GuestLimitBottomSheet
+import com.apollo9921.quizrise.presentation.navigation.Destination
 
 @Composable
 fun StartQuizRoute(
@@ -56,8 +60,22 @@ fun StartQuizRoute(
     }
     val retry = remember { { viewModel.getQuiz() } }
     val resetValues = remember { { viewModel.resetValues() } }
+    val goBack = remember { { navHostController.navigateUp() } }
+    val signInByGoogle = remember { { viewModel.startSignInByGoogle(navHostController) } }
+    val navigateToRegister =
+        remember { { navHostController.navigate(Destination.Register.passArgument(isAnonymous = true)) } }
 
-    StartQuiz(uiState, quizState, correctAnswer, incorrectAnswer, resetValues, retry)
+    StartQuiz(
+        uiState,
+        quizState,
+        correctAnswer,
+        incorrectAnswer,
+        resetValues,
+        retry,
+        goBack,
+        signInByGoogle,
+        navigateToRegister
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -68,7 +86,10 @@ private fun StartQuiz(
     correctAnswer: (Int) -> Unit,
     incorrectAnswer: (Int) -> Unit,
     resetValues: () -> Unit,
-    retry: () -> Unit
+    retry: () -> Unit,
+    goBack: () -> Boolean,
+    signInByGoogle: () -> Unit,
+    navigateToRegister: () -> Unit
 ) {
     Scaffold { pv ->
         Box(
@@ -83,10 +104,26 @@ private fun StartQuiz(
                 }
 
                 is QuizViewModel.UIState.Error -> {
-                    ErrorScreen(
-                        errorMessage = stringResource(uiState.errorMessage),
-                        onClick = { retry() }
-                    )
+                    if (uiState.errorMessage == R.string.anonymous_quiz_expired || uiState.showToast) {
+                        GuestLimitBottomSheet(
+                            isVisible = true,
+                            onDismissRequest = { goBack() },
+                            onGoogleSignInClick = { signInByGoogle() },
+                            onEmailRegisterClick = { navigateToRegister() }
+                        )
+                        if (uiState.showToast) {
+                            Toast.makeText(
+                                LocalContext.current,
+                                stringResource(uiState.errorMessage),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    } else {
+                        ErrorScreen(
+                            errorMessage = stringResource(uiState.errorMessage),
+                            onClick = { retry() }
+                        )
+                    }
                 }
 
                 is QuizViewModel.UIState.Success -> {

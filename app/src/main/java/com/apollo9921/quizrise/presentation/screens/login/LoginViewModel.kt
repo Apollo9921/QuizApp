@@ -15,6 +15,9 @@ import com.apollo9921.quizrise.domain.usecase.InsertUserUseCase
 import com.apollo9921.quizrise.domain.usecase.InsertNewUserUseCase
 import com.apollo9921.quizrise.domain.usecase.PostSessionUseCase
 import com.apollo9921.quizrise.domain.usecase.PostUserAndResultsUseCase
+import com.apollo9921.quizrise.domain.usecase.PostUserAnonymouslyUseCase
+import com.apollo9921.quizrise.presentation.dataStore.UserManager
+import com.apollo9921.quizrise.presentation.dataStore.dataStoreUser
 import com.apollo9921.quizrise.presentation.navigation.Destination
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,6 +34,7 @@ class LoginViewModel(
     private val insertNewResultsUseCase: InsertNewResultsUseCase,
     private val postUserAndResultsUseCase: PostUserAndResultsUseCase,
     private val postSessionUseCase: PostSessionUseCase,
+    private val postUserAnonymouslyUseCase: PostUserAnonymouslyUseCase,
     private val firebaseAuth: FirebaseAuth
 ) : ViewModel() {
 
@@ -112,6 +116,35 @@ class LoginViewModel(
                 is AppResult.Success<*> -> {
                     checkIfUserExists(navHostController)
                 }
+            }
+        }
+    }
+
+    fun signInAnonymously(navHostController: NavHostController) {
+        viewModelScope.launch {
+            _uiState.value = UIState.Loading
+            val name = generateRandomName()
+            val sessionResult = postSessionUseCase.invoke()
+            if (sessionResult is AppResult.Success) {
+                val session = sessionResult.data.id
+                val result = postUserAnonymouslyUseCase.invoke(name, session)
+                when (result) {
+                    is AppResult.Error -> {
+                        firebaseAuth.signOut()
+                        getTypeOfError(result.error)
+                    }
+
+                    is AppResult.Success<*> -> {
+                        _uiState.value = UIState.Idle
+                        val userManager = UserManager(navHostController.context.dataStoreUser)
+                        userManager.storeQuizAllowed()
+                        navHostController.popBackStack()
+                        navHostController.navigate(Destination.Categories.route)
+                    }
+                }
+            } else {
+                firebaseAuth.signOut()
+                getTypeOfError((sessionResult as AppResult.Error).error)
             }
         }
     }

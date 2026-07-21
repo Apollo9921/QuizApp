@@ -97,4 +97,8 @@
     <string name="tooltip_profile">Aqui podes ver o teu progresso, nível e medalhas.</string>
     <string name="tooltip_results">Aqui podes ver os teus resultados por média de todas as categorias e a percentagem de cada categoria.</string>
     <string name="tooltip_leaderboard">Aqui você pode ver os 100 melhores jogadores por nível e categoria.</string>
+    <string name="guest_mode">Entrar no Modo de Convidado</string>
+    <string name="anonymous_quiz_expired">Atingiste o limite de testes!</string>
+    <string name="anonymous_quiz_expired_description">Esgotaste as 3 jogadas do Modo Convidado. Cria uma conta agora para guardar os teus pontos, conquistas e histórico!</string>
+    <string name="create_account_email">Criar conta com Email</string>
 </resources>

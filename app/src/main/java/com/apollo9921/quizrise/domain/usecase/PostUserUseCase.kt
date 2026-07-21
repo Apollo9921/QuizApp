@@ -10,7 +10,8 @@ class PostUserUseCase(
     suspend operator fun invoke(
         email: String,
         password: String,
-        confirmPassword: String
+        confirmPassword: String,
+        isAnonymous: Boolean
     ): AppResult<Unit> {
         if (email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
             return AppResult.Error(AppError.EmptyFields)
@@ -25,6 +26,10 @@ class PostUserUseCase(
         if (password != confirmPassword) {
             return AppResult.Error(AppError.PasswordMismatch)
         }
-        return repository.registerWithEmail(email, password)
+        return if (isAnonymous) {
+            return repository.registerWithEmailByAnonymouslyAccount(email, password)
+        } else {
+            repository.registerWithEmail(email, password)
+        }
     }
 }

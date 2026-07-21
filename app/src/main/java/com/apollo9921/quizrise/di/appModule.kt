@@ -37,6 +37,7 @@ import com.apollo9921.quizrise.domain.usecase.InsertNewUserUseCase
 import com.apollo9921.quizrise.domain.usecase.PostSessionUseCase
 import com.apollo9921.quizrise.domain.usecase.PostUserUseCase
 import com.apollo9921.quizrise.domain.usecase.PostUserAndResultsUseCase
+import com.apollo9921.quizrise.domain.usecase.PostUserAnonymouslyUseCase
 import com.apollo9921.quizrise.domain.usecase.UpdateBadgeUseCase
 import com.apollo9921.quizrise.domain.usecase.UpdatePointsUseCase
 import com.apollo9921.quizrise.domain.usecase.UpdateResultsUseCase
@@ -100,11 +101,11 @@ val repositoryModule = module {
 }
 
 val viewModelModule = module {
-    viewModel { QuizViewModel(get(), get(), get(), get(), get(), get(), get()) }
+    viewModel { QuizViewModel(get(), get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { ProgressViewModel(get(), get()) }
     viewModel { QuizResultViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
-    viewModel { ProfileViewModel(get(), get(), get(), get(), get()) }
-    viewModel { LoginViewModel(get(), get(), get(), get(), get(), get(), get(), get(), get(), get()) }
+    viewModel { ProfileViewModel(get(), get(), get(), get(), get(), get()) }
+    viewModel { LoginViewModel(get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { RegisterViewModel(get()) }
     viewModel { LeaderboardViewModel(get(), get(), get()) }
     viewModel { ResultsViewModel(get(), get()) }
@@ -112,7 +113,7 @@ val viewModelModule = module {
 }
 
 val useCaseModule = module {
-    factory { GetQuizUseCase(get(), androidContext()) }
+    factory { GetQuizUseCase(get(), get(), androidContext()) }
     factory { FormatQuizUseCase(get()) }
     factory { FetchUserUseCase(get()) }
     factory { FormatProgressPercentageUseCase() }
@@ -124,7 +125,7 @@ val useCaseModule = module {
     factory { InsertNewResultsUseCase(get()) }
     factory { InsertNewUserUseCase(get()) }
     factory { PostUserAndResultsUseCase(get()) }
-    factory { UpdateUserAndResultsUseCase(androidContext(), get()) }
+    factory { UpdateUserAndResultsUseCase(androidContext(), get(), get()) }
     factory { PostUserUseCase(get()) }
     factory { InsertResultsUseCase(get()) }
     factory { InsertUserUseCase(get()) }
@@ -135,4 +136,5 @@ val useCaseModule = module {
     factory { PostSessionUseCase(get()) }
     factory { DeleteAccountUseCase(get(), get()) }
     factory { UpdateUserSessionUseCase(get()) }
+    factory { PostUserAnonymouslyUseCase(get(), get(), get()) }
 }

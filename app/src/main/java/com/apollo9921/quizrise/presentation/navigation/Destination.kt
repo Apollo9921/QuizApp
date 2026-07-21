@@ -3,7 +3,11 @@ package com.apollo9921.quizrise.presentation.navigation
 sealed class Destination(val route: String) {
     data object OnBoard: Destination(route = "onboard")
     data object Login: Destination(route = "login")
-    data object Register: Destination(route = "register")
+    data object Register: Destination(route = "register/{isAnonymous}") {
+        fun passArgument(isAnonymous: Boolean): String {
+            return "register/$isAnonymous"
+        }
+    }
     data object Progress: Destination(route = "progress")
     data object Categories: Destination(route = "categories")
     data object Leaderboard: Destination(route = "leaderboard")

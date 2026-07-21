@@ -27,11 +27,13 @@ class RegisterViewModel(
         email: String,
         password: String,
         confirmPassword: String,
-        onNavigateBack: () -> Unit
+        onNavigateBack: () -> Unit,
+        isAnonymous: Boolean,
+        navigateToCategories: () -> Unit
     ) {
         viewModelScope.launch {
             _uiState.value = UIState.Loading
-            val result = postUserUseCase.invoke(email, password, confirmPassword)
+            val result = postUserUseCase.invoke(email, password, confirmPassword, isAnonymous)
             when(result) {
                 is AppResult.Error -> {
                     when(result.error) {
@@ -58,7 +60,11 @@ class RegisterViewModel(
                 }
                 is AppResult.Success<*> -> {
                     _uiState.value = UIState.Idle
-                    onNavigateBack()
+                    if (!isAnonymous) {
+                        onNavigateBack()
+                    } else {
+                        navigateToCategories()
+                    }
                 }
             }
         }
