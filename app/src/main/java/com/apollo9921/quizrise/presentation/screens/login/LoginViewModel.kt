@@ -124,19 +124,27 @@ class LoginViewModel(
         viewModelScope.launch {
             _uiState.value = UIState.Loading
             val name = generateRandomName()
-            val result = postUserAnonymouslyUseCase.invoke(name, "")
-            when (result) {
-                is AppResult.Error -> {
-                    firebaseAuth.signOut()
-                    getTypeOfError(result.error)
+            val sessionResult = postSessionUseCase.invoke()
+            if (sessionResult is AppResult.Success) {
+                val session = sessionResult.data.id
+                val result = postUserAnonymouslyUseCase.invoke(name, session)
+                when (result) {
+                    is AppResult.Error -> {
+                        firebaseAuth.signOut()
+                        getTypeOfError(result.error)
+                    }
+
+                    is AppResult.Success<*> -> {
+                        _uiState.value = UIState.Idle
+                        val userManager = UserManager(navHostController.context.dataStoreUser)
+                        userManager.storeQuizAllowed()
+                        navHostController.popBackStack()
+                        navHostController.navigate(Destination.Categories.route)
+                    }
                 }
-                is AppResult.Success<*> -> {
-                    _uiState.value = UIState.Idle
-                    val userManager = UserManager(navHostController.context.dataStoreUser)
-                    userManager.storeQuizAllowed()
-                    navHostController.popBackStack()
-                    navHostController.navigate(Destination.Categories.route)
-                }
+            } else {
+                firebaseAuth.signOut()
+                getTypeOfError((sessionResult as AppResult.Error).error)
             }
         }
     }
