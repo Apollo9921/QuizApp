@@ -16,6 +16,8 @@ import com.apollo9921.quizrise.domain.usecase.InsertNewUserUseCase
 import com.apollo9921.quizrise.domain.usecase.PostSessionUseCase
 import com.apollo9921.quizrise.domain.usecase.PostUserAndResultsUseCase
 import com.apollo9921.quizrise.domain.usecase.PostUserAnonymouslyUseCase
+import com.apollo9921.quizrise.presentation.dataStore.UserManager
+import com.apollo9921.quizrise.presentation.dataStore.dataStoreUser
 import com.apollo9921.quizrise.presentation.navigation.Destination
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -130,6 +132,8 @@ class LoginViewModel(
                 }
                 is AppResult.Success<*> -> {
                     _uiState.value = UIState.Idle
+                    val userManager = UserManager(navHostController.context.dataStoreUser)
+                    userManager.storeQuizAllowed()
                     navHostController.popBackStack()
                     navHostController.navigate(Destination.Categories.route)
                 }

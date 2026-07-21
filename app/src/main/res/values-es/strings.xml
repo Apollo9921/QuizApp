@@ -98,4 +98,7 @@
     <string name="tooltip_results">Aquí puedes ver tus resultados por promedio de todas las categorías y el porcentaje de cada categoría.</string>
     <string name="tooltip_leaderboard">Aquí puedes ver a los 100 mejores jugadores por nivel y categoría.</string>
     <string name="guest_mode">Entrar en modo invitado</string>
+    <string name="anonymous_quiz_expired">¡Has alcanzado el límite de pruebas!</string>
+    <string name="anonymous_quiz_expired_description">Has agotado tus 3 turnos en el modo invitado. ¡Crea una cuenta ahora para guardar tus puntos, logros e historial!</string>
+    <string name="create_account_email">Crear cuenta con correo electrónico</string>
 </resources>

@@ -7,9 +7,14 @@ import com.apollo9921.quizrise.domain.repository.QuizRepository
 import com.apollo9921.quizrise.domain.result.AppError
 import com.apollo9921.quizrise.domain.result.AppResult
 import com.apollo9921.quizrise.domain.util.QuizConstants
+import com.apollo9921.quizrise.presentation.dataStore.UserManager
+import com.apollo9921.quizrise.presentation.dataStore.dataStoreUser
+import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.flow.first
 
 class GetQuizUseCase(
     private val repository: QuizRepository,
+    private val firebaseAuth: FirebaseAuth,
     private val context: Context
 ) {
     suspend operator fun invoke(categoryResId: String, levelResId: String, session: String): AppResult<List<Quiz>> {
@@ -34,6 +39,21 @@ class GetQuizUseCase(
             else -> return AppResult.Error(AppError.NoCategoryOrLevelDefined)
         }
 
-        return repository.getQuiz(categoryKey, levelKey, session)
+        val userManager = UserManager(dataStore = context.dataStoreUser)
+        val quizAllowed = userManager.quizAllowedFlow.first()
+        val authUser = firebaseAuth.currentUser
+        return if (authUser != null) {
+            if (authUser.isAnonymous) {
+                if (quizAllowed > 0) {
+                    repository.getQuiz(categoryKey, levelKey, session)
+                } else {
+                    AppResult.Error(AppError.AnonymousUserExpiredQuiz)
+                }
+            } else {
+                repository.getQuiz(categoryKey, levelKey, session)
+            }
+        } else {
+            AppResult.Error(AppError.Unknown)
+        }
     }
 }

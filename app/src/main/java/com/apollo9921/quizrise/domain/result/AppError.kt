@@ -31,5 +31,7 @@ sealed interface AppError {
 
     data object UserAlreadyExists : AppError
 
+    data object AnonymousUserExpiredQuiz : AppError
+
     data object Unknown : AppError
 }

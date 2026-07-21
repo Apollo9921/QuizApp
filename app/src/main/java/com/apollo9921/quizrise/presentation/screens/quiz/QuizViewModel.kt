@@ -93,6 +93,10 @@ class QuizViewModel(
                                 _uiState.value = UIState.Error(R.string.unexpected_error)
                             }
 
+                            is AppError.AnonymousUserExpiredQuiz -> {
+                                _uiState.value = UIState.Error(R.string.anonymous_quiz_expired)
+                            }
+
                             else -> {
                                 _uiState.value = UIState.Error(R.string.unexpected_error)
                             }

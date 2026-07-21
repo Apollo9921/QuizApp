@@ -33,6 +33,7 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import com.apollo9921.quizrise.R
+import com.apollo9921.quizrise.presentation.components.GuestLimitBottomSheet
 
 @Composable
 fun StartQuizRoute(
@@ -56,8 +57,9 @@ fun StartQuizRoute(
     }
     val retry = remember { { viewModel.getQuiz() } }
     val resetValues = remember { { viewModel.resetValues() } }
+    val goBack = remember { { navHostController.navigateUp() } }
 
-    StartQuiz(uiState, quizState, correctAnswer, incorrectAnswer, resetValues, retry)
+    StartQuiz(uiState, quizState, correctAnswer, incorrectAnswer, resetValues, retry, goBack)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -68,7 +70,8 @@ private fun StartQuiz(
     correctAnswer: (Int) -> Unit,
     incorrectAnswer: (Int) -> Unit,
     resetValues: () -> Unit,
-    retry: () -> Unit
+    retry: () -> Unit,
+    goBack: () -> Boolean
 ) {
     Scaffold { pv ->
         Box(
@@ -83,10 +86,14 @@ private fun StartQuiz(
                 }
 
                 is QuizViewModel.UIState.Error -> {
-                    ErrorScreen(
-                        errorMessage = stringResource(uiState.errorMessage),
-                        onClick = { retry() }
-                    )
+                    if (uiState.errorMessage == R.string.anonymous_quiz_expired) {
+                        GuestLimitBottomSheet(isVisible = true, onDismissRequest = { goBack() }, onGoogleSignInClick = { }, onEmailRegisterClick = { })
+                    } else {
+                        ErrorScreen(
+                            errorMessage = stringResource(uiState.errorMessage),
+                            onClick = { retry() }
+                        )
+                    }
                 }
 
                 is QuizViewModel.UIState.Success -> {

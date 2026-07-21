@@ -113,7 +113,7 @@ val viewModelModule = module {
 }
 
 val useCaseModule = module {
-    factory { GetQuizUseCase(get(), androidContext()) }
+    factory { GetQuizUseCase(get(), get(), androidContext()) }
     factory { FormatQuizUseCase(get()) }
     factory { FetchUserUseCase(get()) }
     factory { FormatProgressPercentageUseCase() }
@@ -125,7 +125,7 @@ val useCaseModule = module {
     factory { InsertNewResultsUseCase(get()) }
     factory { InsertNewUserUseCase(get()) }
     factory { PostUserAndResultsUseCase(get()) }
-    factory { UpdateUserAndResultsUseCase(androidContext(), get()) }
+    factory { UpdateUserAndResultsUseCase(androidContext(), get(), get()) }
     factory { PostUserUseCase(get()) }
     factory { InsertResultsUseCase(get()) }
     factory { InsertUserUseCase(get()) }
