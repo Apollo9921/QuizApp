@@ -1,5 +1,6 @@
 package com.apollo9921.quizrise.presentation.screens.quiz
 
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -15,6 +16,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -58,8 +60,18 @@ fun StartQuizRoute(
     val retry = remember { { viewModel.getQuiz() } }
     val resetValues = remember { { viewModel.resetValues() } }
     val goBack = remember { { navHostController.navigateUp() } }
+    val signInByGoogle = remember { { viewModel.startSignInByGoogle(navHostController) } }
 
-    StartQuiz(uiState, quizState, correctAnswer, incorrectAnswer, resetValues, retry, goBack)
+    StartQuiz(
+        uiState,
+        quizState,
+        correctAnswer,
+        incorrectAnswer,
+        resetValues,
+        retry,
+        goBack,
+        signInByGoogle
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -71,7 +83,8 @@ private fun StartQuiz(
     incorrectAnswer: (Int) -> Unit,
     resetValues: () -> Unit,
     retry: () -> Unit,
-    goBack: () -> Boolean
+    goBack: () -> Boolean,
+    signInByGoogle: () -> Unit
 ) {
     Scaffold { pv ->
         Box(
@@ -86,8 +99,20 @@ private fun StartQuiz(
                 }
 
                 is QuizViewModel.UIState.Error -> {
-                    if (uiState.errorMessage == R.string.anonymous_quiz_expired) {
-                        GuestLimitBottomSheet(isVisible = true, onDismissRequest = { goBack() }, onGoogleSignInClick = { }, onEmailRegisterClick = { })
+                    if (uiState.errorMessage == R.string.anonymous_quiz_expired || uiState.showToast) {
+                        GuestLimitBottomSheet(
+                            isVisible = true,
+                            onDismissRequest = { goBack() },
+                            onGoogleSignInClick = { signInByGoogle() },
+                            onEmailRegisterClick = { }
+                        )
+                        if (uiState.showToast) {
+                            Toast.makeText(
+                                LocalContext.current,
+                                stringResource(uiState.errorMessage),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     } else {
                         ErrorScreen(
                             errorMessage = stringResource(uiState.errorMessage),
