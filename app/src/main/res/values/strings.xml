@@ -79,7 +79,7 @@
     <string name="confirm_password_field">Confirm Password</string>
     <string name="register">Register</string>
     <string name="have_an_account">Already have an account? Do Login</string>
-    <string name="loading_translations">Please wait, we are loading the translations!</string>
+    <string name="loading_translations">Please wait, we are selecting the questions!</string>
     <string name="leaderboard">Leaderboard</string>
     <string name="leaderboard_title">Leaderboard 🌌</string>
     <string name="filter_by">Filter by: %1$s 🔽</string>

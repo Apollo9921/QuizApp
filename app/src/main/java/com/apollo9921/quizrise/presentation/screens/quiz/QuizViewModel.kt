@@ -42,7 +42,7 @@ class QuizViewModel(
     private var hasNavigatedToResult = false
 
     data class QuizState(
-        var progress: Int = 20,
+        var progress: Int = 25,
         var correctAnswers: Int = 0,
         var incorrectAnswers: Int = 0,
         val session: String = ""
@@ -144,7 +144,7 @@ class QuizViewModel(
     fun timing() {
         timerJob?.cancel()
         timerJob = viewModelScope.launch {
-            _quizState.value = _quizState.value.copy(progress = 20)
+            _quizState.value = _quizState.value.copy(progress = 25)
             while (_quizState.value.progress >= 0) {
                 delay(1000L)
                 _quizState.value = _quizState.value.copy(
@@ -198,8 +198,7 @@ class QuizViewModel(
     fun startSignInByGoogle(navHostController: NavHostController) {
         viewModelScope.launch {
             _uiState.value = UIState.Loading
-            val result = googleAuthService.getGoogleIdToken()
-            when (result) {
+            when (val result = googleAuthService.getGoogleIdToken()) {
                 is AppResult.Error -> {
                     when(result.error) {
                         is AppError.NoInternetConnection -> {
@@ -229,8 +228,7 @@ class QuizViewModel(
 
     private fun signInWithGoogle(idToken: String, navHostController: NavHostController) {
         viewModelScope.launch {
-            val result = authRepository.signInWithGoogleByAnonymouslyAccount(idToken)
-            when (result) {
+            when (val result = authRepository.signInWithGoogleByAnonymouslyAccount(idToken)) {
                 is AppResult.Error -> {
                     when(result.error) {
                         is AppError.NoInternetConnection -> {

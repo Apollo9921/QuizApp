@@ -67,7 +67,7 @@
     <string name="confirm_password_field">Confirme sua senha</string>
     <string name="register">Registar</string>
     <string name="have_an_account">Já tem uma conta? Faça login.</string>
-    <string name="loading_translations">Por Favor aguarde, estamos carregando as traduções!</string>
+    <string name="loading_translations">Por Favor aguarde, estamos selecionando as perguntas!</string>
     <string name="leaderboard">Classificação</string>
     <string name="leaderboard_title">Classificação 🌌</string>
     <string name="filter_by">Filtrar por: %1$s 🔽</string>

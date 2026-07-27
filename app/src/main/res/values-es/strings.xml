@@ -67,7 +67,7 @@
     <string name="do_not_have_account">¿No tienes cuenta? Regístrate</string>
     <string name="create_account">Crear una cuenta</string>
     <string name="confirm_password_field">Confirmar Contraseña</string>
-    <string name="loading_translations">Por favor, espere, estamos cargando las traducciones.</string>
+    <string name="loading_translations">Por favor espere, estamos seleccionando las preguntas.</string>
     <string name="leaderboard">Clasificación</string>
     <string name="leaderboard_title">Clasificación 🌌</string>
     <string name="filter_by">Filtrar por: %1$s 🔽</string>
