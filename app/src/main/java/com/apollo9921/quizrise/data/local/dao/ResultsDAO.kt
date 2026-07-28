@@ -26,4 +26,7 @@ interface ResultsDAO {
     @Query("DELETE FROM results_table")
     suspend fun clearAllData()
 
+    @Query("UPDATE results_table SET username = :username WHERE username = :oldUsername")
+    suspend fun updateUsername(username: String, oldUsername: String)
+
 }

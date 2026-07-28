@@ -45,4 +45,13 @@ class ResultsRepositoryImpl(
         resultsDAO.clearAllData()
     }
 
+    override suspend fun updateUsername(username: String, oldUsername: String): Result<Unit> {
+        return try {
+            val result = resultsDAO.updateUsername(username, oldUsername)
+            Result.success(result)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
 }

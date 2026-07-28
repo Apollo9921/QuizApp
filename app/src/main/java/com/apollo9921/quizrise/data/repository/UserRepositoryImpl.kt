@@ -329,4 +329,63 @@ class UserRepositoryImpl(
             }
         }
     }
+
+    override suspend fun updateName(
+        name: String,
+        oldName: String
+    ): Result<Unit> {
+        return withContext(ioDispatcher) {
+            try {
+                userDAO.updateName(name, oldName)
+                Result.success(Unit)
+            } catch (e: Exception) {
+                Result.failure(e)
+            }
+        }
+    }
+
+    override suspend fun postUserName(
+        name: String,
+        results: List<Results>
+    ): AppResult<Unit> {
+        return withContext(ioDispatcher) {
+            try {
+                val currentUser =
+                    FirebaseAuth.getInstance().currentUser ?:
+                    return@withContext AppResult.Error(AppError.Unauthorized)
+                val userId = currentUser.uid
+                val userRef = firestore.collection("users").document(userId)
+                val batch = firestore.batch()
+                batch.update(
+                    userRef,
+                    "name", name
+                )
+
+                results.forEach { result ->
+                    val resultRef = userRef.collection("results").document(result.category)
+                    batch.update(
+                        resultRef,
+                        "username", name
+                    )
+                }
+
+                batch.commit().await()
+                AppResult.Success(Unit)
+            } catch (_: HttpRequestTimeoutException) {
+                AppResult.Error(AppError.Timeout)
+            } catch (_: ConnectTimeoutException) {
+                AppResult.Error(AppError.NoInternetConnection)
+            } catch (_: IOException) {
+                AppResult.Error(AppError.Network)
+            } catch (_: RedirectResponseException) {
+                AppResult.Error(AppError.Server)
+            } catch (_: ClientRequestException) {
+                AppResult.Error(AppError.BadRequest)
+            } catch (_: ServerResponseException) {
+                AppResult.Error(AppError.ServerDown)
+            } catch (_: Exception) {
+                AppResult.Error(AppError.Unknown)
+            }
+        }
+    }
 }

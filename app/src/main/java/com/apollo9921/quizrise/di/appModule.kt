@@ -39,6 +39,7 @@ import com.apollo9921.quizrise.domain.usecase.PostUserUseCase
 import com.apollo9921.quizrise.domain.usecase.PostUserAndResultsUseCase
 import com.apollo9921.quizrise.domain.usecase.PostUserAnonymouslyUseCase
 import com.apollo9921.quizrise.domain.usecase.UpdateBadgeUseCase
+import com.apollo9921.quizrise.domain.usecase.UpdateNameUseCase
 import com.apollo9921.quizrise.domain.usecase.UpdatePointsUseCase
 import com.apollo9921.quizrise.domain.usecase.UpdateResultsUseCase
 import com.apollo9921.quizrise.domain.usecase.UpdateUserAndResultsUseCase
@@ -137,4 +138,5 @@ val useCaseModule = module {
     factory { DeleteAccountUseCase(get(), get()) }
     factory { UpdateUserSessionUseCase(get()) }
     factory { PostUserAnonymouslyUseCase(get(), get(), get()) }
+    factory { UpdateNameUseCase(get(), get()) }
 }
