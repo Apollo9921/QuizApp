@@ -24,9 +24,36 @@ sealed class Destination(val route: String) {
             return "start_quiz/$category/$level"
         }
     }
-    data object QuizResult: Destination(route = "quiz_result/{category}/{correctAnswers}/{incorrectAnswers}") {
-        fun passArgument(category: String, correctAnswers: Int, incorrectAnswers: Int): String {
-            return "quiz_result/$category/$correctAnswers/$incorrectAnswers"
+    data object QuizResult : Destination(route = "quiz_result/{category}/{correctAnswers}/{incorrectAnswers}?question={question}&answers={answers}&correctAnswersList={correctAnswersList}") {
+        fun passArgument(
+            category: String,
+            correctAnswers: Int,
+            incorrectAnswers: Int,
+            question: List<String>,
+            answers: List<String>,
+            correctAnswersList: List<String>
+        ): String {
+            val basePath = "quiz_result/$category/$correctAnswers/$incorrectAnswers"
+
+            val qParams = question.joinToString("&") { "question=$it" }
+            val aParams = answers.joinToString("&") { "answers=$it" }
+            val cParams = correctAnswersList.joinToString("&") { "correctAnswersList=$it" }
+
+            return "$basePath?$qParams&$aParams&$cParams"
+        }
+    }
+
+    data object WrongAnswers : Destination(route = "wrong_answers?question={question}&correctAnswers={correctAnswers}&incorrectAnswers={incorrectAnswers}") {
+        fun passArgument(
+            question: Array<String>,
+            correctAnswers: Array<String>,
+            incorrectAnswers: Array<String>
+        ): String {
+            val qParams = question.joinToString("&") { "question=$it" }
+            val cParams = correctAnswers.joinToString("&") { "correctAnswers=$it" }
+            val iParams = incorrectAnswers.joinToString("&") { "incorrectAnswers=$it" }
+
+            return "wrong_answers?$qParams&$cParams&$iParams"
         }
     }
 }

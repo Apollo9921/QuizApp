@@ -101,4 +101,7 @@
     <string name="anonymous_quiz_expired">¡Has alcanzado el límite de pruebas!</string>
     <string name="anonymous_quiz_expired_description">Has agotado tus 3 turnos en el modo invitado. ¡Crea una cuenta ahora para guardar tus puntos, logros e historial!</string>
     <string name="create_account_email">Crear cuenta con correo electrónico</string>
+    <string name="see_wrong_answers">Consulta tus respuestas incorrectas</string>
+    <string name="revision">Revisión</string>
+    <string name="no_answered">Sin respuesta</string>
 </resources>

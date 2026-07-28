@@ -113,4 +113,7 @@
     <string name="anonymous_quiz_expired">You have reached the test limit!</string>
     <string name="anonymous_quiz_expired_description">You\'ve used up your 3 Guest Mode turns. Create an account now to save your points, achievements, and history!</string>
     <string name="create_account_email">Create an account with Email</string>
+    <string name="see_wrong_answers">See your wrong answers</string>
+    <string name="revision">Revision</string>
+    <string name="no_answered">No Answered</string>
 </resources>

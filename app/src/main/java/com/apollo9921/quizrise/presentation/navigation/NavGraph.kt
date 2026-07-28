@@ -24,6 +24,7 @@ import com.apollo9921.quizrise.presentation.screens.quiz.StartQuizRoute
 import com.apollo9921.quizrise.presentation.screens.quizResult.QuizResultRoute
 import com.apollo9921.quizrise.presentation.screens.register.RegisterRoute
 import com.apollo9921.quizrise.presentation.screens.results.ResultsRoute
+import com.apollo9921.quizrise.presentation.screens.wrongAnswers.WrongAnswersRoute
 
 @Composable
 fun AnimationNav(navHostController: NavHostController, startDestination: String) {
@@ -208,34 +209,50 @@ fun AnimationNav(navHostController: NavHostController, startDestination: String)
         composable(
             route = Destination.QuizResult.route,
             arguments = listOf(
-                navArgument("category") {
-                    type = NavType.StringType
+                navArgument("category") { type = NavType.StringType },
+                navArgument("correctAnswers") { type = NavType.IntType },
+                navArgument("incorrectAnswers") { type = NavType.IntType },
+                navArgument("question") {
+                    type = NavType.StringArrayType
+                    nullable = true
                 },
-                navArgument("correctAnswers") {
-                    type = NavType.IntType
+                navArgument("answers") {
+                    type = NavType.StringArrayType
+                    nullable = true
                 },
-                navArgument("incorrectAnswers") {
-                    type = NavType.IntType
+                navArgument("correctAnswersList") {
+                    type = NavType.StringArrayType
+                    nullable = true
                 }
             ),
-            enterTransition = {
-                slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Left,
-                    animationSpec = tween(700)
-                )
-            },
-            exitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Right,
-                    animationSpec = tween(700)
-                )
-            }
         ) {
             QuizResultRoute(
                 navHostController = navHostController,
-                category = it.arguments?.getString("category")!!,
-                correctAnswers = it.arguments?.getInt("correctAnswers")!!,
-                incorrectAnswers = it.arguments?.getInt("incorrectAnswers")!!
+                category = it.arguments?.getString("category") ?: "",
+                correctAnswers = it.arguments?.getInt("correctAnswers") ?: 0,
+                incorrectAnswers = it.arguments?.getInt("incorrectAnswers") ?: 0,
+                question = it.arguments?.getStringArray("question") ?: emptyArray(),
+                answers = it.arguments?.getStringArray("answers") ?: emptyArray(),
+                correctAnswersList = it.arguments?.getStringArray("correctAnswersList") ?: emptyArray()
+            )
+        }
+        composable(
+            route = Destination.WrongAnswers.route,
+            arguments = listOf(
+                navArgument("question") { type = NavType.StringArrayType },
+                navArgument("correctAnswers") { type = NavType.StringArrayType },
+                navArgument("incorrectAnswers") { type = NavType.StringArrayType }
+            )
+        ) { backStackEntry ->
+            val question = backStackEntry.arguments?.getStringArray("question") ?: emptyArray()
+            val incorrect = backStackEntry.arguments?.getStringArray("incorrectAnswers") ?: emptyArray()
+            val correct = backStackEntry.arguments?.getStringArray("correctAnswers") ?: emptyArray()
+
+            WrongAnswersRoute(
+                navHostController = navHostController,
+                question = question,
+                incorrectAnswers = incorrect,
+                correctAnswers = correct
             )
         }
     }

@@ -45,7 +45,8 @@ class QuizViewModel(
         var progress: Int = 25,
         var correctAnswers: Int = 0,
         var incorrectAnswers: Int = 0,
-        val session: String = ""
+        val session: String = "",
+        val quiz: List<TranslatedQuizResult> = emptyList()
     )
 
     init {
@@ -174,6 +175,15 @@ class QuizViewModel(
         }
     }
 
+    fun handleIncorrectAnswer(question: TranslatedQuizResult, userAnswer: String) {
+        viewModelScope.launch {
+            val questionIncorrect = question.copy(incorrectAnswers = listOf(userAnswer))
+            _quizState.value = _quizState.value.copy(
+                quiz = _quizState.value.quiz + questionIncorrect
+            )
+        }
+    }
+
     private fun checkCurrentPage(currentPage: Int, navHostController: NavHostController) {
         val previousState = _uiState.value as UIState.Success
         if (currentPage >= previousState.quiz.size - 1 && !hasNavigatedToResult) {
@@ -182,7 +192,11 @@ class QuizViewModel(
                 Destination.QuizResult.passArgument(
                     category = category,
                     correctAnswers = _quizState.value.correctAnswers,
-                    incorrectAnswers = _quizState.value.incorrectAnswers
+                    incorrectAnswers = _quizState.value.incorrectAnswers,
+                    question = _quizState.value.quiz.map { it.question },
+                    answers = _quizState.value.quiz.map { it.incorrectAnswers.firstOrNull() ?: "" },
+                    correctAnswersList = _quizState.value.quiz.map { it.correctAnswer }
+
                 )
             )
             resetValues()

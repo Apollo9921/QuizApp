@@ -101,4 +101,7 @@
     <string name="anonymous_quiz_expired">Atingiste o limite de testes!</string>
     <string name="anonymous_quiz_expired_description">Esgotaste as 3 jogadas do Modo Convidado. Cria uma conta agora para guardar os teus pontos, conquistas e histórico!</string>
     <string name="create_account_email">Criar conta com Email</string>
+    <string name="see_wrong_answers">Veja as suas respostas erradas</string>
+    <string name="revision">Revisão</string>
+    <string name="no_answered">Não respondido</string>
 </resources>
