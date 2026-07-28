@@ -35,6 +35,9 @@ fun QuizResultRoute(
     category: String,
     correctAnswers: Int,
     incorrectAnswers: Int,
+    question: Array<String>,
+    answers: Array<String>,
+    correctAnswersList: Array<String>,
     viewModel: QuizResultViewModel = koinViewModel {
         parametersOf(
             category,
@@ -45,12 +48,22 @@ fun QuizResultRoute(
 ) {
     val total = viewModel.total
     val pointsReceived = viewModel.pointsReceived.intValue
+    val navigateToWrongAnswers = {
+        navHostController.navigate(
+            Destination.WrongAnswers.passArgument(
+                question = question,
+                correctAnswers = correctAnswersList,
+                incorrectAnswers = answers
+            )
+        )
+    }
 
     QuizResultScreen(
         navHostController = navHostController,
         correctAnswers = correctAnswers,
         total = total,
         pointsReceived = pointsReceived,
+        navigateToWrongAnswers = navigateToWrongAnswers
     )
 }
 
@@ -61,6 +74,7 @@ private fun QuizResultScreen(
     correctAnswers: Int,
     total: Int,
     pointsReceived: Int,
+    navigateToWrongAnswers: () -> Unit,
 ) {
     BackHandler(enabled = true) {}
 
@@ -127,11 +141,17 @@ private fun QuizResultScreen(
                         )
 
                         Spacer(modifier = Modifier.height(24.dp))
-                        HorizontalDivider(color = White.copy(alpha = 0.1f), modifier = Modifier.padding(horizontal = 16.dp))
+                        HorizontalDivider(
+                            color = White.copy(alpha = 0.1f),
+                            modifier = Modifier.padding(horizontal = 16.dp)
+                        )
                         Spacer(modifier = Modifier.height(24.dp))
 
                         Text(
-                            text = stringResource(id = R.string.pointsReceived, pointsReceived).uppercase(),
+                            text = stringResource(
+                                id = R.string.pointsReceived,
+                                pointsReceived
+                            ).uppercase(),
                             style = MaterialTheme.typography.labelMedium,
                             color = White,
                             fontWeight = FontWeight.ExtraBold,
@@ -141,6 +161,18 @@ private fun QuizResultScreen(
                 }
 
                 Spacer(modifier = Modifier.height(componentSizeByScreen(baseSize = 40.dp)))
+
+                if (correctAnswers < total) {
+                    Text(
+                        text = stringResource(id = R.string.see_wrong_answers),
+                        style = MaterialTheme.typography.labelMedium,
+                        color = White,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.clickable { navigateToWrongAnswers() }
+                    )
+                    Spacer(modifier = Modifier.height(componentSizeByScreen(baseSize = 40.dp)))
+                }
 
                 Card(
                     shape = RoundedCornerShape(20.dp),

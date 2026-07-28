@@ -67,7 +67,7 @@
     <string name="confirm_password_field">Confirme sua senha</string>
     <string name="register">Registar</string>
     <string name="have_an_account">Já tem uma conta? Faça login.</string>
-    <string name="loading_translations">Por Favor aguarde, estamos carregando as traduções!</string>
+    <string name="loading_translations">Por Favor aguarde, estamos selecionando as perguntas!</string>
     <string name="leaderboard">Classificação</string>
     <string name="leaderboard_title">Classificação 🌌</string>
     <string name="filter_by">Filtrar por: %1$s 🔽</string>
@@ -101,4 +101,7 @@
     <string name="anonymous_quiz_expired">Atingiste o limite de testes!</string>
     <string name="anonymous_quiz_expired_description">Esgotaste as 3 jogadas do Modo Convidado. Cria uma conta agora para guardar os teus pontos, conquistas e histórico!</string>
     <string name="create_account_email">Criar conta com Email</string>
+    <string name="see_wrong_answers">Veja as suas respostas erradas</string>
+    <string name="revision">Revisão</string>
+    <string name="no_answered">Não respondido</string>
 </resources>

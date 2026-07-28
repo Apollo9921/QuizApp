@@ -58,8 +58,12 @@ fun StartQuizRoute(
             viewModel.incrementIncorrectAnswer(currentPage, navHostController)
         }
     }
+    val incorrectAnswerWithCorrectAnswer = remember {
+        { wrongAnswer: TranslatedQuizResult, answer: String ->
+            viewModel.handleIncorrectAnswer(wrongAnswer, answer)
+        }
+    }
     val retry = remember { { viewModel.getQuiz() } }
-    val resetValues = remember { { viewModel.resetValues() } }
     val goBack = remember { { navHostController.navigateUp() } }
     val signInByGoogle = remember { { viewModel.startSignInByGoogle(navHostController) } }
     val navigateToRegister =
@@ -70,11 +74,11 @@ fun StartQuizRoute(
         quizState,
         correctAnswer,
         incorrectAnswer,
-        resetValues,
         retry,
         goBack,
         signInByGoogle,
-        navigateToRegister
+        navigateToRegister,
+        incorrectAnswerWithCorrectAnswer
     )
 }
 
@@ -85,11 +89,11 @@ private fun StartQuiz(
     quizState: QuizViewModel.QuizState,
     correctAnswer: (Int) -> Unit,
     incorrectAnswer: (Int) -> Unit,
-    resetValues: () -> Unit,
     retry: () -> Unit,
     goBack: () -> Boolean,
     signInByGoogle: () -> Unit,
-    navigateToRegister: () -> Unit
+    navigateToRegister: () -> Unit,
+    incorrectAnswerWithCorrectAnswer: (TranslatedQuizResult, String) -> Unit
 ) {
     Scaffold { pv ->
         Box(
@@ -131,7 +135,8 @@ private fun StartQuiz(
                         data = uiState.quiz,
                         correctAnswer = correctAnswer,
                         incorrectAnswer = incorrectAnswer,
-                        quizState = quizState
+                        quizState = quizState,
+                        incorrectAnswerWithCorrectAnswer = incorrectAnswerWithCorrectAnswer
                     )
                 }
             }
@@ -145,7 +150,8 @@ private fun ShowQuiz(
     data: List<TranslatedQuizResult>,
     correctAnswer: (Int) -> Unit,
     incorrectAnswer: (Int) -> Unit,
-    quizState: QuizViewModel.QuizState
+    quizState: QuizViewModel.QuizState,
+    incorrectAnswerWithCorrectAnswer: (TranslatedQuizResult, String) -> Unit
 ) {
     val state = rememberPagerState(pageCount = { data.size })
     val coroutineScope = rememberCoroutineScope()
@@ -156,6 +162,7 @@ private fun ShowQuiz(
             if (currentPage < data.size - 1) {
                 state.animateScrollToPage(currentPage + 1)
             }
+            incorrectAnswerWithCorrectAnswer(data[currentPage], "")
             incorrectAnswer(currentPage)
         }
     }
@@ -235,6 +242,7 @@ private fun ShowQuiz(
                                     if (answer == currentQuestion.correctAnswer) {
                                         correctAnswer(currentPage)
                                     } else {
+                                        incorrectAnswerWithCorrectAnswer(data[currentPage], answer)
                                         incorrectAnswer(currentPage)
                                     }
                                 }
