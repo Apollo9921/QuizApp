@@ -23,12 +23,13 @@ class UpdateNameUseCase(
             return AppResult.Error(AppError.SameName)
         }
 
-        val userUpdate = userRepository.updateName(name, oldName)
-        val resultsUpdate = resultsRepository.updateUsername(name, oldName)
-        return if (userUpdate.isSuccess && resultsUpdate.isSuccess) {
-            userRepository.postUserName(name, results)
+        val response = userRepository.postUserName(name, results)
+        if (response is AppResult.Success) {
+            userRepository.updateName(name, oldName)
+            resultsRepository.updateUsername(name, oldName)
+            return AppResult.Success(Unit)
         } else {
-            AppResult.Error(AppError.Unknown)
+            return response
         }
     }
 }
