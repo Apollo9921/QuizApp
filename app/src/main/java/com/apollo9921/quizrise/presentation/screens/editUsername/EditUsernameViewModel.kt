@@ -2,6 +2,7 @@ package com.apollo9921.quizrise.presentation.screens.editUsername
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavHostController
 import com.apollo9921.quizrise.R
 import com.apollo9921.quizrise.domain.result.AppError
 import com.apollo9921.quizrise.domain.result.AppResult
@@ -29,7 +30,7 @@ class EditUsernameViewModel(
         data class Error(val errorMessage: Int) : UiState()
     }
 
-    fun updateName(name: String) {
+    fun updateName(name: String, navHostController: NavHostController) {
         viewModelScope.launch {
             _uiState.value = UiState.Loading
             val userResult = fetUserUseCase.invoke()
@@ -43,6 +44,7 @@ class EditUsernameViewModel(
                     }
                     is AppResult.Success<*> -> {
                         _uiState.value = UiState.Success
+                        navHostController.navigateUp()
                     }
                 }
             } else {
