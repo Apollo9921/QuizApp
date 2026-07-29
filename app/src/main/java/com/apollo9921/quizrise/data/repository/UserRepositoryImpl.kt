@@ -27,7 +27,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
-import kotlinx.coroutines.withTimeout
 import java.io.IOException
 import java.net.UnknownHostException
 import java.util.concurrent.TimeUnit
@@ -348,7 +347,7 @@ class UserRepositoryImpl(
     override suspend fun postUserName(name: String, results: List<Results>): AppResult<Unit> {
         return withContext(ioDispatcher) {
             try {
-                withTimeout(5000) {
+                kotlinx.coroutines.withTimeout(5000) {
                     val currentUser = FirebaseAuth.getInstance().currentUser
                         ?: return@withTimeout AppResult.Error(AppError.Unauthorized)
 
@@ -367,8 +366,18 @@ class UserRepositoryImpl(
                 AppResult.Success(Unit)
             } catch (_: kotlinx.coroutines.TimeoutCancellationException) {
                 AppResult.Error(AppError.NoInternetConnection)
-            } catch (_: com.google.firebase.firestore.FirebaseFirestoreException) {
+            } catch (_: com.google.firebase.FirebaseNetworkException) {
                 AppResult.Error(AppError.NoInternetConnection)
+            } catch (e: com.google.firebase.firestore.FirebaseFirestoreException) {
+                when (e.code) {
+                    com.google.firebase.firestore.FirebaseFirestoreException.Code.UNAVAILABLE ->
+                        AppResult.Error(AppError.NoInternetConnection)
+                    com.google.firebase.firestore.FirebaseFirestoreException.Code.PERMISSION_DENIED ->
+                        AppResult.Error(AppError.Unauthorized)
+                    else -> AppResult.Error(AppError.Unknown)
+                }
+            } catch (_: IllegalStateException) {
+                AppResult.Error(AppError.Unauthorized)
             } catch (_: Exception) {
                 AppResult.Error(AppError.Unknown)
             }
