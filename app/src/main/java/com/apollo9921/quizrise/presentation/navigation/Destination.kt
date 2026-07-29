@@ -13,6 +13,7 @@ sealed class Destination(val route: String) {
     data object Leaderboard: Destination(route = "leaderboard")
     data object Results: Destination(route = "results")
     data object Profile: Destination(route = "profile")
+    data object EditUserName: Destination(route = "edit_username")
     data object DeleteAccount: Destination(route = "delete_account")
     data object LevelDifficulty: Destination(route = "level_difficulty/{category}") {
         fun passArgument(category: String): String {

@@ -105,4 +105,7 @@
     <string name="revision">Revisão</string>
     <string name="no_answered">Não respondido</string>
     <string name="same_name_error">Não podes usar o mesmo nome que o teu utilizador atual</string>
+    <string name="avatar_update_by_typing">O teu avatar atualiza conforme o teu nome!</string>
+    <string name="username">Nome de utilizador</string>
+    <string name="save_changes">Guardar Alterações</string>
 </resources>

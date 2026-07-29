@@ -6,12 +6,15 @@ import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -57,6 +60,7 @@ fun ProfileRoute(
     val badgeState = viewModel.badgeState.collectAsStateWithLifecycle().value
     val fetchUser = { viewModel.fetchUser() }
     val logout = { viewModel.logout(navHostController) }
+    val navigateToChangeName = { navHostController.navigate(Destination.EditUserName.route) }
 
     val context = LocalContext.current
 
@@ -69,7 +73,8 @@ fun ProfileRoute(
         navHostController = navHostController,
         uiState = uiState,
         badgeState = badgeState,
-        onSettingsClick = { showSettings = true }
+        onSettingsClick = { showSettings = true },
+        navigateToChangeName = navigateToChangeName
     )
 
     if (showSettings) {
@@ -79,7 +84,10 @@ fun ProfileRoute(
                 val customTabsIntent = CustomTabsIntent.Builder()
                     .setShowTitle(true)
                     .build()
-                customTabsIntent.launchUrl(context, Uri.parse("https://apollo9921.github.io/quizrise-privacy-policy/"))
+                customTabsIntent.launchUrl(
+                    context,
+                    Uri.parse("https://apollo9921.github.io/quizrise-privacy-policy/")
+                )
             },
             onLogoutClick = {
                 showSettings = false
@@ -98,7 +106,8 @@ private fun ProfileScreen(
     navHostController: NavHostController,
     uiState: ProfileViewModel.UIState,
     badgeState: ProfileViewModel.Badge,
-    onSettingsClick: () -> Unit = {}
+    onSettingsClick: () -> Unit = {},
+    navigateToChangeName: () -> Unit
 ) {
     Scaffold(
         bottomBar = { BottomNavigationBar(navHostController) },
@@ -120,8 +129,9 @@ private fun ProfileScreen(
                             .error(R.drawable.person)
                             .build()
                     )
-                    ShowProfile(user, painter, badgeState, onSettingsClick)
+                    ShowProfile(user, painter, badgeState, onSettingsClick, navigateToChangeName)
                 }
+
                 else -> {}
             }
         }
@@ -133,7 +143,8 @@ private fun ShowProfile(
     user: User,
     painter: AsyncImagePainter,
     badgeState: ProfileViewModel.Badge,
-    onSettingsClick: () -> Unit
+    onSettingsClick: () -> Unit,
+    navigateToChangeName: () -> Unit
 ) {
     val percentage = ((user.totalPoints * 100) / badgeState.badgeLevel.toDouble()) / 100.0
     val displayPercentage = (percentage * 100).toInt()
@@ -141,7 +152,10 @@ private fun ShowProfile(
     val configuration = LocalConfiguration.current
     val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 
-    val topPadding = if (isLandscape) componentSizeByScreen(baseSize = 120.dp) else componentSizeByScreen(baseSize = 240.dp)
+    val topPadding =
+        if (isLandscape) componentSizeByScreen(baseSize = 120.dp) else componentSizeByScreen(
+            baseSize = 240.dp
+        )
     val iconContainerSize = componentSizeByScreen(baseSize = 44.dp)
     val badgeIconSize = componentSizeByScreen(baseSize = 60.dp)
 
@@ -193,13 +207,32 @@ private fun ShowProfile(
             ) {
                 Spacer(modifier = Modifier.height(componentSizeByScreen(baseSize = 16.dp)))
 
-                Text(
-                    text = user.name,
-                    style = MaterialTheme.typography.titleLarge,
-                    color = White,
-                    fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center
-                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = user.name,
+                        style = MaterialTheme.typography.titleLarge,
+                        color = White,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center
+                    )
+
+                    IconButton(
+                        onClick = navigateToChangeName
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Edit,
+                            contentDescription = "Edit",
+                            tint = White,
+                            modifier = Modifier
+                                .size(componentSizeByScreen(baseSize = 24.dp))
+                                .clickable { navigateToChangeName() }
+                        )
+                    }
+                }
 
                 Spacer(modifier = Modifier.height(componentSizeByScreen(baseSize = 24.dp)))
 
@@ -355,12 +388,17 @@ private fun ProfileScreenDarkPreview() {
     val mockBadge = ProfileViewModel.Badge(badge = R.drawable.newbie, badgeLevel = 1000)
 
     MaterialTheme(typography = getTypography()) {
-        Box(modifier = Modifier.fillMaxSize().background(PurpleGrey40)) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(PurpleGrey40)
+        ) {
             ShowProfile(
                 user = mockUser,
                 painter = rememberAsyncImagePainter(model = ""),
                 badgeState = mockBadge,
-                onSettingsClick = {}
+                onSettingsClick = {},
+                navigateToChangeName = {}
             )
         }
     }
