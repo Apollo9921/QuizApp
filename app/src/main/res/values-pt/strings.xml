@@ -104,4 +104,5 @@
     <string name="see_wrong_answers">Veja as suas respostas erradas</string>
     <string name="revision">Revisão</string>
     <string name="no_answered">Não respondido</string>
+    <string name="same_name_error">Não podes usar o mesmo nome que o teu utilizador atual</string>
 </resources>

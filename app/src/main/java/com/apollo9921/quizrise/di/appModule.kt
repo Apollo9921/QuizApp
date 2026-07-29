@@ -45,6 +45,7 @@ import com.apollo9921.quizrise.domain.usecase.UpdateResultsUseCase
 import com.apollo9921.quizrise.domain.usecase.UpdateUserAndResultsUseCase
 import com.apollo9921.quizrise.domain.usecase.UpdateUserSessionUseCase
 import com.apollo9921.quizrise.presentation.screens.deleteAccount.DeleteAccountViewModel
+import com.apollo9921.quizrise.presentation.screens.editUsername.EditUsernameViewModel
 import com.apollo9921.quizrise.presentation.screens.leaderboard.LeaderboardViewModel
 import com.apollo9921.quizrise.presentation.screens.profile.ProfileViewModel
 import com.apollo9921.quizrise.presentation.screens.progress.ProgressViewModel
@@ -111,6 +112,7 @@ val viewModelModule = module {
     viewModel { LeaderboardViewModel(get(), get(), get()) }
     viewModel { ResultsViewModel(get(), get()) }
     viewModel { DeleteAccountViewModel(get()) }
+    viewModel { EditUsernameViewModel(get(), get(), get()) }
 }
 
 val useCaseModule = module {

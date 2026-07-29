@@ -27,6 +27,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeout
 import java.io.IOException
 import java.net.UnknownHostException
 import java.util.concurrent.TimeUnit
@@ -344,45 +345,30 @@ class UserRepositoryImpl(
         }
     }
 
-    override suspend fun postUserName(
-        name: String,
-        results: List<Results>
-    ): AppResult<Unit> {
+    override suspend fun postUserName(name: String, results: List<Results>): AppResult<Unit> {
         return withContext(ioDispatcher) {
             try {
-                val currentUser =
-                    FirebaseAuth.getInstance().currentUser ?:
-                    return@withContext AppResult.Error(AppError.Unauthorized)
-                val userId = currentUser.uid
-                val userRef = firestore.collection("users").document(userId)
-                val batch = firestore.batch()
-                batch.update(
-                    userRef,
-                    "name", name
-                )
+                withTimeout(5000) {
+                    val currentUser = FirebaseAuth.getInstance().currentUser
+                        ?: return@withTimeout AppResult.Error(AppError.Unauthorized)
 
-                results.forEach { result ->
-                    val resultRef = userRef.collection("results").document(result.category)
-                    batch.update(
-                        resultRef,
-                        "username", name
-                    )
+                    val userId = currentUser.uid
+                    val userRef = firestore.collection("users").document(userId)
+                    val batch = firestore.batch()
+
+                    batch.update(userRef, "name", name)
+                    results.forEach { result ->
+                        val resultRef = userRef.collection("results").document(result.category)
+                        batch.update(resultRef, "username", name)
+                    }
+
+                    batch.commit().await()
                 }
-
-                batch.commit().await()
                 AppResult.Success(Unit)
-            } catch (_: HttpRequestTimeoutException) {
-                AppResult.Error(AppError.Timeout)
-            } catch (_: ConnectTimeoutException) {
+            } catch (_: kotlinx.coroutines.TimeoutCancellationException) {
                 AppResult.Error(AppError.NoInternetConnection)
-            } catch (_: IOException) {
-                AppResult.Error(AppError.Network)
-            } catch (_: RedirectResponseException) {
-                AppResult.Error(AppError.Server)
-            } catch (_: ClientRequestException) {
-                AppResult.Error(AppError.BadRequest)
-            } catch (_: ServerResponseException) {
-                AppResult.Error(AppError.ServerDown)
+            } catch (_: com.google.firebase.firestore.FirebaseFirestoreException) {
+                AppResult.Error(AppError.NoInternetConnection)
             } catch (_: Exception) {
                 AppResult.Error(AppError.Unknown)
             }
