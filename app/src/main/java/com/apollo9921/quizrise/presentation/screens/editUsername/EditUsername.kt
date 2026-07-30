@@ -60,6 +60,7 @@ private fun ChangeNameScreen(
     uiState: EditUsernameViewModel.UiState
 ) {
     var userName by remember { mutableStateOf(initialName) }
+    val charsLimit by remember { mutableIntStateOf(22) }
 
     val screenWidth = widthOfScreen()
     val scrollState = rememberScrollState()
@@ -79,7 +80,7 @@ private fun ChangeNameScreen(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues),
+                .padding(top = paddingValues.calculateTopPadding()),
             contentAlignment = Alignment.TopCenter
         ) {
             Column(
@@ -125,7 +126,11 @@ private fun ChangeNameScreen(
 
                 OutlinedTextField(
                     value = userName,
-                    onValueChange = { userName = it },
+                    onValueChange = {
+                        if (it.length <= charsLimit) {
+                            userName = it
+                        }
+                    },
                     label = {
                         Text(
                             text = stringResource(R.string.username),
@@ -137,6 +142,13 @@ private fun ChangeNameScreen(
                             imageVector = Icons.Default.Person,
                             contentDescription = null,
                             tint = White.copy(alpha = 0.7f)
+                        )
+                    },
+                    supportingText = {
+                        Text(
+                            text = "${userName.length}/$charsLimit",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = White.copy(alpha = 0.7f)
                         )
                     },
                     singleLine = true,
