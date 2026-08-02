@@ -81,7 +81,7 @@
     <string name="have_an_account">Already have an account? Do Login</string>
     <string name="loading_translations">Please wait, we are selecting the questions!</string>
     <string name="leaderboard">Leaderboard</string>
-    <string name="leaderboard_title">Leaderboard 🌌</string>
+    <string name="leaderboard_title">Leaderboard</string>
     <string name="filter_by">Filter by: %1$s 🔽</string>
     <string name="tab_level">By Level</string>
     <string name="tab_category">By Category</string>
@@ -120,4 +120,6 @@
     <string name="avatar_update_by_typing">Your avatar updates according to your name!</string>
     <string name="username">Username</string>
     <string name="save_changes">Save Changes</string>
+    <string name="level">Level</string>
+    <string name="score">Score</string>
 </resources>

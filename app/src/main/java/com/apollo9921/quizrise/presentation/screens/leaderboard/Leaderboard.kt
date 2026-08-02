@@ -4,13 +4,17 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Leaderboard
 import androidx.compose.material3.*
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -36,6 +40,7 @@ import com.apollo9921.quizrise.presentation.screens.leaderboard.LeaderboardViewM
 import org.koin.androidx.compose.koinViewModel
 import com.apollo9921.quizrise.R
 import com.apollo9921.quizrise.presentation.components.QuizTooltipIcon
+import com.apollo9921.quizrise.presentation.components.RankingRulesDialog
 
 @Composable
 fun LeaderboardRoute(
@@ -92,6 +97,7 @@ private fun LeaderboardScreen(
     onFilterChanged: (String) -> Unit,
     navigateBack: () -> Boolean
 ) {
+    var isRankingRulesDialogVisible by remember { mutableStateOf(false) }
     Scaffold(
         topBar = {
             TopBar(
@@ -105,8 +111,38 @@ private fun LeaderboardScreen(
                 position = Arrangement.End
             )
         },
+        floatingActionButton = {
+            IconButton(
+                onClick = {
+                    isRankingRulesDialogVisible = !isRankingRulesDialogVisible
+                },
+                modifier = Modifier.padding(bottom = 16.dp)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(48.dp)
+                        .background(LeaderboardAccentColor)
+                        .clip(CircleShape),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Leaderboard,
+                        contentDescription = null,
+                        tint = White
+                    )
+                }
+            }
+        },
         containerColor = LeaderboardBackground
     ) { paddingValues ->
+        if (isRankingRulesDialogVisible) {
+            RankingRulesDialog(
+                isVisible = true,
+                onDismissRequest = {
+                    isRankingRulesDialogVisible = false
+                }
+            )
+        }
         Box(
             modifier = Modifier
                 .fillMaxSize()
