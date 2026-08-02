@@ -16,5 +16,8 @@ enum class PlayerLevel(val badgeName: String, val minPoints: Int, val maxPoints:
         fun getLevelByPoints(points: Int): PlayerLevel {
             return entries.firstOrNull { points in it.minPoints..it.maxPoints } ?: RECRUIT
         }
+        fun getAllLevels(): List<PlayerLevel> {
+            return entries.toList()
+        }
     }
 }
