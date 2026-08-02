@@ -116,4 +116,8 @@
     <string name="see_wrong_answers">See your wrong answers</string>
     <string name="revision">Revision</string>
     <string name="no_answered">No Answered</string>
+    <string name="same_name_error">You can\'t use the same name as your current account</string>
+    <string name="avatar_update_by_typing">Your avatar updates according to your name!</string>
+    <string name="username">Username</string>
+    <string name="save_changes">Save Changes</string>
 </resources>

@@ -8,4 +8,5 @@ interface ResultsRepository {
     suspend fun updateResults(category: String, correctAnswers: Int, incorrectAnswers: Int)
     suspend fun fetchResults(): Result<List<Results>>
     suspend fun clearAllData()
+    suspend fun updateUsername(username: String, oldUsername: String): Result<Unit>
 }

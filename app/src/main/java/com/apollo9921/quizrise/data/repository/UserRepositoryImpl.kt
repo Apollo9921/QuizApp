@@ -329,4 +329,58 @@ class UserRepositoryImpl(
             }
         }
     }
+
+    override suspend fun updateName(
+        name: String,
+        oldName: String
+    ): Result<Unit> {
+        return withContext(ioDispatcher) {
+            try {
+                userDAO.updateName(name, oldName)
+                Result.success(Unit)
+            } catch (e: Exception) {
+                Result.failure(e)
+            }
+        }
+    }
+
+    override suspend fun postUserName(name: String, results: List<Results>): AppResult<Unit> {
+        return withContext(ioDispatcher) {
+            try {
+                kotlinx.coroutines.withTimeout(5000) {
+                    val currentUser = FirebaseAuth.getInstance().currentUser
+                        ?: return@withTimeout AppResult.Error(AppError.Unauthorized)
+
+                    val userId = currentUser.uid
+                    val userRef = firestore.collection("users").document(userId)
+                    val batch = firestore.batch()
+
+                    batch.update(userRef, "name", name)
+                    results.forEach { result ->
+                        val resultRef = userRef.collection("results").document(result.category)
+                        batch.update(resultRef, "username", name)
+                    }
+
+                    batch.commit().await()
+                }
+                AppResult.Success(Unit)
+            } catch (_: kotlinx.coroutines.TimeoutCancellationException) {
+                AppResult.Error(AppError.NoInternetConnection)
+            } catch (_: com.google.firebase.FirebaseNetworkException) {
+                AppResult.Error(AppError.NoInternetConnection)
+            } catch (e: com.google.firebase.firestore.FirebaseFirestoreException) {
+                when (e.code) {
+                    com.google.firebase.firestore.FirebaseFirestoreException.Code.UNAVAILABLE ->
+                        AppResult.Error(AppError.NoInternetConnection)
+                    com.google.firebase.firestore.FirebaseFirestoreException.Code.PERMISSION_DENIED ->
+                        AppResult.Error(AppError.Unauthorized)
+                    else -> AppResult.Error(AppError.Unknown)
+                }
+            } catch (_: IllegalStateException) {
+                AppResult.Error(AppError.Unauthorized)
+            } catch (_: Exception) {
+                AppResult.Error(AppError.Unknown)
+            }
+        }
+    }
 }

@@ -9,7 +9,7 @@ import com.apollo9921.quizrise.data.local.entity.UserEntity
 @Dao
 interface UserDAO {
 
-    @Insert(onConflict = OnConflictStrategy.Companion.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertUser(user: UserEntity)
 
     @Query("SELECT * FROM user_table")
@@ -26,4 +26,7 @@ interface UserDAO {
 
     @Query("DELETE FROM user_table")
     suspend fun clearAllData()
+
+    @Query("UPDATE user_table SET name=:name WHERE name =:oldName")
+    suspend fun updateName(name: String, oldName: String)
 }
