@@ -12,6 +12,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -21,6 +22,7 @@ import androidx.compose.ui.window.DialogProperties
 import com.apollo9921.quizrise.domain.util.PlayerLevel
 import com.apollo9921.quizrise.presentation.core.PurpleGrey40
 import com.apollo9921.quizrise.presentation.core.White
+import com.apollo9921.quizrise.R
 
 @Composable
 fun RankingRulesDialog(
@@ -58,7 +60,7 @@ fun RankingRulesDialog(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "Tabela de Rankings",
+                            text = stringResource(R.string.leaderboard_title),
                             style = MaterialTheme.typography.labelMedium,
                             fontWeight = FontWeight.Bold,
                             color = White
@@ -82,14 +84,14 @@ fun RankingRulesDialog(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "NÍVEL",
+                            text = stringResource(R.string.level).uppercase(),
                             style = MaterialTheme.typography.labelSmall,
                             color = White.copy(alpha = 0.6f),
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.weight(1f)
                         )
                         Text(
-                            text = "PONTUAÇÃO",
+                            text = stringResource(R.string.score).uppercase(),
                             style = MaterialTheme.typography.labelSmall,
                             color = White.copy(alpha = 0.6f),
                             fontWeight = FontWeight.Bold,

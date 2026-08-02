@@ -69,7 +69,7 @@
     <string name="have_an_account">Já tem uma conta? Faça login.</string>
     <string name="loading_translations">Por Favor aguarde, estamos selecionando as perguntas!</string>
     <string name="leaderboard">Classificação</string>
-    <string name="leaderboard_title">Classificação 🌌</string>
+    <string name="leaderboard_title">Classificação</string>
     <string name="filter_by">Filtrar por: %1$s 🔽</string>
     <string name="tab_level">Por Nível</string>
     <string name="tab_category">Por Categoria</string>
@@ -108,4 +108,6 @@
     <string name="avatar_update_by_typing">O teu avatar atualiza conforme o teu nome!</string>
     <string name="username">Nome de utilizador</string>
     <string name="save_changes">Guardar Alterações</string>
+    <string name="level">Nível</string>
+    <string name="score">Pontuação</string>
 </resources>
