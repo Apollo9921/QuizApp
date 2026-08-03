@@ -187,4 +187,7 @@ dependencies {
     implementation("androidx.browser:browser:1.8.0")
 
     implementation 'com.google.android.gms:play-services-auth:21.3.0'
+
+    // In-App Play Store
+    implementation("com.google.android.play:app-update-ktx:2.1.0")
 }
