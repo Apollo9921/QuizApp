@@ -29,6 +29,7 @@ class QuizResultViewModel(
 
     var total: Int = 5
     var pointsReceived = mutableIntStateOf(0)
+    var pointsToNextLevel = mutableIntStateOf(0)
 
     init {
         saveQuizProcess()
@@ -42,6 +43,10 @@ class QuizResultViewModel(
                 val userResult = fetchUserUseCase.invoke()
                 val userLocal = userResult.getOrThrow()
                 userName = userLocal.name
+
+                val totalPoints = userLocal.totalPoints
+                val currentLevel = PlayerLevel.getLevelByPoints(totalPoints)
+                pointsToNextLevel.intValue = (currentLevel.maxPoints + 5) - (totalPoints + pointsReceived.intValue)
 
                 updateResultsUseCase.invoke(category, correctAnswers, incorrectAnswers)
                 updatePointsUseCase.invoke(userLocal.name, pointsReceived.intValue, pointsPossible)

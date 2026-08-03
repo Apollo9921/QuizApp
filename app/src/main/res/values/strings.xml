@@ -122,4 +122,5 @@
     <string name="save_changes">Save Changes</string>
     <string name="level">Level</string>
     <string name="score">Score</string>
+    <string name="points_next_level">You need %1$d points to reach the next level</string>
 </resources>

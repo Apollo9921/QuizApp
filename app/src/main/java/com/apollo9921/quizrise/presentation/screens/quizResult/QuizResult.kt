@@ -15,6 +15,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -28,6 +29,7 @@ import com.apollo9921.quizrise.presentation.utils.componentSizeByScreen
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import com.apollo9921.quizrise.R
+import com.apollo9921.quizrise.presentation.core.Gold
 
 @Composable
 fun QuizResultRoute(
@@ -48,6 +50,7 @@ fun QuizResultRoute(
 ) {
     val total = viewModel.total
     val pointsReceived = viewModel.pointsReceived.intValue
+    val pointsNextLevel = viewModel.pointsToNextLevel.intValue
     val navigateToWrongAnswers = {
         navHostController.navigate(
             Destination.WrongAnswers.passArgument(
@@ -63,7 +66,8 @@ fun QuizResultRoute(
         correctAnswers = correctAnswers,
         total = total,
         pointsReceived = pointsReceived,
-        navigateToWrongAnswers = navigateToWrongAnswers
+        navigateToWrongAnswers = navigateToWrongAnswers,
+        pointsNextLevel = pointsNextLevel
     )
 }
 
@@ -75,6 +79,7 @@ private fun QuizResultScreen(
     total: Int,
     pointsReceived: Int,
     navigateToWrongAnswers: () -> Unit,
+    pointsNextLevel: Int,
 ) {
     BackHandler(enabled = true) {}
 
@@ -157,6 +162,19 @@ private fun QuizResultScreen(
                             fontWeight = FontWeight.ExtraBold,
                             textAlign = TextAlign.Center
                         )
+
+                        Spacer(modifier = Modifier.height(24.dp))
+
+                        Text(
+                            text = stringResource(
+                                id = R.string.points_next_level,
+                                pointsNextLevel
+                            ),
+                            style = MaterialTheme.typography.labelMedium,
+                            color = Gold,
+                            fontWeight = FontWeight.SemiBold,
+                            textAlign = TextAlign.Center
+                        )
                     }
                 }
 
@@ -169,6 +187,7 @@ private fun QuizResultScreen(
                         color = White,
                         fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Center,
+                        textDecoration = TextDecoration.Underline,
                         modifier = Modifier.clickable { navigateToWrongAnswers() }
                     )
                     Spacer(modifier = Modifier.height(componentSizeByScreen(baseSize = 40.dp)))

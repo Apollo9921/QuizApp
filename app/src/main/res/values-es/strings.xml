@@ -110,4 +110,5 @@
     <string name="save_changes">Guardar cambios</string>
     <string name="level">Nivel</string>
     <string name="score">Puntuación</string>
+    <string name="points_next_level">Necesitas %1$d puntos para subir al siguiente nivel</string>
 </resources>
