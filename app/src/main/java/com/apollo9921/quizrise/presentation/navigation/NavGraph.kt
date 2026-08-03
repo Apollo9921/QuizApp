@@ -7,11 +7,19 @@ import androidx.compose.animation.core.EaseInOut
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
+import com.google.firebase.Firebase
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.analytics
+import com.google.firebase.analytics.logEvent
+
 import com.apollo9921.quizrise.presentation.screens.progress.ProgressRoute
 import com.apollo9921.quizrise.presentation.screens.categories.CategoriesRoute
 import com.apollo9921.quizrise.presentation.screens.profile.ProfileRoute
@@ -29,6 +37,36 @@ import com.apollo9921.quizrise.presentation.screens.wrongAnswers.WrongAnswersRou
 
 @Composable
 fun AnimationNav(navHostController: NavHostController, startDestination: String) {
+
+    val navBackStackEntry by navHostController.currentBackStackEntryAsState()
+
+    LaunchedEffect(navBackStackEntry) {
+        navBackStackEntry?.destination?.route?.let { currentRoute ->
+
+            val screenName = when {
+                currentRoute.startsWith("onBoard") -> "OnBoard"
+                currentRoute.startsWith("login") -> "Login"
+                currentRoute.startsWith("register") -> "Register"
+                currentRoute.startsWith("categories") -> "Categories"
+                currentRoute.startsWith("progress") -> "Progress"
+                currentRoute.startsWith("leaderboard") -> "Leaderboard"
+                currentRoute.startsWith("results") -> "Results"
+                currentRoute.startsWith("profile") -> "Profile"
+                currentRoute.startsWith("edit_username") -> "EditUserName"
+                currentRoute.startsWith("delete_account") -> "DeleteAccount"
+                currentRoute.startsWith("level_difficulty") -> "LevelDifficulty"
+                currentRoute.startsWith("start_quiz") -> "StartQuiz"
+                currentRoute.startsWith("quiz_result") -> "QuizResult"
+                currentRoute.startsWith("wrong_answers") -> "WrongAnswers"
+                else -> currentRoute
+            }
+
+            Firebase.analytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW) {
+                param(FirebaseAnalytics.Param.SCREEN_NAME, screenName)
+            }
+        }
+    }
+
     NavHost(
         navController = navHostController,
         startDestination = startDestination
