@@ -19,6 +19,7 @@ import com.apollo9921.quizrise.domain.repository.LeaderboardRepository
 import com.apollo9921.quizrise.domain.repository.QuizRepository
 import com.apollo9921.quizrise.domain.repository.ResultsRepository
 import com.apollo9921.quizrise.domain.repository.UserRepository
+import com.apollo9921.quizrise.domain.usecase.CalculateQuizResultUseCase
 import com.apollo9921.quizrise.domain.usecase.ClearAllDataUseCase
 import com.apollo9921.quizrise.domain.usecase.DeleteAccountUseCase
 import com.apollo9921.quizrise.domain.usecase.FetchBadgeImageUseCase
@@ -38,11 +39,8 @@ import com.apollo9921.quizrise.domain.usecase.PostSessionUseCase
 import com.apollo9921.quizrise.domain.usecase.PostUserUseCase
 import com.apollo9921.quizrise.domain.usecase.PostUserAndResultsUseCase
 import com.apollo9921.quizrise.domain.usecase.PostUserAnonymouslyUseCase
-import com.apollo9921.quizrise.domain.usecase.UpdateBadgeUseCase
+import com.apollo9921.quizrise.domain.usecase.SaveQuizUseCase
 import com.apollo9921.quizrise.domain.usecase.UpdateNameUseCase
-import com.apollo9921.quizrise.domain.usecase.UpdatePointsUseCase
-import com.apollo9921.quizrise.domain.usecase.UpdateResultsUseCase
-import com.apollo9921.quizrise.domain.usecase.UpdateUserAndResultsUseCase
 import com.apollo9921.quizrise.domain.usecase.UpdateUserSessionUseCase
 import com.apollo9921.quizrise.presentation.screens.deleteAccount.DeleteAccountViewModel
 import com.apollo9921.quizrise.presentation.screens.editUsername.EditUsernameViewModel
@@ -105,7 +103,7 @@ val repositoryModule = module {
 val viewModelModule = module {
     viewModel { QuizViewModel(get(), get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { ProgressViewModel(get(), get()) }
-    viewModel { QuizResultViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
+    viewModel { QuizResultViewModel(get(), get(), get(), get(), get()) }
     viewModel { ProfileViewModel(get(), get(), get(), get(), get(), get()) }
     viewModel { LoginViewModel(get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { RegisterViewModel(get()) }
@@ -120,15 +118,11 @@ val useCaseModule = module {
     factory { FormatQuizUseCase(get()) }
     factory { FetchUserUseCase(get()) }
     factory { FormatProgressPercentageUseCase() }
-    factory { UpdateResultsUseCase(androidContext(), get()) }
-    factory { UpdatePointsUseCase(get()) }
     factory { FetchBadgeImageUseCase() }
     factory { FetchBadgeUseCase() }
-    factory { UpdateBadgeUseCase(get()) }
     factory { InsertNewResultsUseCase(get()) }
     factory { InsertNewUserUseCase(get()) }
     factory { PostUserAndResultsUseCase(get()) }
-    factory { UpdateUserAndResultsUseCase(androidContext(), get(), get()) }
     factory { PostUserUseCase(get()) }
     factory { InsertResultsUseCase(get()) }
     factory { InsertUserUseCase(get()) }
@@ -141,4 +135,6 @@ val useCaseModule = module {
     factory { UpdateUserSessionUseCase(get()) }
     factory { PostUserAnonymouslyUseCase(get(), get(), get()) }
     factory { UpdateNameUseCase(get(), get()) }
+    factory { SaveQuizUseCase(androidContext(), get(), get(), get()) }
+    factory { CalculateQuizResultUseCase(get()) }
 }
