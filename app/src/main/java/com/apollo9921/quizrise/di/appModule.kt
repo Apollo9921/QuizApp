@@ -19,6 +19,7 @@ import com.apollo9921.quizrise.domain.repository.LeaderboardRepository
 import com.apollo9921.quizrise.domain.repository.QuizRepository
 import com.apollo9921.quizrise.domain.repository.ResultsRepository
 import com.apollo9921.quizrise.domain.repository.UserRepository
+import com.apollo9921.quizrise.domain.usecase.CalculateQuizResultUseCase
 import com.apollo9921.quizrise.domain.usecase.ClearAllDataUseCase
 import com.apollo9921.quizrise.domain.usecase.DeleteAccountUseCase
 import com.apollo9921.quizrise.domain.usecase.FetchBadgeImageUseCase
@@ -106,7 +107,7 @@ val repositoryModule = module {
 val viewModelModule = module {
     viewModel { QuizViewModel(get(), get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { ProgressViewModel(get(), get()) }
-    viewModel { QuizResultViewModel(get(), get(), get(), get()) }
+    viewModel { QuizResultViewModel(get(), get(), get(), get(), get()) }
     viewModel { ProfileViewModel(get(), get(), get(), get(), get(), get()) }
     viewModel { LoginViewModel(get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { RegisterViewModel(get()) }
@@ -143,4 +144,5 @@ val useCaseModule = module {
     factory { PostUserAnonymouslyUseCase(get(), get(), get()) }
     factory { UpdateNameUseCase(get(), get()) }
     factory { SaveQuizUseCase(androidContext(), get(), get()) }
+    factory { CalculateQuizResultUseCase(get()) }
 }

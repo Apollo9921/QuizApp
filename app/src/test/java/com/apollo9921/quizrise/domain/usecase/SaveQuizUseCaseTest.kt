@@ -42,31 +42,6 @@ class SaveQuizUseCaseTest {
 
         // --- ASSERT ---
         assert(result is AppResult.Success)
-        assert((result as AppResult.Success).data == Pair(15, 135))
-    }
-
-    @Test
-    fun `invoke saves quiz correctly after leveling up`() = runBlocking {
-        // --- ARRANGE ---
-        val category = "Music"
-        val correctAnswers = 3
-        val incorrectAnswers = 2
-        val badge = PlayerLevel.getLevelByPoints(145).badgeName
-
-        val fakeUser = User("", "FakeName", 145, 200, badge)
-
-        coEvery { userRepository.fetchUser() } returns Result.success(fakeUser)
-        coEvery { resultsRepository.updateResults(any(), any(), any()) } returns Unit
-        coEvery { resultsRepository.updatePoints(any(), any(), any()) } returns Unit
-        coEvery { userRepository.updateBadge(any(), any()) } returns Unit
-        coEvery { userRepository.updateUserAndResults(any(), any()) } returns AppResult.Success(Unit)
-
-        // --- ACT ---
-        val result = saveQuizUseCase.invoke(category, correctAnswers, incorrectAnswers)
-
-        // --- ASSERT ---
-        assert(result is AppResult.Success)
-        assert((result as AppResult.Success).data == Pair(15, 340))
     }
 
     @Test

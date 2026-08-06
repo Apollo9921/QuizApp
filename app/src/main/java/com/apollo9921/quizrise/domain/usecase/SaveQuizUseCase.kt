@@ -17,7 +17,11 @@ class SaveQuizUseCase(
     private val resultsRepository: ResultsRepository,
     private val userRepository: UserRepository
 ) {
-    suspend operator fun invoke(category: String, correctAnswers: Int, incorrectAnswers: Int): AppResult<Pair<Int, Int>> {
+    suspend operator fun invoke(
+        category: String,
+        correctAnswers: Int,
+        incorrectAnswers: Int
+    ): AppResult<Unit> {
         try {
             val pointsPossible = 25
 
@@ -40,11 +44,7 @@ class SaveQuizUseCase(
                 val userResult = userResult.getOrThrow()
                 val badge = PlayerLevel.getLevelByPoints(userResult.totalPoints).badgeName
                 val userName = userResult.name
-                val totalPoints = userResult.totalPoints
                 val pointsReceived = correctAnswers * 5
-                val currentLevel = PlayerLevel.getLevelByPoints(totalPoints + pointsReceived)
-                val pointsToNextLevel =
-                    (currentLevel.maxPoints + 5) - (totalPoints + pointsReceived)
 
                 resultsRepository.updateResults(categoryName, correctAnswers, incorrectAnswers)
                 resultsRepository.updatePoints(
@@ -57,14 +57,7 @@ class SaveQuizUseCase(
                 val userRemote = User("", userResult.name, pointsReceived, pointsPossible, badge)
                 val resultsRemote = Results("", category, correctAnswers, incorrectAnswers)
 
-                val updateUserAndResults =
-                    userRepository.updateUserAndResults(userRemote, resultsRemote)
-
-                return if (updateUserAndResults is AppResult.Success) {
-                    AppResult.Success(Pair(pointsReceived, pointsToNextLevel))
-                } else {
-                    AppResult.Error(AppError.Unknown)
-                }
+                return userRepository.updateUserAndResults(userRemote, resultsRemote)
             } else {
                 return AppResult.Error(AppError.Unknown)
             }
