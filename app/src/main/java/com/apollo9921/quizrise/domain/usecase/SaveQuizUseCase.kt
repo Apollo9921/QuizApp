@@ -10,12 +10,16 @@ import com.apollo9921.quizrise.domain.result.AppError
 import com.apollo9921.quizrise.domain.result.AppResult
 import com.apollo9921.quizrise.domain.util.PlayerLevel
 import com.apollo9921.quizrise.domain.util.QuizCategory
+import com.apollo9921.quizrise.presentation.dataStore.UserManager
+import com.apollo9921.quizrise.presentation.dataStore.dataStoreUser
+import com.google.firebase.auth.FirebaseAuth
 import kotlin.getOrThrow
 
 class SaveQuizUseCase(
     private val context: Context,
     private val resultsRepository: ResultsRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val firebaseAuth: FirebaseAuth
 ) {
     suspend operator fun invoke(
         category: String,
@@ -56,6 +60,14 @@ class SaveQuizUseCase(
 
                 val userRemote = User("", userResult.name, pointsReceived, pointsPossible, badge)
                 val resultsRemote = Results("", category, correctAnswers, incorrectAnswers)
+
+                val authUser = firebaseAuth.currentUser
+                if (authUser != null) {
+                    if (authUser.isAnonymous) {
+                        val userManager = UserManager(dataStore = context.dataStoreUser)
+                        userManager.updateQuizAllowed()
+                    }
+                }
 
                 return userRepository.updateUserAndResults(userRemote, resultsRemote)
             } else {

@@ -7,6 +7,7 @@ import com.apollo9921.quizrise.domain.repository.UserRepository
 import com.apollo9921.quizrise.domain.result.AppError
 import com.apollo9921.quizrise.domain.result.AppResult
 import com.apollo9921.quizrise.domain.util.PlayerLevel
+import com.google.firebase.auth.FirebaseAuth
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
@@ -17,9 +18,10 @@ class SaveQuizUseCaseTest {
 
     private val resultsRepository = mockk<ResultsRepository>()
     private val userRepository = mockk<UserRepository>()
+    private val firebaseAuth = mockk<FirebaseAuth>()
     private val context = mockk<Context>(relaxed = true)
 
-    private val saveQuizUseCase = SaveQuizUseCase(context, resultsRepository, userRepository)
+    private val saveQuizUseCase = SaveQuizUseCase(context, resultsRepository, userRepository, firebaseAuth)
 
     @Test
     fun `invoke saves quiz correctly`() = runBlocking {
@@ -35,6 +37,7 @@ class SaveQuizUseCaseTest {
         coEvery { resultsRepository.updateResults(any(), any(), any()) } returns Unit
         coEvery { resultsRepository.updatePoints(any(), any(), any()) } returns Unit
         coEvery { userRepository.updateBadge(any(), any()) } returns Unit
+        coEvery { firebaseAuth.currentUser } returns null
         coEvery { userRepository.updateUserAndResults(any(), any()) } returns AppResult.Success(Unit)
 
         // --- ACT ---
@@ -58,6 +61,7 @@ class SaveQuizUseCaseTest {
         coEvery { resultsRepository.updateResults(any(), any(), any()) } returns Unit
         coEvery { resultsRepository.updatePoints(any(), any(), any()) } returns Unit
         coEvery { userRepository.updateBadge(any(), any()) } returns Unit
+        coEvery { firebaseAuth.currentUser } returns null
         coEvery { userRepository.updateUserAndResults(any(), any()) } returns AppResult.Error(AppError.Unknown)
 
         // --- ACT ---
