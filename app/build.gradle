@@ -61,6 +61,7 @@ android {
             buildConfigField("String", "BASE_URL", "\"https://the-trivia-api.com/v2/\"")
 
             minifyEnabled true
+            shrinkResources true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
             signingConfig = signingConfigs.getByName("debug")
         }
@@ -127,8 +128,8 @@ dependencies {
     // Coil (Image Loading)
     implementation("io.coil-kt:coil-compose:2.7.0")
 
-    // Room (Latest stable is 2.6.1)
-    def room_version = "2.6.1"
+    // Room
+    def room_version = "2.7.0-alpha11"
     implementation "androidx.room:room-runtime:$room_version"
     ksp "androidx.room:room-compiler:$room_version"
     implementation "androidx.room:room-ktx:$room_version"
@@ -170,6 +171,7 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.9.0"
     implementation("com.google.firebase:firebase-functions-ktx:21.0.0")
 
+    // Credentials
     implementation "androidx.credentials:credentials:1.2.2"
     implementation "androidx.credentials:credentials-play-services-auth:1.2.2"
 
