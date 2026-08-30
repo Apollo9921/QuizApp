@@ -1,5 +1,6 @@
 package com.apollo9921.quizrise.presentation.screens.results
 
+import android.content.Context
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -10,6 +11,8 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -18,7 +21,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.layer.GraphicsLayer
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -26,7 +32,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
-import com.apollo9921.quizrise.domain.model.results.Results
 import com.apollo9921.quizrise.domain.model.user.User
 import com.apollo9921.quizrise.presentation.components.BottomNavigationBar
 import com.apollo9921.quizrise.presentation.components.ErrorScreen
@@ -47,26 +52,19 @@ import com.apollo9921.quizrise.presentation.utils.formatTotalCount
 import com.apollo9921.quizrise.presentation.utils.widthOfScreen
 import org.koin.androidx.compose.koinViewModel
 import com.apollo9921.quizrise.R
+import com.apollo9921.quizrise.presentation.components.CategoryStat
+import com.apollo9921.quizrise.presentation.components.OffscreenShareCardHost
 import com.apollo9921.quizrise.presentation.components.QuizTooltipIcon
-
-private val categories = listOf(
-    R.string.artsAndLiterature_translatable,
-    R.string.filmAndTV_translatable,
-    R.string.foodAndDrink_translatable,
-    R.string.generalKnowledge_translatable,
-    R.string.geography_translatable,
-    R.string.history_translatable,
-    R.string.music_translatable,
-    R.string.science_translatable,
-    R.string.societyAndCulture_translatable,
-    R.string.sportAndLeisure_translatable
-)
+import com.apollo9921.quizrise.presentation.components.ShareCardData
+import com.apollo9921.quizrise.presentation.utils.shareQuizBitmap
+import kotlinx.coroutines.launch
 
 @Composable
 fun ResultsRoute(
     navHostController: NavHostController,
     viewModel: ResultsViewModel = koinViewModel<ResultsViewModel>()
 ) {
+    val context = LocalContext.current
     val state = viewModel.uiState.collectAsStateWithLifecycle().value
     val retry = { viewModel.fetchUserAndResults() }
 
@@ -76,6 +74,7 @@ fun ResultsRoute(
 
     Results(
         navHostController = navHostController,
+        context = context,
         state = state,
         retry = retry
     )
@@ -85,10 +84,58 @@ fun ResultsRoute(
 @Composable
 private fun Results(
     navHostController: NavHostController,
+    context: Context,
     state: ResultsViewModel.UIState,
     retry: () -> Unit
 ) {
+    val scope = rememberCoroutineScope()
+    var graphicsLayer by remember { mutableStateOf<GraphicsLayer?>(null) }
+    var isExporting by remember { mutableStateOf(false) }
+
+    val shareText = stringResource(id = R.string.share_text)
+    val titleIntent = stringResource(id = R.string.title_intent)
+
     Scaffold(
+        topBar = {
+            Row(
+                modifier = Modifier
+                    .statusBarsPadding()
+                    .navigationBarsPadding()
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                if (state is ResultsViewModel.UIState.Success) {
+                    IconButton(
+                        onClick = {
+                            val layer = graphicsLayer ?: return@IconButton
+                            isExporting = true
+
+                            scope.launch {
+                                try {
+                                    val bitmap = layer.toImageBitmap().asAndroidBitmap()
+                                    shareQuizBitmap(context, bitmap, shareText, titleIntent)
+                                } finally {
+                                    isExporting = false
+                                }
+                            }
+                        },
+                        enabled = !isExporting && graphicsLayer != null,
+                        content = {
+                            Icon(
+                                imageVector = Icons.Default.Share,
+                                contentDescription = null,
+                                tint = White
+                            )
+                        }
+                    )
+                    QuizTooltipIcon(
+                        text = stringResource(id = R.string.tooltip_results),
+                        position = Arrangement.End
+                    )
+                }
+            }
+        },
         bottomBar = { BottomNavigationBar(navHostController) }
     ) { paddingValues ->
         Box(
@@ -109,7 +156,28 @@ private fun Results(
                 }
 
                 is ResultsViewModel.UIState.Success -> {
-                    ShowResults(state.user, state.results)
+                    val shareCardData = remember(state) {
+                        ShareCardData(
+                            totalPoints = state.user.totalPoints,
+                            overallAccuracy = state.averagePercentage,
+                            categories = state.results.mapIndexed { index, it ->
+                                val percentage = if (it.correctAnswers == 0 && it.incorrectAnswers == 0) 0 else (it.correctAnswers * 100) / (it.correctAnswers + it.incorrectAnswers)
+                                CategoryStat(
+                                    name = state.data.keys.elementAt(index),
+                                    percentage = percentage
+                                )
+                            }
+                        )
+                    }
+
+                    OffscreenShareCardHost(
+                        data = shareCardData,
+                        onGraphicsLayerReady = { layer ->
+                            graphicsLayer = layer
+                        }
+                    )
+
+                    ShowResults(state.user, state.data)
                 }
             }
         }
@@ -117,18 +185,7 @@ private fun Results(
 }
 
 @Composable
-private fun ShowResults(user: User, results: List<Results>) {
-    var data: Map<String, Int> = mapOf()
-    val displayCount = minOf(results.size, categories.size)
-
-    for (i in 0 until displayCount) {
-        val correct = results[i].correctAnswers
-        val incorrect = results[i].incorrectAnswers
-        val percentage =
-            if (correct == 0 && incorrect == 0) 0 else (correct * 100) / (correct + incorrect)
-        data = data + mapOf(stringResource(id = categories[i]) to percentage)
-    }
-
+private fun ShowResults(user: User, data: Map<Int, Int>) {
     val screenWidth = widthOfScreen()
 
     val maxLayoutWidth =
@@ -154,10 +211,9 @@ private fun ShowResults(user: User, results: List<Results>) {
         contentPadding = PaddingValues(top = 16.dp, bottom = 24.dp)
     ) {
         item(span = { GridItemSpan(columnsCount) }) {
-            QuizTooltipIcon(text = stringResource(id = R.string.tooltip_results))
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
-                    style = MaterialTheme.typography.labelMedium,
+                    style = MaterialTheme.typography.labelSmall,
                     text = stringResource(
                         id = R.string.totalAndTotalPossiblePoints,
                         formatTotalCount(user.totalPoints.toFloat()),
@@ -183,7 +239,7 @@ private fun ShowResults(user: User, results: List<Results>) {
 
         items(data.size) { index ->
             DetailsPieChartItem(
-                categoryName = data.keys.elementAt(index),
+                categoryName = stringResource(data.keys.elementAt(index)),
                 percentage = data.values.elementAt(index),
                 color = colors[index % colors.size]
             )
@@ -193,10 +249,10 @@ private fun ShowResults(user: User, results: List<Results>) {
 
 @Composable
 private fun PieChart(
-    data: Map<String, Int>,
+    data: Map<Int, Int>,
     chartSize: Dp,
     chartBarWidth: Dp,
-    animDuration: Int = 1000,
+    animDuration: Int = 1000
 ) {
     val totalSum = data.values.sum()
     val floatValue = mutableListOf<Float>()

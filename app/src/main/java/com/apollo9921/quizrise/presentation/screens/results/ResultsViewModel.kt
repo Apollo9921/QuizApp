@@ -7,6 +7,7 @@ import com.apollo9921.quizrise.domain.model.results.Results
 import com.apollo9921.quizrise.domain.model.user.User
 import com.apollo9921.quizrise.domain.usecase.FetchResultsUseCase
 import com.apollo9921.quizrise.domain.usecase.FetchUserUseCase
+import com.apollo9921.quizrise.domain.util.QuizCategory
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
@@ -20,7 +21,13 @@ class ResultsViewModel(
 
     sealed class UIState {
         object Loading : UIState()
-        data class Success(val results: List<Results>, val user: User) : UIState()
+        data class Success(
+            val results: List<Results>,
+            val user: User,
+            val data: Map<Int, Int>,
+            val averagePercentage: Int
+        ) : UIState()
+
         data class Error(val message: Int) : UIState()
     }
 
@@ -33,7 +40,16 @@ class ResultsViewModel(
                     val user = userResult.getOrNull()
                     val results = resultsResult.getOrNull()
                     if (user != null && results != null) {
-                        _uiState.value = UIState.Success(results, user)
+                        val data = results.mapIndexed { index, result ->
+                            val correct = result.correctAnswers
+                            val incorrect = result.incorrectAnswers
+                            val percentage = if (correct + incorrect == 0) 0 else (correct * 100) / (correct + incorrect)
+
+                            QuizCategory.entries[index].resourceId to percentage
+                        }.toMap()
+
+                        val averagePercentage = if (data.isNotEmpty()) data.values.average().toInt() else 0
+                        _uiState.value = UIState.Success(results, user, data, averagePercentage)
                     } else {
                         _uiState.value = UIState.Error(R.string.unexpected_error)
                     }
