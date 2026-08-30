@@ -111,4 +111,8 @@
     <string name="level">Nível</string>
     <string name="score">Pontuação</string>
     <string name="points_next_level">Precisas de %1$d pontos para atingir o próximo nível</string>
+    <string name="total_points">Pontuação Total</string>
+    <string name="average_points">Média Geral: %1$d %%</string>
+    <string name="performance_top_categories">Desempenho nas melhores categorias</string>
+    <string name="can_you_beat_me">Consegues-me vencer?</string>
 </resources>

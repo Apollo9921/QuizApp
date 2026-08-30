@@ -123,4 +123,8 @@
     <string name="level">Level</string>
     <string name="score">Score</string>
     <string name="points_next_level">You need %1$d points to reach the next level</string>
+    <string name="total_points">Total Points</string>
+    <string name="average_points">Overall Average: %1$d %%</string>
+    <string name="performance_top_categories">Performance on best categories</string>
+    <string name="can_you_beat_me">Can you beat me?</string>
 </resources>
