@@ -115,4 +115,6 @@
     <string name="average_points">Média Geral: %1$d %%</string>
     <string name="performance_top_categories">Desempenho nas melhores categorias</string>
     <string name="can_you_beat_me">Consegues-me vencer?</string>
+    <string name="share_text">Consegues superar a minha pontuação no QuizRise? ⚡ Baixa já:</string>
+    <string name="title_intent">Partilhar resultado via</string>
 </resources>

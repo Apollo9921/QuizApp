@@ -127,4 +127,6 @@
     <string name="average_points">Overall Average: %1$d %%</string>
     <string name="performance_top_categories">Performance on best categories</string>
     <string name="can_you_beat_me">Can you beat me?</string>
+    <string name="share_text">Can you beat my score in QuizRise? ⚡ Download now:</string>
+    <string name="title_intent">Share result by</string>
 </resources>
