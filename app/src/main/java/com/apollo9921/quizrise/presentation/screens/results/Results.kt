@@ -148,7 +148,7 @@ private fun Results(
         ) {
             when (state) {
                 is ResultsViewModel.UIState.Error -> {
-                    ErrorScreen(errorMessage = stringResource(id = state.message), onClick = retry)
+                    ErrorScreen(errorMessage = stringResource(id = state.message), onClick = { retry() })
                 }
 
                 ResultsViewModel.UIState.Loading -> {
