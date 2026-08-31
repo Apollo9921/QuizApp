@@ -63,8 +63,7 @@ private fun DeleteAccountScreen(
         topBar = {
             TopBar(
                 backgroundColor = PurpleGrey40,
-                isBackEnabled = true,
-                onBackClicked = { onCancelClick() }
+                onClick = { onCancelClick() }
             )
         },
         containerColor = PurpleGrey40

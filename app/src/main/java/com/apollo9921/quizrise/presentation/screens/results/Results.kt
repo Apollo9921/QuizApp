@@ -11,8 +11,6 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -56,6 +54,8 @@ import com.apollo9921.quizrise.presentation.components.CategoryStat
 import com.apollo9921.quizrise.presentation.components.OffscreenShareCardHost
 import com.apollo9921.quizrise.presentation.components.QuizTooltipIcon
 import com.apollo9921.quizrise.presentation.components.ShareCardData
+import com.apollo9921.quizrise.presentation.components.TopBar
+import com.apollo9921.quizrise.presentation.components.TopBarIconOptions
 import com.apollo9921.quizrise.presentation.utils.shareQuizBitmap
 import kotlinx.coroutines.launch
 
@@ -97,43 +97,28 @@ private fun Results(
 
     Scaffold(
         topBar = {
-            Row(
-                modifier = Modifier
-                    .statusBarsPadding()
-                    .navigationBarsPadding()
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                if (state is ResultsViewModel.UIState.Success) {
-                    IconButton(
-                        onClick = {
-                            val layer = graphicsLayer ?: return@IconButton
-                            isExporting = true
+            if (state is ResultsViewModel.UIState.Success) {
+                TopBar(
+                    backgroundColor = PurpleGrey40,
+                    backIconOption = TopBarIconOptions.SHARE,
+                    onClick = {
+                        val layer = graphicsLayer ?: return@TopBar
+                        isExporting = true
 
-                            scope.launch {
-                                try {
-                                    val bitmap = layer.toImageBitmap().asAndroidBitmap()
-                                    shareQuizBitmap(context, bitmap, shareText, titleIntent)
-                                } finally {
-                                    isExporting = false
-                                }
+                        scope.launch {
+                            try {
+                                val bitmap = layer.toImageBitmap().asAndroidBitmap()
+                                shareQuizBitmap(context, bitmap, shareText, titleIntent)
+                            } finally {
+                                isExporting = false
                             }
-                        },
-                        enabled = !isExporting && graphicsLayer != null,
-                        content = {
-                            Icon(
-                                imageVector = Icons.Default.Share,
-                                contentDescription = null,
-                                tint = White
-                            )
                         }
-                    )
-                    QuizTooltipIcon(
-                        text = stringResource(id = R.string.tooltip_results),
-                        position = Arrangement.End
-                    )
-                }
+                    }
+                )
+                QuizTooltipIcon(
+                    text = stringResource(id = R.string.tooltip_results),
+                    position = Arrangement.End
+                )
             }
         },
         bottomBar = { BottomNavigationBar(navHostController) }
@@ -143,7 +128,9 @@ private fun Results(
                 .fillMaxSize()
                 .background(PurpleGrey40)
                 .safeDrawingPadding()
-                .padding(bottom = paddingValues.calculateBottomPadding()),
+                .padding(
+                    top = 20.dp,
+                    bottom = paddingValues.calculateBottomPadding()),
             contentAlignment = Alignment.TopCenter
         ) {
             when (state) {

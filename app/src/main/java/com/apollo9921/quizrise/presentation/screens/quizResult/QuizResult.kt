@@ -93,8 +93,7 @@ private fun QuizResultScreen(
         topBar = {
             TopBar(
                 backgroundColor = PurpleGrey40,
-                isBackEnabled = false,
-                onBackClicked = { false },
+                onClick = { },
                 title = stringResource(id = R.string.results)
             )
         },

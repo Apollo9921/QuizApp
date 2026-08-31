@@ -59,8 +59,7 @@ fun LevelDifficulty(navHostController: NavHostController, category: String) {
         topBar = {
             TopBar(
                 backgroundColor = PurpleGrey40,
-                isBackEnabled = true,
-                onBackClicked = { navHostController.navigateUp() })
+                onClick = { navHostController.navigateUp() })
         }
     ) { paddingValues ->
         Box(

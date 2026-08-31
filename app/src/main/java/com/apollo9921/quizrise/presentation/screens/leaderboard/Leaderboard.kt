@@ -103,8 +103,7 @@ private fun LeaderboardScreen(
             TopBar(
                 backgroundColor = LeaderboardBackground,
                 title = stringResource(R.string.leaderboard_title),
-                isBackEnabled = true,
-                onBackClicked = navigateBack
+                onClick = { navigateBack() }
             )
             QuizTooltipIcon(
                 text = stringResource(R.string.tooltip_leaderboard),
