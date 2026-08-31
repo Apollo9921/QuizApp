@@ -71,8 +71,7 @@ private fun ChangeNameScreen(
         topBar = {
             TopBar(
                 backgroundColor = PurpleGrey40,
-                isBackEnabled = true,
-                onBackClicked = { onBackClick() }
+                onClick = { onBackClick() }
             )
         },
         containerColor = PurpleGrey40
