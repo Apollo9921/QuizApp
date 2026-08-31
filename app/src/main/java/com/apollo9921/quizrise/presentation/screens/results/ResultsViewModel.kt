@@ -37,18 +37,20 @@ class ResultsViewModel(
                 val userResult = fetchUserUseCase.invoke()
                 val resultsResult = fetchResultsUseCase.invoke()
                 if (userResult.isSuccess && resultsResult.isSuccess) {
-                    val user = userResult.getOrNull()
-                    val results = resultsResult.getOrNull()
-                    if (user != null && results != null) {
+                    val user = userResult.getOrThrow()
+                    val results = resultsResult.getOrThrow()
+                    if (user.id.isNotEmpty() && user.name.isNotEmpty() && user.badge.isNotEmpty() && user.session.isNotEmpty() && results.isNotEmpty()) {
                         val data = results.mapIndexed { index, result ->
                             val correct = result.correctAnswers
                             val incorrect = result.incorrectAnswers
-                            val percentage = if (correct + incorrect == 0) 0 else (correct * 100) / (correct + incorrect)
+                            val percentage =
+                                if (correct + incorrect == 0) 0 else (correct * 100) / (correct + incorrect)
 
                             QuizCategory.entries[index].resourceId to percentage
                         }.toMap()
 
-                        val averagePercentage = if (data.isNotEmpty()) data.values.average().toInt() else 0
+                        val averagePercentage =
+                            if (data.isNotEmpty()) data.values.average().toInt() else 0
                         _uiState.value = UIState.Success(results, user, data, averagePercentage)
                     } else {
                         _uiState.value = UIState.Error(R.string.unexpected_error)
