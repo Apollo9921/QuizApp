@@ -129,4 +129,12 @@
     <string name="can_you_beat_me">Can you beat me?</string>
     <string name="share_text">Can you beat my score in QuizRise? ⚡ Download now:</string>
     <string name="title_intent">Share result by</string>
+    <string name="recruit_level">Recruit</string>
+    <string name="explorer_level">Explorer</string>
+    <string name="veteran_level">Veteran</string>
+    <string name="strategist_level">Strategist</string>
+    <string name="elite_brain_level">Elite Brain</string>
+    <string name="mentalist_level">Mentalist</string>
+    <string name="oracle_level">Oracle</string>
+    <string name="quiz_deity_level">Quiz Deity</string>
 </resources>

@@ -117,4 +117,12 @@
     <string name="can_you_beat_me">¿Puedes superarme?</string>
     <string name="share_text">Conseguiste superar a mi puntuación en QuizRise? ⚡ Descarga ya:</string>
     <string name="title_intent">Compartir resultado por</string>
+    <string name="recruit_level">Recluta</string>
+    <string name="explorer_level">Explorador</string>
+    <string name="veteran_level">Veterano</string>
+    <string name="strategist_level">Estratega</string>
+    <string name="elite_brain_level">Cerebro de Élite</string>
+    <string name="mentalist_level">Mentalista</string>
+    <string name="oracle_level">Oráculo</string>
+    <string name="quiz_deity_level">Genio</string>
 </resources>
