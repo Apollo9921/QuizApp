@@ -1,11 +1,10 @@
 package com.apollo9921.quizrise.domain.util
 
-import androidx.annotation.StringRes
 import com.apollo9921.quizrise.R
 
 enum class QuizCategory(
     val categoryName: String,
-    @StringRes val resourceId: Int
+    val resourceId: Int
 ) {
     ARTS_AND_LITERATURE("Arts and Literature", R.string.artsAndLiterature_translatable),
     FILM_AND_TV("Film and TV", R.string.filmAndTV_translatable),
@@ -19,7 +18,12 @@ enum class QuizCategory(
     SPORT_AND_LEISURE("Sport and Leisure", R.string.sportAndLeisure_translatable);
 
     companion object {
-        fun fromName(name: String): QuizCategory? =
-            entries.find { it.categoryName == name }
+        fun getLevelByName(resourceId: Int): String {
+            return QuizCategory.entries.firstOrNull { it.resourceId == resourceId }?.categoryName ?: ARTS_AND_LITERATURE.categoryName
+        }
+
+        fun getResourceByName(name: String): Int {
+            return QuizCategory.entries.firstOrNull { it.categoryName == name }?.resourceId ?: ARTS_AND_LITERATURE.resourceId
+        }
     }
 }

@@ -135,7 +135,7 @@ private fun RankingRowItem(rule: PlayerLevel) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = rule.badgeName,
+            text = stringResource(rule.resourceId),
             style = MaterialTheme.typography.labelMedium,
             fontWeight = FontWeight.Bold,
             color = White,
