@@ -1,5 +1,6 @@
 package com.apollo9921.quizrise.presentation.screens.profile
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
@@ -41,7 +42,7 @@ class ProfileViewModel(
         data class Success(val user: User) : UIState()
     }
 
-    fun fetchUser() {
+    fun fetchUser(context: Context) {
         viewModelScope.launch {
             val result = fetchUserUseCase.invoke()
             if (result.isSuccess) {
@@ -49,8 +50,8 @@ class ProfileViewModel(
                 val badgeSymbol = fetchBadgeImageUseCase.invoke(data)
                 val badgeMaxPoints = fetchBadgeUseCase.invoke(data)
 
-                val badgeName = PlayerLevel.getLevelByPoints(data.totalPoints).badgeName
-                data = data.copy(badge = badgeName)
+                val badgeName = PlayerLevel.getLevelByPoints(data.totalPoints).resourceId
+                data = data.copy(badge = context.getString(badgeName))
 
                 _badgeState.value = Badge(badgeSymbol, badgeMaxPoints)
                 _uiState.value = UIState.Success(user = data)

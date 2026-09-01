@@ -56,13 +56,12 @@ fun ProfileRoute(
     navHostController: NavHostController,
     viewModel: ProfileViewModel = koinViewModel<ProfileViewModel>()
 ) {
+    val context = LocalContext.current
     val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
     val badgeState = viewModel.badgeState.collectAsStateWithLifecycle().value
-    val fetchUser = { viewModel.fetchUser() }
+    val fetchUser = { viewModel.fetchUser(context) }
     val logout = { viewModel.logout(navHostController) }
     val navigateToChangeName = { navHostController.navigate(Destination.EditUserName.route) }
-
-    val context = LocalContext.current
 
     LaunchedEffect(Unit) {
         fetchUser()

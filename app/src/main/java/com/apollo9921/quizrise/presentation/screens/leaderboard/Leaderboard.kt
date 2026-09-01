@@ -314,9 +314,9 @@ private fun FilterSelector(
     var expanded by rememberSaveable { mutableStateOf(false) }
 
     val filters = if (selectedTab == 0) {
-        PlayerLevel.entries.map { it.badgeName }
+        PlayerLevel.entries.map { it.resourceId }
     } else {
-        QuizCategory.entries.map { it.categoryName }
+        QuizCategory.entries.map { it.resourceId }
     }
 
     Box(modifier = Modifier.padding(16.dp)) {
@@ -325,9 +325,14 @@ private fun FilterSelector(
             colors = ButtonDefaults.outlinedButtonColors(contentColor = White),
             border = ButtonDefaults.outlinedButtonBorder().copy(width = 1.dp)
         ) {
+            val current =
+                if (selectedTab == 0)
+                    stringResource(PlayerLevel.getResourceByName(currentFilter))
+                else
+                    stringResource(QuizCategory.getResourceByName(currentFilter))
             Text(
                 style = MaterialTheme.typography.displaySmall,
-                text = stringResource(id = R.string.filter_by, currentFilter),
+                text = stringResource(id = R.string.filter_by, current),
             )
         }
 
@@ -340,14 +345,18 @@ private fun FilterSelector(
                 DropdownMenuItem(
                     text = {
                         Text(
-                            filter,
+                            text = stringResource(filter),
                             color = White,
                             style = MaterialTheme.typography.labelSmall,
                             textAlign = TextAlign.Start,
                         )
                     },
                     onClick = {
-                        onFilterSelected(filter)
+                        if (selectedTab == 0) {
+                            onFilterSelected(PlayerLevel.getLevelByName(filter))
+                        } else {
+                            onFilterSelected(QuizCategory.getLevelByName(filter))
+                        }
                         expanded = false
                     }
                 )
