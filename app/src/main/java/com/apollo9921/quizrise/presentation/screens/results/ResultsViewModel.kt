@@ -39,7 +39,7 @@ class ResultsViewModel(
                 if (userResult.isSuccess && resultsResult.isSuccess) {
                     val user = userResult.getOrThrow()
                     val results = resultsResult.getOrThrow()
-                    if (user.name.isNotEmpty() && user.badge.isNotEmpty() && user.session.isNotEmpty() && results.isNotEmpty()) {
+                    if (results.isNotEmpty()) {
                         val data = results.mapIndexed { index, result ->
                             val correct = result.correctAnswers
                             val incorrect = result.incorrectAnswers
