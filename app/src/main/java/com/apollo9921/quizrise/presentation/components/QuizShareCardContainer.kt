@@ -1,5 +1,6 @@
 package com.apollo9921.quizrise.presentation.components
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -9,7 +10,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.LinearProgressIndicator
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -17,6 +17,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -64,21 +66,20 @@ fun QuizResultShareCard(
                 horizontalArrangement = Arrangement.Center
             ) {
                 Box(
-                    modifier = Modifier
-                        .size(32.dp)
-                        .clip(CircleShape)
-                        .background(accentGradient),
+                    modifier = Modifier.size(60.dp),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(
-                        style = MaterialTheme.typography.labelMedium,
-                        text = "⚡"
+                    Image(
+                        painter = painterResource(R.mipmap.ic_launcher_foreground),
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.fillMaxSize()
                     )
                 }
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    style = MaterialTheme.typography.titleLarge,
                     text = stringResource(R.string.app_name),
+                    fontSize = 22.sp,
                     fontWeight = FontWeight.Black,
                     color = White,
                     letterSpacing = 2.sp
@@ -99,8 +100,8 @@ fun QuizResultShareCard(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        style = MaterialTheme.typography.displaySmall,
                         text = stringResource(R.string.total_points).uppercase(),
+                        fontSize = 13.sp,
                         fontWeight = FontWeight.Bold,
                         color = White.copy(alpha = 0.6f),
                         letterSpacing = 1.sp
@@ -120,8 +121,8 @@ fun QuizResultShareCard(
                             .padding(horizontal = 12.dp, vertical = 4.dp)
                     ) {
                         Text(
-                            style = MaterialTheme.typography.displaySmall,
                             text = stringResource(R.string.average_points, data.overallAccuracy),
+                            fontSize = 13.sp,
                             fontWeight = FontWeight.Bold,
                             color = White
                         )
@@ -150,14 +151,14 @@ fun QuizResultShareCard(
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             Text(
-                                style = MaterialTheme.typography.displaySmall,
                                 text = stringResource(cat.name),
+                                fontSize = 13.sp,
                                 color = White,
                                 fontWeight = FontWeight.Medium
                             )
                             Text(
-                                style = MaterialTheme.typography.displaySmall,
                                 text = "${cat.percentage}%",
+                                fontSize = 13.sp,
                                 color = cyanNeon,
                                 fontWeight = FontWeight.Bold
                             )
@@ -186,16 +187,10 @@ fun QuizResultShareCard(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    style = MaterialTheme.typography.displaySmall,
                     text = stringResource(R.string.can_you_beat_me),
+                    fontSize = 13.sp,
                     color = White.copy(alpha = 0.9f),
                     fontWeight = FontWeight.SemiBold
-                )
-                Text(
-                    style = MaterialTheme.typography.displaySmall,
-                    text = stringResource(R.string.app_name),
-                    color = cyanNeon,
-                    fontWeight = FontWeight.Bold
                 )
             }
         }
