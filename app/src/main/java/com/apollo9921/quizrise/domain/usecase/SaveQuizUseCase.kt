@@ -59,7 +59,7 @@ class SaveQuizUseCase(
                 userRepository.updateBadge(userResult.badge, userName)
 
                 val userRemote = User("", userResult.name, pointsReceived, pointsPossible, badge)
-                val resultsRemote = Results("", category, correctAnswers, incorrectAnswers)
+                val resultsRemote = Results("", categoryName, correctAnswers, incorrectAnswers)
 
                 val authUser = firebaseAuth.currentUser
                 if (authUser != null) {
