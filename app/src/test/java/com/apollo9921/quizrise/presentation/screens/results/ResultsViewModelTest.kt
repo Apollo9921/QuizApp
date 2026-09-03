@@ -65,7 +65,9 @@ class ResultsViewModelTest {
 
         // --- ASSERT ---
         val state = viewModel.uiState.value
-        assert(state is ResultsViewModel.UIState.Error)
+        assert(state is ResultsViewModel.UIState.Success)
+        assert((state as ResultsViewModel.UIState.Success).user == User())
+        assert(state.results == listOf(fakeResult))
     }
 
     @Test

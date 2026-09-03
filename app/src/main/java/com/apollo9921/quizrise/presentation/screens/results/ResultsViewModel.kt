@@ -37,9 +37,9 @@ class ResultsViewModel(
                 val userResult = fetchUserUseCase.invoke()
                 val resultsResult = fetchResultsUseCase.invoke()
                 if (userResult.isSuccess && resultsResult.isSuccess) {
-                    val user = userResult.getOrThrow()
+                    val user = userResult.getOrNull()
                     val results = resultsResult.getOrThrow()
-                    if (results.isNotEmpty()) {
+                    if (user != null && results.isNotEmpty()) {
                         val data = results.mapIndexed { index, result ->
                             val correct = result.correctAnswers
                             val incorrect = result.incorrectAnswers
