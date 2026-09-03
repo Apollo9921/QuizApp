@@ -112,7 +112,7 @@
     <string name="score">Puntuación</string>
     <string name="points_next_level">Necesitas %1$d puntos para subir al siguiente nivel</string>
     <string name="total_points">Total de Puntos</string>
-    <string name="average_points">Media General: %1$d %%</string>
+    <string name="average_points">Media General: %1$d%%</string>
     <string name="performance_top_categories">Desempeño en las mejores categorías</string>
     <string name="can_you_beat_me">¿Puedes superarme?</string>
     <string name="share_text">Conseguiste superar a mi puntuación en QuizRise? ⚡ Descarga ya:</string>
