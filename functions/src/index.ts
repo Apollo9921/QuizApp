@@ -11,7 +11,6 @@ const db = getFirestore();
 
 const TARGET_LANGUAGES = ["pt", "es"];
 
-// Interface para remover os avisos de "any" do Linter
 interface QuizQuestion {
   id: string | number;
   question: string;
@@ -36,7 +35,6 @@ export const getTranslatedQuiz = onCall(
       return {results: questions};
     }
 
-    // Tipagem estrita usando a Interface criada
     const results: QuizQuestion[] = [];
     const missingByLanguage: Record<string, QuizQuestion[]> = {};
 
@@ -65,13 +63,15 @@ export const getTranslatedQuiz = onCall(
       const missingItems = missingByLanguage[lang];
 
       if (missingItems.length > 0) {
-        // Quebra de strings longas para respeitar o limite de 80 caracteres
+        // PROMPT MELHORADO: Atua como tradutor nativo de jogos
         const prompt =
-          "You are an expert quiz translator. Translate these " +
-          `${missingItems.length} quiz questions to the language: ${lang}. ` +
-          "Return a JSON object with a key 'results' containing the " +
-          "translated items. Maintain original IDs, citation context, and " +
-          `internal double quotes. Items: ${JSON.stringify(missingItems)}`;
+          "You are an expert native translator for trivia games. Translate these " +
+          `${missingItems.length} questions into the language: "${lang}".\n` +
+          "STRICT RULES:\n" +
+          "1. Ensure grammar is perfect and the language sounds natural, fluid, and exciting for a game.\n" +
+          "2. DO NOT translate proper nouns (people, bands, movies, brands).\n" +
+          "3. Maintain the exact original IDs and JSON structure.\n" +
+          `Return a JSON object with a key 'results' containing the translated items. Items: ${JSON.stringify(missingItems)}`;
 
         const result = await model.generateContent({
           contents: [{role: "user", parts: [{text: prompt}]}],
@@ -82,6 +82,9 @@ export const getTranslatedQuiz = onCall(
 
         for (const item of translatedBatch.results as QuizQuestion[]) {
           const itemId = item.id.toString();
+
+          // BLINDAGEM DE CÓDIGO: Remove qualquer nó extra inventado pelo Gemini
+          delete item.translations;
 
           await db.collection("questions").doc(itemId).set({
             translations: {[lang]: item},
@@ -99,7 +102,6 @@ export const getTranslatedQuiz = onCall(
       }
     }
 
-    // Mapeamento final tipado sem estourar os 80 caracteres por linha
     const orderedResults = (questions as QuizQuestion[]).map((q) => {
       const found = results.find((r) => r.id.toString() === q.id.toString());
       return found || q;
