@@ -192,4 +192,8 @@ dependencies {
 
     // In-App Play Store
     implementation("com.google.android.play:app-update-ktx:2.1.0")
+
+    // Google User Messaging Platform SDK
+    implementation("com.google.android.ump:user-messaging-platform:3.0.0")
+    implementation("com.google.android.gms:play-services-ads:23.3.0")
 }
