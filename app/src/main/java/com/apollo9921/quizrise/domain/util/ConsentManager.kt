@@ -1,6 +1,7 @@
 package com.apollo9921.quizrise.domain.util
 
 import android.app.Activity
+import android.preference.PreferenceManager
 import android.util.Log
 import com.apollo9921.quizrise.BuildConfig
 import com.google.android.ump.ConsentDebugSettings
@@ -16,6 +17,12 @@ class ConsentManager(private val activity: Activity) {
 
     private val consentInformation: ConsentInformation =
         UserMessagingPlatform.getConsentInformation(activity)
+
+    fun isConsentGranted(): Boolean {
+        val prefs = PreferenceManager.getDefaultSharedPreferences(activity)
+        val purposeConsents = prefs.getString("IABTCF_PurposeConsents", "") ?: ""
+        return purposeConsents.isNotEmpty() && purposeConsents[0] == '1'
+    }
 
     fun gatherConsent(
         testDeviceHashedId: String? = null,
@@ -46,15 +53,13 @@ class ConsentManager(private val activity: Activity) {
                         Log.e("UMP_LOG", "Error to show form: ${formError.message}")
                     }
 
-                    val canGatherData = consentInformation.canRequestAds()
-                    updateFirebaseConsent(canGatherData)
-                    onConsentGathered(canGatherData)
+                    updateFirebaseConsent(isConsentGranted())
+                    onConsentGathered(consentInformation.canRequestAds())
                 }
             },
             { requestConsentError ->
-                val canGatherData = consentInformation.canRequestAds()
-                updateFirebaseConsent(canGatherData)
-                onConsentGathered(canGatherData)
+                updateFirebaseConsent(isConsentGranted())
+                onConsentGathered(consentInformation.canRequestAds())
                 Log.e("UMP_LOG", "Error updating consent: ${requestConsentError.message}")
             }
         )
@@ -70,8 +75,7 @@ class ConsentManager(private val activity: Activity) {
             if (formError != null) {
                 Log.e("UMP_LOG", "Error reopen privacy options: ${formError.message}")
             }
-            val canGatherData = consentInformation.canRequestAds()
-            updateFirebaseConsent(canGatherData)
+            updateFirebaseConsent(isConsentGranted())
             onDismiss(formError)
         }
     }

@@ -59,6 +59,7 @@ fun AnimationNav(navHostController: NavHostController, startDestination: String)
                 currentRoute.startsWith("start_quiz") -> "StartQuiz"
                 currentRoute.startsWith("quiz_result") -> "QuizResult"
                 currentRoute.startsWith("wrong_answers") -> "WrongAnswers"
+                currentRoute.startsWith("settings") -> "Settings"
                 else -> currentRoute
             }
 

@@ -10,8 +10,6 @@ import com.apollo9921.quizrise.domain.usecase.ClearAllDataUseCase
 import com.apollo9921.quizrise.domain.usecase.DeleteAccountUseCase
 import com.apollo9921.quizrise.presentation.navigation.Destination
 import com.google.firebase.auth.FirebaseAuth
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class SettingsScreenViewModel(
@@ -19,18 +17,13 @@ class SettingsScreenViewModel(
     private val clearAllDataUseCase: ClearAllDataUseCase,
     private val deleteAccountUseCase: DeleteAccountUseCase
 ) : ViewModel() {
-    private val _isGdprConsentGranted = MutableStateFlow(false)
-    val isGdprConsentGranted: StateFlow<Boolean> = _isGdprConsentGranted
-
 
     fun logout(navHostController: NavHostController) {
         viewModelScope.launch {
             try {
                 val user = firebaseAuth.currentUser
-                if (user != null) {
-                    if (user.isAnonymous) {
-                        deleteAccountUseCase.invoke()
-                    }
+                if (user?.isAnonymous == true) {
+                    deleteAccountUseCase.invoke()
                 }
                 firebaseAuth.signOut()
                 clearAllDataUseCase.invoke()
@@ -60,10 +53,5 @@ class SettingsScreenViewModel(
                 Uri.parse("https://apollo9921.github.io/quizrise-privacy-policy/")
             )
         }
-    }
-
-    fun changeGdprConsent(value: Boolean): Boolean {
-        _isGdprConsentGranted.value = value
-        return value
     }
 }
