@@ -1,8 +1,6 @@
 package com.apollo9921.quizrise.presentation.screens.profile
 
 import android.content.res.Configuration
-import android.net.Uri
-import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -40,7 +38,6 @@ import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.apollo9921.quizrise.domain.model.user.User
 import com.apollo9921.quizrise.presentation.components.BottomNavigationBar
-import com.apollo9921.quizrise.presentation.components.SettingsDialog
 import com.apollo9921.quizrise.presentation.core.PurpleGrey40
 import com.apollo9921.quizrise.presentation.core.White
 import com.apollo9921.quizrise.presentation.core.getTypography
@@ -60,44 +57,20 @@ fun ProfileRoute(
     val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
     val badgeState = viewModel.badgeState.collectAsStateWithLifecycle().value
     val fetchUser = { viewModel.fetchUser(context) }
-    val logout = { viewModel.logout(navHostController) }
     val navigateToChangeName = { navHostController.navigate(Destination.EditUserName.route) }
+    val navigateToSettings = { navHostController.navigate(Destination.Settings.route) }
 
     LaunchedEffect(Unit) {
         fetchUser()
     }
-    var showSettings by remember { mutableStateOf(false) }
 
     ProfileScreen(
         navHostController = navHostController,
         uiState = uiState,
         badgeState = badgeState,
-        onSettingsClick = { showSettings = true },
+        onSettingsClick = { navigateToSettings() },
         navigateToChangeName = navigateToChangeName
     )
-
-    if (showSettings) {
-        SettingsDialog(
-            onDismissRequest = { showSettings = false },
-            onPrivacyPolicyClick = {
-                val customTabsIntent = CustomTabsIntent.Builder()
-                    .setShowTitle(true)
-                    .build()
-                customTabsIntent.launchUrl(
-                    context,
-                    Uri.parse("https://apollo9921.github.io/quizrise-privacy-policy/")
-                )
-            },
-            onLogoutClick = {
-                showSettings = false
-                logout()
-            },
-            onDeleteAccountClick = {
-                showSettings = false
-                navHostController.navigate(Destination.DeleteAccount.route)
-            }
-        )
-    }
 }
 
 @Composable

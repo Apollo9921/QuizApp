@@ -33,6 +33,7 @@ import com.apollo9921.quizrise.presentation.screens.quiz.StartQuizRoute
 import com.apollo9921.quizrise.presentation.screens.quizResult.QuizResultRoute
 import com.apollo9921.quizrise.presentation.screens.register.RegisterRoute
 import com.apollo9921.quizrise.presentation.screens.results.ResultsRoute
+import com.apollo9921.quizrise.presentation.screens.settings.SettingsScreenRoute
 import com.apollo9921.quizrise.presentation.screens.wrongAnswers.WrongAnswersRoute
 
 @Composable
@@ -199,6 +200,23 @@ fun AnimationNav(navHostController: NavHostController, startDestination: String)
             }
         ) {
             DeleteAccountRoute(navHostController = navHostController)
+        }
+        composable(
+            route = Destination.Settings.route,
+            enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Left,
+                    animationSpec = tween(700)
+                )
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Right,
+                    animationSpec = tween(700)
+                )
+            }
+        ) {
+            SettingsScreenRoute(navHostController = navHostController)
         }
         composable(
             route = Destination.LevelDifficulty.route,
