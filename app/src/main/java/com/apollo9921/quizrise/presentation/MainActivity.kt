@@ -9,11 +9,14 @@ import androidx.compose.runtime.remember
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.apollo9921.quizrise.presentation.navigation.AnimationNav
-import com.apollo9921.quizrise.presentation.navigation.Destination
+import com.apollo9921.quizrise.BuildConfig
+import com.apollo9921.quizrise.domain.util.ConsentManager
 import com.apollo9921.quizrise.presentation.core.QuizAppTheme
 import com.apollo9921.quizrise.presentation.dataStore.UserManager
 import com.apollo9921.quizrise.presentation.dataStore.dataStoreUser
+import com.apollo9921.quizrise.presentation.navigation.AnimationNav
+import com.apollo9921.quizrise.presentation.navigation.Destination
+import com.google.android.gms.ads.MobileAds
 import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import com.google.android.play.core.appupdate.AppUpdateOptions
@@ -31,6 +34,8 @@ class MainActivity : ComponentActivity() {
 
     private lateinit var navHostController: NavHostController
     private lateinit var appUpdateManager: AppUpdateManager
+
+    private val consentManager by lazy { ConsentManager(this) }
 
     private val installStateUpdatedListener = InstallStateUpdatedListener { state ->
         if (state.installStatus() == InstallStatus.DOWNLOADED) {
@@ -51,17 +56,26 @@ class MainActivity : ComponentActivity() {
 
         appUpdateManager = AppUpdateManagerFactory.create(this)
         appUpdateManager.registerListener(installStateUpdatedListener)
-
         checkForAppUpdate()
+
+        consentManager.gatherConsent(
+            testDeviceHashedId = if (BuildConfig.DEBUG) "MY_HASHED_DEVICE_ID" else null
+        ) { canRequestAds ->
+            if (canRequestAds) {
+                MobileAds.initialize(this)
+            }
+        }
 
         setContent {
             QuizAppTheme {
                 navHostController = rememberNavController()
+
                 val startDestination = remember {
                     val user = FirebaseAuth.getInstance().currentUser
                     var isLoaded = false
                     val userManager = UserManager(dataStore = dataStoreUser)
                     runBlocking { isLoaded = userManager.userFlow.first() }
+
                     if (user != null) {
                         Destination.Categories.route
                     } else if (!isLoaded) {
@@ -70,6 +84,7 @@ class MainActivity : ComponentActivity() {
                         Destination.Login.route
                     }
                 }
+
                 AnimationNav(
                     navHostController = navHostController,
                     startDestination = startDestination
@@ -80,16 +95,20 @@ class MainActivity : ComponentActivity() {
 
     override fun onResume() {
         super.onResume()
-        appUpdateManager.appUpdateInfo.addOnSuccessListener { appUpdateInfo ->
-            if (appUpdateInfo.installStatus() == InstallStatus.DOWNLOADED) {
-                popupSnackBarForCompleteUpdate()
+        if (::appUpdateManager.isInitialized) {
+            appUpdateManager.appUpdateInfo.addOnSuccessListener { appUpdateInfo ->
+                if (appUpdateInfo.installStatus() == InstallStatus.DOWNLOADED) {
+                    popupSnackBarForCompleteUpdate()
+                }
             }
         }
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        appUpdateManager.unregisterListener(installStateUpdatedListener)
+        if (::appUpdateManager.isInitialized) {
+            appUpdateManager.unregisterListener(installStateUpdatedListener)
+        }
     }
 
     private fun checkForAppUpdate() {

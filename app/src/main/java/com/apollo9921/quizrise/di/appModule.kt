@@ -52,6 +52,7 @@ import com.apollo9921.quizrise.presentation.screens.quizResult.QuizResultViewMod
 import com.apollo9921.quizrise.presentation.screens.login.LoginViewModel
 import com.apollo9921.quizrise.presentation.screens.register.RegisterViewModel
 import com.apollo9921.quizrise.presentation.screens.results.ResultsViewModel
+import com.apollo9921.quizrise.presentation.screens.settings.SettingsScreenViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.functions.FirebaseFunctions
@@ -104,13 +105,14 @@ val viewModelModule = module {
     viewModel { QuizViewModel(get(), get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { ProgressViewModel(get(), get()) }
     viewModel { QuizResultViewModel(get(), get(), get(), get(), get()) }
-    viewModel { ProfileViewModel(get(), get(), get(), get(), get(), get()) }
+    viewModel { ProfileViewModel(get(), get(), get()) }
     viewModel { LoginViewModel(get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { RegisterViewModel(get()) }
     viewModel { LeaderboardViewModel(get(), get(), get()) }
     viewModel { ResultsViewModel(get(), get()) }
     viewModel { DeleteAccountViewModel(get()) }
     viewModel { EditUsernameViewModel(get(), get(), get()) }
+    viewModel { SettingsScreenViewModel(get(), get(), get()) }
 }
 
 val useCaseModule = module {

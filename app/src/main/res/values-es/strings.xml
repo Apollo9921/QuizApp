@@ -125,4 +125,6 @@
     <string name="mentalist_level">Mentalista</string>
     <string name="oracle_level">Oráculo</string>
     <string name="quiz_deity_level">Genio</string>
+    <string name="settings">Ajustes</string>
+    <string name="consent_ue">Consentimiento RGPD (UE)</string>
 </resources>

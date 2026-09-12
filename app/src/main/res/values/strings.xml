@@ -137,4 +137,6 @@
     <string name="mentalist_level">Mentalist</string>
     <string name="oracle_level">Oracle</string>
     <string name="quiz_deity_level">Quiz Deity</string>
+    <string name="settings">Settings</string>
+    <string name="consent_ue">Consent RGPD (UE)</string>
 </resources>
