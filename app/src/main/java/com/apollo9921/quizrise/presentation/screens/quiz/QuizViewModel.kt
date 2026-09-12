@@ -199,8 +199,8 @@ class QuizViewModel(
                     incorrectAnswers = _quizState.value.incorrectAnswers,
                     question = _quizState.value.quiz.map { it.question },
                     answers = _quizState.value.quiz.map { it.incorrectAnswers.firstOrNull() ?: "" },
-                    correctAnswersList = _quizState.value.quiz.map { it.correctAnswer }
-
+                    correctAnswersList = _quizState.value.quiz.map { it.correctAnswer },
+                    level = level
                 )
             )
             resetValues()

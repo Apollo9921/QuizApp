@@ -9,12 +9,14 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
+import com.apollo9921.quizrise.R
 import com.google.firebase.Firebase
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.analytics
@@ -290,6 +292,10 @@ fun AnimationNav(navHostController: NavHostController, startDestination: String)
                 navArgument("correctAnswersList") {
                     type = NavType.StringArrayType
                     nullable = true
+                },
+                navArgument("level") {
+                    type = NavType.StringType
+                    nullable = false
                 }
             ),
         ) {
@@ -300,7 +306,8 @@ fun AnimationNav(navHostController: NavHostController, startDestination: String)
                 incorrectAnswers = it.arguments?.getInt("incorrectAnswers") ?: 0,
                 question = it.arguments?.getStringArray("question") ?: emptyArray(),
                 answers = it.arguments?.getStringArray("answers") ?: emptyArray(),
-                correctAnswersList = it.arguments?.getStringArray("correctAnswersList") ?: emptyArray()
+                correctAnswersList = it.arguments?.getStringArray("correctAnswersList") ?: emptyArray(),
+                level = it.arguments?.getString("level") ?: stringResource(R.string.easy_translatable)
             )
         }
         composable(
