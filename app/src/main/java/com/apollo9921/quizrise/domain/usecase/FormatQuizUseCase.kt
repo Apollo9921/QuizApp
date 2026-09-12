@@ -12,7 +12,7 @@ class FormatQuizUseCase(
     suspend operator fun invoke(data: List<Quiz>): AppResult<List<TranslatedQuizResult>> {
         val inputBlock = data.map { q ->
             CloudQuizInputItem(
-                id = q.id.toString(),
+                id = q.id,
                 question = q.question.text,
                 correctAnswer = q.correctAnswer,
                 incorrectAnswers = q.incorrectAnswers

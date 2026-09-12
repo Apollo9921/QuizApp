@@ -125,6 +125,10 @@ class QuizViewModel(
                                 _uiState.value = UIState.Error(R.string.unexpected_error)
                             }
                         } else {
+                            if (result.data.size != 5) {
+                                _uiState.value = UIState.Error(R.string.unexpected_error)
+                                return@launch
+                            }
                             val translatedQuiz = formatQuizUseCase.invoke(result.data)
                             if (translatedQuiz is AppResult.Success) {
                                 _uiState.value = UIState.Success(translatedQuiz.data)
