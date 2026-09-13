@@ -125,6 +125,10 @@ class QuizViewModel(
                                 _uiState.value = UIState.Error(R.string.unexpected_error)
                             }
                         } else {
+                            if (result.data.size != 5) {
+                                _uiState.value = UIState.Error(R.string.unexpected_error)
+                                return@launch
+                            }
                             val translatedQuiz = formatQuizUseCase.invoke(result.data)
                             if (translatedQuiz is AppResult.Success) {
                                 _uiState.value = UIState.Success(translatedQuiz.data)
@@ -195,8 +199,8 @@ class QuizViewModel(
                     incorrectAnswers = _quizState.value.incorrectAnswers,
                     question = _quizState.value.quiz.map { it.question },
                     answers = _quizState.value.quiz.map { it.incorrectAnswers.firstOrNull() ?: "" },
-                    correctAnswersList = _quizState.value.quiz.map { it.correctAnswer }
-
+                    correctAnswersList = _quizState.value.quiz.map { it.correctAnswer },
+                    level = level
                 )
             )
             resetValues()

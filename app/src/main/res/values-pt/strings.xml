@@ -127,4 +127,6 @@
     <string name="quiz_deity_level">Divino</string>
     <string name="settings">Definições</string>
     <string name="consent_ue">Consentimento RGPD (UE)</string>
+    <string name="random">Aleatório</string>
+    <string name="random_system">O sistema escolhe a dificuldade</string>
 </resources>

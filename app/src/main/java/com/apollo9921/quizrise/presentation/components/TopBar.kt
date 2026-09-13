@@ -26,7 +26,7 @@ import com.apollo9921.quizrise.presentation.core.White
 import com.apollo9921.quizrise.presentation.utils.componentSizeByScreen
 
 enum class TopBarIconOptions {
-    BACK, SHARE
+    BACK, SHARE, NONE
 }
 
 @Composable
@@ -52,8 +52,8 @@ fun TopBar(
             verticalAlignment = Alignment.CenterVertically
         ) {
             StartIconOption(backIconOption, onClick)
-            Spacer(modifier = Modifier.padding(10.dp))
             if (title.isNotEmpty()) {
+                Spacer(modifier = Modifier.padding(10.dp))
                 Text(
                     style = MaterialTheme.typography.titleLarge,
                     text = title,
@@ -100,5 +100,7 @@ private fun StartIconOption(backIconOption: TopBarIconOptions, onClick: () -> Un
                 )
             }
         }
+
+        TopBarIconOptions.NONE -> {}
     }
 }

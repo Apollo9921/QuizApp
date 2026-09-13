@@ -46,9 +46,9 @@ class SaveQuizUseCase(
             val userResult = userRepository.fetchUser()
             if (userResult.isSuccess) {
                 val userResult = userResult.getOrThrow()
-                val badge = PlayerLevel.getLevelByPoints(userResult.totalPoints).badgeName
                 val userName = userResult.name
                 val pointsReceived = correctAnswers * 5
+                val badge = PlayerLevel.getLevelByPoints(userResult.totalPoints + pointsReceived).badgeName
 
                 resultsRepository.updateResults(categoryName, correctAnswers, incorrectAnswers)
                 resultsRepository.updatePoints(

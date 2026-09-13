@@ -14,6 +14,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -21,10 +22,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.apollo9921.quizrise.R
 import com.apollo9921.quizrise.presentation.components.TopBar
 import com.apollo9921.quizrise.presentation.core.Black
 import com.apollo9921.quizrise.presentation.core.Purple40
@@ -32,8 +33,6 @@ import com.apollo9921.quizrise.presentation.core.PurpleGrey40
 import com.apollo9921.quizrise.presentation.core.White
 import com.apollo9921.quizrise.presentation.navigation.Destination
 import com.apollo9921.quizrise.presentation.utils.componentSizeByScreen
-import com.apollo9921.quizrise.presentation.utils.widthOfScreen
-import com.apollo9921.quizrise.R
 
 @Composable
 fun LevelDifficulty(navHostController: NavHostController, category: String) {
@@ -45,15 +44,9 @@ fun LevelDifficulty(navHostController: NavHostController, category: String) {
     )
 
     var selectedOption by rememberSaveable { mutableIntStateOf(levelsDifficulty[0]) }
-    val level = rememberSaveable { mutableStateOf("") }
+    var isRandomMode by rememberSaveable { mutableStateOf(false) }
 
-    val screenWidth = widthOfScreen()
-    val maxLayoutWidth = if (screenWidth < 600.dp) Dp.Unspecified else componentSizeByScreen(560.dp)
     val cardHeight = componentSizeByScreen(baseSize = 72.dp)
-
-    LaunchedEffect(selectedOption) {
-        level.value = context.resources.getString(selectedOption)
-    }
 
     Scaffold(
         topBar = {
@@ -71,7 +64,6 @@ fun LevelDifficulty(navHostController: NavHostController, category: String) {
         ) {
             Column(
                 modifier = Modifier
-                    .widthIn(max = maxLayoutWidth)
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState())
                     .padding(horizontal = 24.dp),
@@ -96,7 +88,45 @@ fun LevelDifficulty(navHostController: NavHostController, category: String) {
                     textAlign = TextAlign.Center
                 )
 
-                Spacer(modifier = Modifier.height(componentSizeByScreen(baseSize = 40.dp)))
+                Spacer(modifier = Modifier.height(componentSizeByScreen(baseSize = 32.dp)))
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(16.dp))
+                        .clickable { isRandomMode = !isRandomMode }
+                        .background(White.copy(alpha = 0.05f))
+                        .border(1.dp, White.copy(alpha = 0.1f), RoundedCornerShape(16.dp))
+                        .padding(vertical = 12.dp, horizontal = 16.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Column {
+                        Text(
+                            text = stringResource(id = R.string.random),
+                            style = MaterialTheme.typography.labelMedium,
+                            color = White,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Text(
+                            text = stringResource(id = R.string.random_system),
+                            style = MaterialTheme.typography.labelSmall,
+                            color = White.copy(alpha = 0.6f)
+                        )
+                    }
+                    Switch(
+                        checked = isRandomMode,
+                        onCheckedChange = { isRandomMode = it },
+                        colors = SwitchDefaults.colors(
+                            checkedThumbColor = Purple40,
+                            checkedTrackColor = White,
+                            uncheckedThumbColor = White.copy(alpha = 0.7f),
+                            uncheckedTrackColor = Black.copy(alpha = 0.2f)
+                        )
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(24.dp))
 
                 Column(
                     modifier = Modifier.fillMaxWidth(),
@@ -105,8 +135,12 @@ fun LevelDifficulty(navHostController: NavHostController, category: String) {
                     levelsDifficulty.forEach { item ->
                         DifficultyCard(
                             title = stringResource(id = item),
-                            isSelected = (selectedOption == item),
-                            onClick = { selectedOption = item },
+                            isSelected = (selectedOption == item) && !isRandomMode,
+                            isRandomModeActive = isRandomMode,
+                            onClick = {
+                                selectedOption = item
+                                isRandomMode = false
+                            },
                             modifier = Modifier.height(cardHeight)
                         )
                     }
@@ -123,16 +157,18 @@ fun LevelDifficulty(navHostController: NavHostController, category: String) {
                 ) {
                     Box(
                         modifier = Modifier
-                            .widthIn(max = maxLayoutWidth)
                             .fillMaxWidth()
                             .padding(horizontal = 24.dp, vertical = 24.dp)
                     ) {
                         Button(
                             onClick = {
+                                val finalResId = if (isRandomMode) levelsDifficulty.random() else selectedOption
+                                val finalLevelString = context.resources.getString(finalResId)
+
                                 navHostController.navigate(
                                     Destination.StartQuiz.passArgument(
                                         category,
-                                        level.value
+                                        finalLevelString
                                     )
                                 )
                             },
@@ -163,6 +199,7 @@ fun LevelDifficulty(navHostController: NavHostController, category: String) {
 private fun DifficultyCard(
     title: String,
     isSelected: Boolean,
+    isRandomModeActive: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -171,9 +208,12 @@ private fun DifficultyCard(
     val borderStroke = if (isSelected) null else BorderStroke(1.dp, White.copy(alpha = 0.2f))
     val indicatorSize = componentSizeByScreen(baseSize = 24.dp)
 
+    val cardAlpha = if (isRandomModeActive) 0.4f else 1f
+
     Surface(
         modifier = modifier
             .fillMaxWidth()
+            .alpha(cardAlpha)
             .clip(RoundedCornerShape(20.dp))
             .clickable { onClick() },
         color = containerColor,
@@ -220,7 +260,7 @@ private fun DifficultyCard(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun LevelDifficultyPreview() {
     LevelDifficulty(rememberNavController(), "General Knowledge")

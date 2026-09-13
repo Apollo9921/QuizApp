@@ -2,6 +2,7 @@ package com.apollo9921.quizrise.presentation.screens.quizResult
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -20,7 +21,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
-import com.apollo9921.quizrise.presentation.components.TopBar
 import com.apollo9921.quizrise.presentation.navigation.Destination
 import com.apollo9921.quizrise.presentation.core.Black
 import com.apollo9921.quizrise.presentation.core.PurpleGrey40
@@ -33,6 +33,9 @@ import com.apollo9921.quizrise.R
 import com.apollo9921.quizrise.presentation.components.ErrorScreen
 import com.apollo9921.quizrise.presentation.components.Loading
 import com.apollo9921.quizrise.presentation.core.Gold
+import com.apollo9921.quizrise.presentation.core.Green
+import com.apollo9921.quizrise.presentation.core.Red
+import com.apollo9921.quizrise.presentation.core.Yellow
 
 @Composable
 fun QuizResultRoute(
@@ -43,6 +46,7 @@ fun QuizResultRoute(
     question: Array<String>,
     answers: Array<String>,
     correctAnswersList: Array<String>,
+    level: String,
     viewModel: QuizResultViewModel = koinViewModel {
         parametersOf(
             category,
@@ -70,7 +74,8 @@ fun QuizResultRoute(
         total = total,
         navigateToWrongAnswers = navigateToWrongAnswers,
         uiState = uiState,
-        retry = retry
+        retry = retry,
+        level = level
     )
 }
 
@@ -83,6 +88,7 @@ private fun QuizResultScreen(
     navigateToWrongAnswers: () -> Unit,
     uiState: QuizResultViewModel.UIState,
     retry: () -> Unit,
+    level: String,
 ) {
     BackHandler(enabled = true) {}
 
@@ -90,13 +96,6 @@ private fun QuizResultScreen(
     val maxLayoutWidth = if (screenWidth < 600.dp) Dp.Unspecified else componentSizeByScreen(480.dp)
 
     Scaffold(
-        topBar = {
-            TopBar(
-                backgroundColor = PurpleGrey40,
-                onClick = { },
-                title = stringResource(id = R.string.results)
-            )
-        },
         containerColor = PurpleGrey40
     ) { paddingValues ->
         Box(
@@ -106,14 +105,18 @@ private fun QuizResultScreen(
                 .padding(horizontal = 24.dp),
             contentAlignment = Alignment.Center
         ) {
-            when(uiState) {
+            when (uiState) {
                 is QuizResultViewModel.UIState.Error -> {
                     ErrorScreen(
                         errorMessage = stringResource(id = uiState.message),
                         onClick = { retry() }
                     )
                 }
-                QuizResultViewModel.UIState.Idle -> { Loading() }
+
+                QuizResultViewModel.UIState.Idle -> {
+                    Loading()
+                }
+
                 is QuizResultViewModel.UIState.Success -> {
                     val pointsReceived = uiState.pointsReceived
                     val pointsNextLevel = uiState.pointsToNextLevel
@@ -141,6 +144,40 @@ private fun QuizResultScreen(
                                     .padding(vertical = 36.dp, horizontal = 24.dp),
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
+                                val levelColor = when (level) {
+                                    stringResource(R.string.easy_translatable) -> Green
+                                    stringResource(R.string.medium_translatable) -> Yellow
+                                    stringResource(R.string.hard_translatable) -> Red
+                                    else -> Green
+                                }
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.Center,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Box(
+                                        modifier = Modifier
+                                            .size(componentSizeByScreen(baseSize = 14.dp))
+                                            .clip(RoundedCornerShape(50))
+                                            .background(levelColor),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+
+                                    }
+
+                                    Spacer(modifier = Modifier.width(8.dp))
+
+                                    Text(
+                                        text = level,
+                                        style = MaterialTheme.typography.labelMedium,
+                                        color = White,
+                                        fontWeight = FontWeight.Bold,
+                                        textAlign = TextAlign.Center
+                                    )
+                                }
+
+                                Spacer(modifier = Modifier.height(12.dp))
+
                                 Text(
                                     text = stringResource(R.string.correct_answers),
                                     style = MaterialTheme.typography.labelSmall,

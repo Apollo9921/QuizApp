@@ -26,22 +26,24 @@ sealed class Destination(val route: String) {
             return "start_quiz/$category/$level"
         }
     }
-    data object QuizResult : Destination(route = "quiz_result/{category}/{correctAnswers}/{incorrectAnswers}?question={question}&answers={answers}&correctAnswersList={correctAnswersList}") {
+    data object QuizResult : Destination(route = "quiz_result/{category}/{correctAnswers}/{incorrectAnswers}?question={question}&answers={answers}&correctAnswersList={correctAnswersList}&level={level}") {
         fun passArgument(
             category: String,
             correctAnswers: Int,
             incorrectAnswers: Int,
             question: List<String>,
             answers: List<String>,
-            correctAnswersList: List<String>
+            correctAnswersList: List<String>,
+            level: String
         ): String {
             val basePath = "quiz_result/$category/$correctAnswers/$incorrectAnswers"
 
             val qParams = question.joinToString("&") { "question=$it" }
             val aParams = answers.joinToString("&") { "answers=$it" }
             val cParams = correctAnswersList.joinToString("&") { "correctAnswersList=$it" }
+            val lParams = "level=$level"
 
-            return "$basePath?$qParams&$aParams&$cParams"
+            return "$basePath?$qParams&$aParams&$cParams&$lParams"
         }
     }
 
