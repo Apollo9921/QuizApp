@@ -8,7 +8,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
@@ -27,6 +26,8 @@ import com.apollo9921.quizrise.presentation.core.PurpleGrey40
 import com.apollo9921.quizrise.presentation.core.Red
 import com.apollo9921.quizrise.presentation.core.White
 import com.apollo9921.quizrise.R
+import com.apollo9921.quizrise.presentation.components.TopBar
+import com.apollo9921.quizrise.presentation.components.TopBarIconOptions
 
 data class WrongAnswerModel(
     val question: String,
@@ -63,28 +64,11 @@ private fun WrongAnswersScreen(
 ) {
     Scaffold(
         topBar = {
-            CenterAlignedTopAppBar(
-                title = {
-                    Text(
-                        text = stringResource(R.string.revision),
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Bold,
-                        color = White
-                    )
-                },
-                navigationIcon = {
-                    IconButton(onClick = onBackClick) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = null,
-                            tint = White
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = PurpleGrey40
-                ),
-                modifier = Modifier.statusBarsPadding()
+            TopBar(
+                backgroundColor = PurpleGrey40,
+                title = stringResource(R.string.revision),
+                backIconOption = TopBarIconOptions.BACK,
+                onClick = { onBackClick() }
             )
         },
         containerColor = PurpleGrey40
