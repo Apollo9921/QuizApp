@@ -110,7 +110,7 @@ fun LevelDifficulty(navHostController: NavHostController, category: String) {
                         )
                         Text(
                             text = stringResource(id = R.string.random_system),
-                            style = MaterialTheme.typography.labelSmall,
+                            style = MaterialTheme.typography.displaySmall,
                             color = White.copy(alpha = 0.6f)
                         )
                     }
