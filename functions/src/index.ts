@@ -65,13 +65,15 @@ export const getTranslatedQuiz = onCall(
       if (missingItems.length > 0) {
         // PROMPT MELHORADO: Atua como tradutor nativo de jogos
         const prompt =
-          "You are an expert native translator for trivia games. Translate these " +
-          `${missingItems.length} questions into the language: "${lang}".\n` +
+          `You are an expert native translator for trivia games. Translate the following ${missingItems.length} quiz items into the target language: "${lang}".\n\n` +
           "STRICT RULES:\n" +
-          "1. Ensure grammar is perfect and the language sounds natural, fluid, and exciting for a game.\n" +
-          "2. DO NOT translate proper nouns (people, bands, movies, brands).\n" +
-          "3. Maintain the exact original IDs and JSON structure.\n" +
-          `Return a JSON object with a key 'results' containing the translated items. Items: ${JSON.stringify(missingItems)}`;
+          "1. TRANSLATE ALL TEXT FIELDS: You MUST translate every single text field inside each item object. This includes the main question text, ALL answer options in array/object fields, explanations, and hints.\n" +
+          "2. LANGUAGES AND COMMON CONCEPTS MUST BE TRANSLATED: Language names (e.g., 'Aramaic' -> 'Aramaico', 'Hebrew' -> 'Hebraico', 'Latin' -> 'Latim'), general terms, and historical concepts MUST be translated into the target language. Do NOT leave them in English.\n" +
+          "3. PROPER NOUNS EXCEPTION: Keep original names ONLY for personal proper names (e.g. 'Albert Einstein'), brand names, or specific unlocalized titles (movies/songs).\n" +
+          "4. GAME QUALITY: Ensure grammar is perfect, natural, fluid, and exciting for a trivia game.\n" +
+          "5. JSON STRUCTURE: Preserve exact key names, item IDs, and overall JSON structure. Return valid JSON only.\n\n" +
+          `Return a JSON object with a key 'results' containing the translated items.\n\n` +
+          `Items to translate:\n${JSON.stringify(missingItems)}`;
 
         const result = await model.generateContent({
           contents: [{role: "user", parts: [{text: prompt}]}],
