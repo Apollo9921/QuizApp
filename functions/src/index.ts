@@ -72,7 +72,7 @@ export const getTranslatedQuiz = onCall(
           "3. PROPER NOUNS EXCEPTION: Keep original names ONLY for personal proper names (e.g. 'Albert Einstein'), brand names, or specific unlocalized titles (movies/songs).\n" +
           "4. GAME QUALITY: Ensure grammar is perfect, natural, fluid, and exciting for a trivia game.\n" +
           "5. JSON STRUCTURE: Preserve exact key names, item IDs, and overall JSON structure. Return valid JSON only.\n\n" +
-          `Return a JSON object with a key 'results' containing the translated items.\n\n` +
+          "Return a JSON object with a key 'results' containing the translated items.\n\n" +
           `Items to translate:\n${JSON.stringify(missingItems)}`;
 
         const result = await model.generateContent({
