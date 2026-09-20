@@ -196,4 +196,7 @@ dependencies {
     // Google User Messaging Platform SDK
     implementation("com.google.android.ump:user-messaging-platform:3.0.0")
     implementation("com.google.android.gms:play-services-ads:23.3.0")
+
+    // Material Design Components
+    implementation("com.google.android.material:material:1.12.0")
 }
