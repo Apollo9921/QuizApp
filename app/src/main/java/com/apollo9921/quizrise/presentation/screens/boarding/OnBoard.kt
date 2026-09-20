@@ -16,7 +16,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -30,7 +29,6 @@ import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
-import com.apollo9921.quizrise.presentation.isSplashScreenOpen
 import com.apollo9921.quizrise.presentation.navigation.Destination
 import com.apollo9921.quizrise.presentation.core.Purple40
 import com.apollo9921.quizrise.presentation.core.PurpleGrey40
@@ -45,9 +43,6 @@ import com.apollo9921.quizrise.presentation.utils.componentSizeByScreen
 
 @Composable
 fun OnBoard(navHostController: NavHostController) {
-    LaunchedEffect(Unit) {
-        isSplashScreenOpen = false
-    }
     val pageCount = 5
     val state = rememberPagerState(pageCount = { pageCount })
     val coroutineScope = rememberCoroutineScope()

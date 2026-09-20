@@ -1,12 +1,16 @@
 package com.apollo9921.quizrise.presentation
 
+import android.app.AlertDialog
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.apollo9921.quizrise.BuildConfig
@@ -26,15 +30,12 @@ import com.google.android.play.core.install.model.InstallStatus
 import com.google.android.play.core.install.model.UpdateAvailability
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
-
-var isSplashScreenOpen = true
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
 
     private lateinit var navHostController: NavHostController
     private lateinit var appUpdateManager: AppUpdateManager
-
     private val consentManager by lazy { ConsentManager(this) }
 
     private val installStateUpdatedListener = InstallStateUpdatedListener { state ->
@@ -50,45 +51,50 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    private var startDestination by mutableStateOf<String?>(null)
+
     override fun onCreate(savedInstanceState: Bundle?) {
-        installSplashScreen()
+        val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
 
         appUpdateManager = AppUpdateManagerFactory.create(this)
         appUpdateManager.registerListener(installStateUpdatedListener)
-        checkForAppUpdate()
 
-        consentManager.gatherConsent(
-            testDeviceHashedId = if (BuildConfig.DEBUG) "MY_HASHED_DEVICE_ID" else null
-        ) { canRequestAds ->
-            if (canRequestAds) {
-                MobileAds.initialize(this)
+        splashScreen.setKeepOnScreenCondition { startDestination == null }
+
+        lifecycleScope.launch {
+            val user = FirebaseAuth.getInstance().currentUser
+            val userManager = UserManager(dataStore = dataStoreUser)
+            val isOnboardingCompleted = userManager.userFlow.first()
+
+            startDestination = when {
+                user != null -> Destination.Categories.route
+                !isOnboardingCompleted -> Destination.OnBoard.route
+                else -> Destination.Login.route
             }
         }
 
         setContent {
             QuizAppTheme {
-                navHostController = rememberNavController()
+                startDestination?.let { destination ->
+                    navHostController = rememberNavController()
+                    AnimationNav(
+                        navHostController = navHostController,
+                        startDestination = destination
+                    )
 
-                val startDestination = remember {
-                    val user = FirebaseAuth.getInstance().currentUser
-                    var isLoaded = false
-                    val userManager = UserManager(dataStore = dataStoreUser)
-                    runBlocking { isLoaded = userManager.userFlow.first() }
+                    LaunchedEffect(Unit) {
+                        checkForAppUpdate()
 
-                    if (user != null) {
-                        Destination.Categories.route
-                    } else if (!isLoaded) {
-                        Destination.OnBoard.route
-                    } else {
-                        Destination.Login.route
+                        consentManager.gatherConsent(
+                            testDeviceHashedId = if (BuildConfig.DEBUG) "MY_HASHED_DEVICE_ID" else null
+                        ) { canRequestAds ->
+                            if (canRequestAds) {
+                                MobileAds.initialize(this@MainActivity)
+                            }
+                        }
                     }
                 }
-
-                AnimationNav(
-                    navHostController = navHostController,
-                    startDestination = startDestination
-                )
             }
         }
     }
@@ -113,7 +119,6 @@ class MainActivity : ComponentActivity() {
 
     private fun checkForAppUpdate() {
         val appUpdateInfoTask = appUpdateManager.appUpdateInfo
-
         appUpdateInfoTask.addOnSuccessListener { appUpdateInfo ->
             if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
                 && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)
@@ -128,7 +133,13 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun popupSnackBarForCompleteUpdate() {
-        Toast.makeText(this, "New Version Updated. Restarting...", Toast.LENGTH_LONG).show()
-        appUpdateManager.completeUpdate()
+        AlertDialog.Builder(this)
+            .setTitle("Update Completed")
+            .setMessage("New version ready to install. Please restart the app.")
+            .setPositiveButton("Restart Now") { _, _ ->
+                appUpdateManager.completeUpdate()
+            }
+            .setCancelable(false)
+            .show()
     }
 }
