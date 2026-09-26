@@ -16,8 +16,6 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.apollo9921.quizrise.presentation.navigation.BottomNavigationItems
 import com.apollo9921.quizrise.presentation.core.Black
-import com.apollo9921.quizrise.presentation.core.Purple40
-import com.apollo9921.quizrise.presentation.core.White
 import com.apollo9921.quizrise.presentation.utils.componentSizeByScreen
 
 @Composable
@@ -41,7 +39,7 @@ fun BottomNavigationBar(navController: NavController) {
         contentAlignment = Alignment.BottomCenter
     ) {
         NavigationBar(
-            containerColor = Purple40,
+            containerColor = MaterialTheme.colorScheme.secondary,
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight()
@@ -85,9 +83,9 @@ fun BottomNavigationBar(navController: NavController) {
                     },
                     colors = NavigationBarItemDefaults.colors(
                         selectedIconColor = Black,
-                        selectedTextColor = White,
-                        unselectedIconColor = White,
-                        unselectedTextColor = White
+                        selectedTextColor = MaterialTheme.colorScheme.surface,
+                        unselectedIconColor = MaterialTheme.colorScheme.surface,
+                        unselectedTextColor = MaterialTheme.colorScheme.surface
                     )
                 )
             }

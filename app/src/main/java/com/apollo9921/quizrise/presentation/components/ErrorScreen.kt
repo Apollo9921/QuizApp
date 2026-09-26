@@ -19,34 +19,31 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.apollo9921.quizrise.R
-import com.apollo9921.quizrise.presentation.core.Purple40
-import com.apollo9921.quizrise.presentation.core.PurpleGrey40
-import com.apollo9921.quizrise.presentation.core.White
 
 @Composable
 fun ErrorScreen(errorMessage: String, onClick: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(PurpleGrey40),
+            .background(MaterialTheme.colorScheme.primary),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
             style = MaterialTheme.typography.titleLarge,
             text = errorMessage,
-            color = White
+            color = MaterialTheme.colorScheme.surface,
         )
         Spacer(modifier = Modifier.padding(10.dp))
         Button(
             onClick = { onClick() },
             shape = RoundedCornerShape(20.dp),
-            border = BorderStroke(width = 2.dp, color = White),
+            border = BorderStroke(width = 2.dp, color = MaterialTheme.colorScheme.surface),
             colors = ButtonDefaults.buttonColors(
-                containerColor = Purple40,
-                contentColor = Purple40,
-                disabledContentColor = Purple40,
-                disabledContainerColor = Purple40
+                containerColor = MaterialTheme.colorScheme.secondary,
+                contentColor = MaterialTheme.colorScheme.secondary,
+                disabledContentColor = MaterialTheme.colorScheme.secondary,
+                disabledContainerColor = MaterialTheme.colorScheme.secondary
             ),
             modifier = Modifier
                 .fillMaxWidth()
@@ -54,7 +51,7 @@ fun ErrorScreen(errorMessage: String, onClick: () -> Unit) {
         ) {
             Text(
                 text = stringResource(id = R.string.try_again),
-                color = White,
+                color = MaterialTheme.colorScheme.surface,
                 style = MaterialTheme.typography.labelMedium,
                 modifier = Modifier.padding(10.dp)
             )

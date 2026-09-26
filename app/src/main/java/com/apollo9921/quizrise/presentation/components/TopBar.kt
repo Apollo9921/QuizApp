@@ -22,7 +22,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.apollo9921.quizrise.presentation.core.White
 import com.apollo9921.quizrise.presentation.utils.componentSizeByScreen
 
 enum class TopBarIconOptions {
@@ -57,7 +56,7 @@ fun TopBar(
                 Text(
                     style = MaterialTheme.typography.titleLarge,
                     text = title,
-                    color = White
+                    color = MaterialTheme.colorScheme.surface
                 )
             }
         }
@@ -71,7 +70,7 @@ private fun StartIconOption(backIconOption: TopBarIconOptions, onClick: () -> Un
             Box(
                 modifier = Modifier
                     .size(componentSizeByScreen(baseSize = 50.dp))
-                    .background(White.copy(alpha = 0.1f), RoundedCornerShape(24.dp)),
+                    .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.1f), RoundedCornerShape(24.dp)),
             ) {
                 IconButton(
                     onClick = { onClick() },
@@ -80,7 +79,7 @@ private fun StartIconOption(backIconOption: TopBarIconOptions, onClick: () -> Un
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "Back",
-                        tint = White,
+                        tint = MaterialTheme.colorScheme.surface,
                         modifier = Modifier.size(componentSizeByScreen(baseSize = 24.dp))
                     )
                 }
@@ -95,7 +94,7 @@ private fun StartIconOption(backIconOption: TopBarIconOptions, onClick: () -> Un
                 Icon(
                     imageVector = Icons.Default.Share,
                     contentDescription = "Share",
-                    tint = White,
+                    tint = MaterialTheme.colorScheme.surface,
                     modifier = Modifier.size(componentSizeByScreen(baseSize = 24.dp))
                 )
             }

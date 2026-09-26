@@ -20,9 +20,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.apollo9921.quizrise.domain.util.PlayerLevel
-import com.apollo9921.quizrise.presentation.core.PurpleGrey40
-import com.apollo9921.quizrise.presentation.core.White
 import com.apollo9921.quizrise.R
+import com.apollo9921.quizrise.presentation.core.QuizAppTheme
 
 @Composable
 fun RankingRulesDialog(
@@ -43,9 +42,9 @@ fun RankingRulesDialog(
                     .padding(24.dp)
                     .wrapContentHeight(),
                 shape = RoundedCornerShape(24.dp),
-                border = BorderStroke(1.dp, White.copy(alpha = 0.15f)),
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.surface.copy(alpha = 0.15f)),
                 colors = CardDefaults.cardColors(
-                    containerColor = PurpleGrey40
+                    containerColor = MaterialTheme.colorScheme.primary
                 )
             ) {
                 Column(
@@ -63,44 +62,44 @@ fun RankingRulesDialog(
                             text = stringResource(R.string.leaderboard_title),
                             style = MaterialTheme.typography.labelMedium,
                             fontWeight = FontWeight.Bold,
-                            color = White
+                            color = MaterialTheme.colorScheme.surface
                         )
                         IconButton(onClick = onDismissRequest) {
                             Icon(
                                 imageVector = Icons.Default.Close,
                                 contentDescription = null,
-                                tint = White.copy(alpha = 0.7f)
+                                tint = MaterialTheme.colorScheme.surface.copy(alpha = 0.7f)
                             )
                         }
                     }
 
-                    HorizontalDivider(color = White.copy(alpha = 0.1f))
+                    HorizontalDivider(color = MaterialTheme.colorScheme.surface.copy(alpha = 0.1f))
 
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .background(White.copy(alpha = 0.05f))
+                            .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.05f))
                             .padding(horizontal = 24.dp, vertical = 12.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
                             text = stringResource(R.string.level).uppercase(),
                             style = MaterialTheme.typography.labelSmall,
-                            color = White.copy(alpha = 0.6f),
+                            color = MaterialTheme.colorScheme.surface.copy(alpha = 0.6f),
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.weight(1f)
                         )
                         Text(
                             text = stringResource(R.string.score).uppercase(),
                             style = MaterialTheme.typography.labelSmall,
-                            color = White.copy(alpha = 0.6f),
+                            color = MaterialTheme.colorScheme.surface.copy(alpha = 0.6f),
                             fontWeight = FontWeight.Bold,
                             textAlign = TextAlign.End,
                             modifier = Modifier.weight(1f)
                         )
                     }
 
-                    HorizontalDivider(color = White.copy(alpha = 0.1f))
+                    HorizontalDivider(color = MaterialTheme.colorScheme.surface.copy(alpha = 0.1f))
 
                     LazyColumn(
                         modifier = Modifier
@@ -138,14 +137,14 @@ private fun RankingRowItem(rule: PlayerLevel) {
             text = stringResource(rule.resourceId),
             style = MaterialTheme.typography.labelMedium,
             fontWeight = FontWeight.Bold,
-            color = White,
+            color = MaterialTheme.colorScheme.surface,
             modifier = Modifier.weight(1f)
         )
 
         Text(
             text = pointsText,
             style = MaterialTheme.typography.labelMedium,
-            color = White.copy(alpha = 0.8f),
+            color = MaterialTheme.colorScheme.surface.copy(alpha = 0.8f),
             textAlign = TextAlign.End,
             modifier = Modifier.weight(1f)
         )
@@ -155,5 +154,7 @@ private fun RankingRowItem(rule: PlayerLevel) {
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun PreviewRankingRulesDialog() {
-    RankingRulesDialog(isVisible = true, onDismissRequest = {})
+    QuizAppTheme {
+        RankingRulesDialog(isVisible = true, onDismissRequest = {})
+    }
 }

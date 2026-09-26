@@ -14,14 +14,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.apollo9921.quizrise.presentation.core.PurpleGrey40
-import com.apollo9921.quizrise.presentation.core.White
 
 @Composable
 fun Loading(message: String = "") {
     Surface(
         modifier = Modifier.fillMaxSize(),
-        color = PurpleGrey40
+        color = MaterialTheme.colorScheme.primary
     ) {
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -29,7 +27,7 @@ fun Loading(message: String = "") {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             CircularProgressIndicator(
-                color = White,
+                color = MaterialTheme.colorScheme.surface,
                 strokeWidth = 4.dp,
                 modifier = Modifier.size(60.dp)
             )
@@ -37,7 +35,7 @@ fun Loading(message: String = "") {
             if (message.isNotEmpty()) {
                 Text(
                     text = message,
-                    color = White,
+                    color = MaterialTheme.colorScheme.surface,
                     style = MaterialTheme.typography.labelMedium,
                     modifier = Modifier.padding(10.dp)
                 )

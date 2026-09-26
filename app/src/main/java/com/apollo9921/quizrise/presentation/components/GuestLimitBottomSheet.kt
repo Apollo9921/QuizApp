@@ -15,8 +15,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
-import com.apollo9921.quizrise.presentation.core.PurpleGrey40
-import com.apollo9921.quizrise.presentation.core.White
 import com.google.android.gms.common.SignInButton
 import com.apollo9921.quizrise.R
 
@@ -31,11 +29,11 @@ fun GuestLimitBottomSheet(
     if (isVisible) {
         ModalBottomSheet(
             onDismissRequest = onDismissRequest,
-            containerColor = PurpleGrey40,
+            containerColor = MaterialTheme.colorScheme.primary,
             scrimColor = Color.Black.copy(alpha = 0.6f),
             shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp),
             dragHandle = {
-                BottomSheetDefaults.DragHandle(color = White.copy(alpha = 0.4f))
+                BottomSheetDefaults.DragHandle(color = MaterialTheme.colorScheme.surface.copy(alpha = 0.4f))
             }
         ) {
             Column(
@@ -49,15 +47,15 @@ fun GuestLimitBottomSheet(
 
                 Surface(
                     shape = RoundedCornerShape(50),
-                    color = White.copy(alpha = 0.1f),
-                    border = BorderStroke(1.dp, White.copy(alpha = 0.2f)),
+                    color = MaterialTheme.colorScheme.surface.copy(alpha = 0.1f),
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.surface.copy(alpha = 0.2f)),
                     modifier = Modifier.size(64.dp)
                 ) {
                     Box(contentAlignment = Alignment.Center) {
                         Icon(
                             imageVector = Icons.Default.Lock,
                             contentDescription = null,
-                            tint = White,
+                            tint = MaterialTheme.colorScheme.surface,
                             modifier = Modifier.size(32.dp)
                         )
                     }
@@ -67,14 +65,14 @@ fun GuestLimitBottomSheet(
                     text = stringResource(R.string.anonymous_quiz_expired),
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
-                    color = White,
+                    color = MaterialTheme.colorScheme.surface,
                     textAlign = TextAlign.Center
                 )
 
                 Text(
                     text = stringResource(R.string.anonymous_quiz_expired_description),
                     style = MaterialTheme.typography.labelMedium,
-                    color = White.copy(alpha = 0.8f),
+                    color = MaterialTheme.colorScheme.surface.copy(alpha = 0.8f),
                     textAlign = TextAlign.Center,
                     modifier = Modifier.padding(horizontal = 8.dp)
                 )
@@ -99,13 +97,13 @@ fun GuestLimitBottomSheet(
                     modifier = Modifier
                         .wrapContentSize(),
                     shape = RoundedCornerShape(16.dp),
-                    border = BorderStroke(1.dp, White.copy(alpha = 0.4f))
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.surface.copy(alpha = 0.4f))
                 ) {
                     Text(
                         text = stringResource(R.string.create_account_email),
                         style = MaterialTheme.typography.labelSmall,
                         fontWeight = FontWeight.SemiBold,
-                        color = White
+                        color = MaterialTheme.colorScheme.surface
                     )
                 }
             }

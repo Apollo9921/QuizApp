@@ -30,7 +30,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
-import com.apollo9921.quizrise.presentation.core.Pink40
 import com.apollo9921.quizrise.presentation.core.White
 import com.apollo9921.quizrise.presentation.utils.componentSizeByScreen
 
@@ -87,13 +86,13 @@ private fun QuizTooltip(
                 shape = RoundedCornerShape(16.dp),
                 border = BorderStroke(1.dp, White.copy(alpha = 0.2f)),
                 colors = CardDefaults.cardColors(
-                    containerColor = Pink40.copy(alpha = 0.95f)
+                    containerColor = MaterialTheme.colorScheme.tertiary.copy(alpha = 0.95f)
                 )
             ) {
                 Text(
                     text = text,
                     style = MaterialTheme.typography.labelSmall,
-                    color = White.copy(alpha = 0.9f),
+                    color = MaterialTheme.colorScheme.surface.copy(alpha = 0.9f),
                     modifier = Modifier.padding(16.dp)
                 )
             }
