@@ -20,14 +20,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.apollo9921.quizrise.presentation.core.Green
-import com.apollo9921.quizrise.presentation.core.PurpleGrey40
-import com.apollo9921.quizrise.presentation.core.Red
-import com.apollo9921.quizrise.presentation.core.White
 import com.apollo9921.quizrise.R
 import com.apollo9921.quizrise.presentation.components.TopBar
 import com.apollo9921.quizrise.presentation.components.TopBarIconOptions
+import com.apollo9921.quizrise.presentation.core.QuizAppTheme
 
 data class WrongAnswerModel(
     val question: String,
@@ -65,13 +62,13 @@ private fun WrongAnswersScreen(
     Scaffold(
         topBar = {
             TopBar(
-                backgroundColor = PurpleGrey40,
+                backgroundColor = MaterialTheme.colorScheme.primary,
                 title = stringResource(R.string.revision),
                 backIconOption = TopBarIconOptions.BACK,
                 onClick = { onBackClick() }
             )
         },
-        containerColor = PurpleGrey40
+        containerColor = MaterialTheme.colorScheme.primary
     ) { paddingValues ->
         Box(
             modifier = Modifier
@@ -94,15 +91,15 @@ private fun WrongAnswersScreen(
 
 @Composable
 private fun WrongAnswerCard(item: WrongAnswerModel) {
-    val colorError = Red
+    val colorError = MaterialTheme.colorScheme.onError
     val colorSuccess = Green
 
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(20.dp),
-        border = BorderStroke(1.dp, White.copy(alpha = 0.15f)),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.surface.copy(alpha = 0.15f)),
         colors = CardDefaults.cardColors(
-            containerColor = White.copy(alpha = 0.06f)
+            containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.06f)
         )
     ) {
         Column(
@@ -114,11 +111,11 @@ private fun WrongAnswerCard(item: WrongAnswerModel) {
             Text(
                 text = item.question,
                 style = MaterialTheme.typography.labelMedium,
-                color = White,
+                color = MaterialTheme.colorScheme.surface,
                 fontWeight = FontWeight.Bold
             )
 
-            HorizontalDivider(color = White.copy(alpha = 0.1f))
+            HorizontalDivider(color = MaterialTheme.colorScheme.surface.copy(alpha = 0.1f))
 
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 AnswerFeedbackRow(
@@ -169,7 +166,7 @@ private fun AnswerFeedbackRow(
         Text(
             text = answerText.ifEmpty { stringResource(R.string.no_answered) },
             style = MaterialTheme.typography.labelSmall,
-            color = White.copy(alpha = 0.9f),
+            color = MaterialTheme.colorScheme.surface.copy(alpha = 0.9f),
             fontWeight = FontWeight.Medium
         )
     }
@@ -178,10 +175,21 @@ private fun AnswerFeedbackRow(
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun PreviewWrongAnswersScreen() {
-    WrongAnswersRoute(
-        navHostController = rememberNavController(),
-        question = arrayOf("Pergunta 1", "Pergunta 2"),
-        incorrectAnswers = arrayOf("Resposta 1", "Resposta 2"),
-        correctAnswers = arrayOf("Resposta 1", "Resposta 2")
-    )
+    QuizAppTheme {
+        WrongAnswersScreen(
+            onBackClick = {},
+            wrongAnswers = listOf(
+                WrongAnswerModel(
+                    question = "What is the capital of France?",
+                    userAnswer = "Paris",
+                    correctAnswer = "London"
+                ),
+                WrongAnswerModel(
+                    question = "What is the capital of Spain?",
+                    userAnswer = "Madrid",
+                    correctAnswer = "Barcelona"
+                )
+            )
+        )
+    }
 }

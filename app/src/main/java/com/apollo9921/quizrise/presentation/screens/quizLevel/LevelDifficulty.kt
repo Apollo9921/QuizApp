@@ -28,9 +28,7 @@ import androidx.navigation.compose.rememberNavController
 import com.apollo9921.quizrise.R
 import com.apollo9921.quizrise.presentation.components.TopBar
 import com.apollo9921.quizrise.presentation.core.Black
-import com.apollo9921.quizrise.presentation.core.Purple40
-import com.apollo9921.quizrise.presentation.core.PurpleGrey40
-import com.apollo9921.quizrise.presentation.core.White
+import com.apollo9921.quizrise.presentation.core.QuizAppTheme
 import com.apollo9921.quizrise.presentation.navigation.Destination
 import com.apollo9921.quizrise.presentation.utils.componentSizeByScreen
 
@@ -51,14 +49,14 @@ fun LevelDifficulty(navHostController: NavHostController, category: String) {
     Scaffold(
         topBar = {
             TopBar(
-                backgroundColor = PurpleGrey40,
+                backgroundColor = MaterialTheme.colorScheme.primary,
                 onClick = { navHostController.navigateUp() })
         }
     ) { paddingValues ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(PurpleGrey40)
+                .background(MaterialTheme.colorScheme.primary)
                 .padding(paddingValues),
             contentAlignment = Alignment.TopCenter
         ) {
@@ -75,7 +73,7 @@ fun LevelDifficulty(navHostController: NavHostController, category: String) {
                     text = stringResource(id = R.string.chooseLevel),
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
-                    color = White,
+                    color = MaterialTheme.colorScheme.surface,
                     textAlign = TextAlign.Center
                 )
 
@@ -84,7 +82,7 @@ fun LevelDifficulty(navHostController: NavHostController, category: String) {
                 Text(
                     text = stringResource(R.string.choose_level_difficulty),
                     style = MaterialTheme.typography.labelSmall,
-                    color = White.copy(alpha = 0.7f),
+                    color = MaterialTheme.colorScheme.surface.copy(alpha = 0.7f),
                     textAlign = TextAlign.Center
                 )
 
@@ -95,8 +93,12 @@ fun LevelDifficulty(navHostController: NavHostController, category: String) {
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(16.dp))
                         .clickable { isRandomMode = !isRandomMode }
-                        .background(White.copy(alpha = 0.05f))
-                        .border(1.dp, White.copy(alpha = 0.1f), RoundedCornerShape(16.dp))
+                        .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.05f))
+                        .border(
+                            1.dp,
+                            MaterialTheme.colorScheme.surface.copy(alpha = 0.1f),
+                            RoundedCornerShape(16.dp)
+                        )
                         .padding(vertical = 12.dp, horizontal = 16.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
@@ -105,22 +107,22 @@ fun LevelDifficulty(navHostController: NavHostController, category: String) {
                         Text(
                             text = stringResource(id = R.string.random),
                             style = MaterialTheme.typography.labelMedium,
-                            color = White,
+                            color = MaterialTheme.colorScheme.surface,
                             fontWeight = FontWeight.Bold
                         )
                         Text(
                             text = stringResource(id = R.string.random_system),
                             style = MaterialTheme.typography.displaySmall,
-                            color = White.copy(alpha = 0.6f)
+                            color = MaterialTheme.colorScheme.surface.copy(alpha = 0.6f)
                         )
                     }
                     Switch(
                         checked = isRandomMode,
                         onCheckedChange = { isRandomMode = it },
                         colors = SwitchDefaults.colors(
-                            checkedThumbColor = Purple40,
-                            checkedTrackColor = White,
-                            uncheckedThumbColor = White.copy(alpha = 0.7f),
+                            checkedThumbColor = MaterialTheme.colorScheme.secondary,
+                            checkedTrackColor = MaterialTheme.colorScheme.surface,
+                            uncheckedThumbColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.7f),
                             uncheckedTrackColor = Black.copy(alpha = 0.2f)
                         )
                     )
@@ -151,7 +153,7 @@ fun LevelDifficulty(navHostController: NavHostController, category: String) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(PurpleGrey40)
+                        .background(MaterialTheme.colorScheme.primary)
                         .navigationBarsPadding(),
                     contentAlignment = Alignment.Center
                 ) {
@@ -162,7 +164,8 @@ fun LevelDifficulty(navHostController: NavHostController, category: String) {
                     ) {
                         Button(
                             onClick = {
-                                val finalResId = if (isRandomMode) levelsDifficulty.random() else selectedOption
+                                val finalResId =
+                                    if (isRandomMode) levelsDifficulty.random() else selectedOption
                                 val finalLevelString = context.resources.getString(finalResId)
 
                                 navHostController.navigate(
@@ -174,8 +177,8 @@ fun LevelDifficulty(navHostController: NavHostController, category: String) {
                             },
                             shape = RoundedCornerShape(16.dp),
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = Purple40,
-                                contentColor = White
+                                containerColor = MaterialTheme.colorScheme.secondary,
+                                contentColor = MaterialTheme.colorScheme.surface
                             ),
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -185,7 +188,7 @@ fun LevelDifficulty(navHostController: NavHostController, category: String) {
                                 text = stringResource(id = R.string.getStarted),
                                 style = MaterialTheme.typography.labelMedium,
                                 fontWeight = FontWeight.Bold,
-                                color = White
+                                color = MaterialTheme.colorScheme.surface
                             )
                         }
                     }
@@ -203,9 +206,15 @@ private fun DifficultyCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val containerColor = if (isSelected) White else White.copy(alpha = 0.1f)
-    val textColor = if (isSelected) Black else White
-    val borderStroke = if (isSelected) null else BorderStroke(1.dp, White.copy(alpha = 0.2f))
+    val containerColor =
+        if (isSelected) MaterialTheme.colorScheme.surface else MaterialTheme.colorScheme.surface.copy(
+            alpha = 0.1f
+        )
+    val textColor = if (isSelected) Black else MaterialTheme.colorScheme.surface
+    val borderStroke = if (isSelected) null else BorderStroke(
+        1.dp,
+        MaterialTheme.colorScheme.surface.copy(alpha = 0.2f)
+    )
     val indicatorSize = componentSizeByScreen(baseSize = 24.dp)
 
     val cardAlpha = if (isRandomModeActive) 0.4f else 1f
@@ -238,12 +247,14 @@ private fun DifficultyCard(
                 modifier = Modifier
                     .size(indicatorSize)
                     .background(
-                        color = if (isSelected) Purple40 else Color.Transparent,
+                        color = if (isSelected) MaterialTheme.colorScheme.secondary else Color.Transparent,
                         shape = CircleShape
                     )
                     .border(
                         width = 2.dp,
-                        color = if (isSelected) Purple40 else White.copy(alpha = 0.6f),
+                        color = if (isSelected) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.surface.copy(
+                            alpha = 0.6f
+                        ),
                         shape = CircleShape
                     ),
                 contentAlignment = Alignment.Center
@@ -252,7 +263,7 @@ private fun DifficultyCard(
                     Box(
                         modifier = Modifier
                             .size(indicatorSize * 0.4f)
-                            .background(White, CircleShape)
+                            .background(MaterialTheme.colorScheme.surface, CircleShape)
                     )
                 }
             }
@@ -263,5 +274,7 @@ private fun DifficultyCard(
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun LevelDifficultyPreview() {
-    LevelDifficulty(rememberNavController(), "General Knowledge")
+    QuizAppTheme {
+        LevelDifficulty(rememberNavController(), "General Knowledge")
+    }
 }

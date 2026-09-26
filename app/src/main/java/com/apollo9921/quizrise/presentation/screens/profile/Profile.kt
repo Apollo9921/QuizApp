@@ -33,19 +33,18 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.apollo9921.quizrise.domain.model.user.User
 import com.apollo9921.quizrise.presentation.components.BottomNavigationBar
-import com.apollo9921.quizrise.presentation.core.PurpleGrey40
-import com.apollo9921.quizrise.presentation.core.White
-import com.apollo9921.quizrise.presentation.core.getTypography
 import com.apollo9921.quizrise.presentation.utils.componentSizeByScreen
 import com.apollo9921.quizrise.presentation.utils.formatTotalCount
 import org.koin.androidx.compose.koinViewModel
 import com.apollo9921.quizrise.R
 import com.apollo9921.quizrise.presentation.components.QuizTooltipIcon
+import com.apollo9921.quizrise.presentation.core.QuizAppTheme
 import com.apollo9921.quizrise.presentation.navigation.Destination
 
 @Composable
@@ -83,7 +82,7 @@ private fun ProfileScreen(
 ) {
     Scaffold(
         bottomBar = { BottomNavigationBar(navHostController) },
-        containerColor = PurpleGrey40
+        containerColor = MaterialTheme.colorScheme.primary
     ) { paddingValues ->
         Box(
             modifier = Modifier
@@ -144,12 +143,12 @@ private fun ShowProfile(
                     .align(Alignment.TopEnd)
                     .padding(top = 12.dp, end = 24.dp)
                     .size(componentSizeByScreen(baseSize = 40.dp))
-                    .background(White.copy(alpha = 0.12f), CircleShape)
+                    .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.12f), CircleShape)
             ) {
                 Icon(
                     imageVector = Icons.Default.Settings,
                     contentDescription = "Settings",
-                    tint = White,
+                    tint = MaterialTheme.colorScheme.surface,
                     modifier = Modifier.size(componentSizeByScreen(baseSize = 24.dp))
                 )
             }
@@ -173,7 +172,7 @@ private fun ShowProfile(
                     .fillMaxSize()
                     .padding(top = topPadding)
                     .clip(RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp))
-                    .background(PurpleGrey40)
+                    .background(MaterialTheme.colorScheme.primary)
                     .padding(horizontal = 24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -187,7 +186,7 @@ private fun ShowProfile(
                     Text(
                         text = user.name,
                         style = MaterialTheme.typography.titleLarge,
-                        color = White,
+                        color = MaterialTheme.colorScheme.surface,
                         fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Center
                     )
@@ -198,7 +197,7 @@ private fun ShowProfile(
                         Icon(
                             imageVector = Icons.Default.Edit,
                             contentDescription = "Edit",
-                            tint = White,
+                            tint = MaterialTheme.colorScheme.surface,
                             modifier = Modifier
                                 .size(componentSizeByScreen(baseSize = 24.dp))
                                 .clickable { navigateToChangeName() }
@@ -254,8 +253,15 @@ private fun StatCard(
 ) {
     Card(
         modifier = modifier,
-        border = BorderStroke(width = 1.dp, color = White.copy(alpha = 0.15f)),
-        colors = CardDefaults.cardColors(containerColor = White.copy(alpha = 0.06f)),
+        border = BorderStroke(
+            width = 1.dp,
+            color = MaterialTheme.colorScheme.surface.copy(alpha = 0.15f)
+        ),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface.copy(
+                alpha = 0.06f
+            )
+        ),
         shape = RoundedCornerShape(20.dp)
     ) {
         Column(
@@ -268,12 +274,12 @@ private fun StatCard(
             Box(
                 modifier = Modifier
                     .size(iconContainerSize)
-                    .background(White.copy(alpha = 0.12f), CircleShape),
+                    .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.12f), CircleShape),
                 contentAlignment = Alignment.Center
             ) {
                 Image(
                     painter = icon,
-                    colorFilter = ColorFilter.tint(White),
+                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.surface),
                     contentDescription = null,
                     modifier = Modifier.size(iconContainerSize * 0.55f)
                 )
@@ -281,13 +287,13 @@ private fun StatCard(
             Text(
                 text = title,
                 style = MaterialTheme.typography.labelSmall,
-                color = White.copy(alpha = 0.6f),
+                color = MaterialTheme.colorScheme.surface.copy(alpha = 0.6f),
                 fontWeight = FontWeight.Medium
             )
             Text(
                 text = value,
                 style = MaterialTheme.typography.labelMedium,
-                color = White,
+                color = MaterialTheme.colorScheme.surface,
                 fontWeight = FontWeight.Bold
             )
         }
@@ -303,8 +309,15 @@ private fun BadgeCard(
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        border = BorderStroke(width = 1.dp, color = White.copy(alpha = 0.15f)),
-        colors = CardDefaults.cardColors(containerColor = White.copy(alpha = 0.06f)),
+        border = BorderStroke(
+            width = 1.dp,
+            color = MaterialTheme.colorScheme.surface.copy(alpha = 0.15f)
+        ),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface.copy(
+                alpha = 0.06f
+            )
+        ),
         shape = RoundedCornerShape(20.dp)
     ) {
         Row(
@@ -327,13 +340,13 @@ private fun BadgeCard(
                 Text(
                     text = stringResource(R.string.badge).uppercase(),
                     style = MaterialTheme.typography.displaySmall,
-                    color = White.copy(alpha = 0.5f),
+                    color = MaterialTheme.colorScheme.surface.copy(alpha = 0.5f),
                     fontWeight = FontWeight.Bold
                 )
                 Text(
                     text = badgeName,
                     style = MaterialTheme.typography.labelMedium,
-                    color = White,
+                    color = MaterialTheme.colorScheme.surface,
                     fontWeight = FontWeight.Bold
                 )
 
@@ -345,8 +358,8 @@ private fun BadgeCard(
                         .fillMaxWidth()
                         .height(componentSizeByScreen(baseSize = 8.dp))
                         .clip(CircleShape),
-                    color = White,
-                    trackColor = White.copy(alpha = 0.15f)
+                    color = MaterialTheme.colorScheme.surface,
+                    trackColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.15f)
                 )
             }
         }
@@ -359,19 +372,13 @@ private fun ProfileScreenDarkPreview() {
     val mockUser = User(name = "Golden Hercules", totalPoints = 750, badge = "Newbie")
     val mockBadge = ProfileViewModel.Badge(badge = R.drawable.newbie, badgeLevel = 1000)
 
-    MaterialTheme(typography = getTypography()) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(PurpleGrey40)
-        ) {
-            ShowProfile(
-                user = mockUser,
-                painter = rememberAsyncImagePainter(model = ""),
-                badgeState = mockBadge,
-                onSettingsClick = {},
-                navigateToChangeName = {}
-            )
-        }
+    QuizAppTheme {
+        ProfileScreen(
+            navHostController = rememberNavController(),
+            uiState = ProfileViewModel.UIState.Success(mockUser),
+            badgeState = mockBadge,
+            onSettingsClick = {},
+            navigateToChangeName = {}
+        )
     }
 }

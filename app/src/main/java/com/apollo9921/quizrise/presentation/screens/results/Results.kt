@@ -41,7 +41,6 @@ import com.apollo9921.quizrise.presentation.core.Green
 import com.apollo9921.quizrise.presentation.core.Orange
 import com.apollo9921.quizrise.presentation.core.Pink40
 import com.apollo9921.quizrise.presentation.core.Purple40
-import com.apollo9921.quizrise.presentation.core.PurpleGrey40
 import com.apollo9921.quizrise.presentation.core.Red
 import com.apollo9921.quizrise.presentation.core.White
 import com.apollo9921.quizrise.presentation.core.Yellow
@@ -99,7 +98,7 @@ private fun Results(
         topBar = {
             if (state is ResultsViewModel.UIState.Success) {
                 TopBar(
-                    backgroundColor = PurpleGrey40,
+                    backgroundColor = MaterialTheme.colorScheme.primary,
                     backIconOption = TopBarIconOptions.SHARE,
                     onClick = {
                         val layer = graphicsLayer ?: return@TopBar
@@ -126,7 +125,7 @@ private fun Results(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(PurpleGrey40)
+                .background(MaterialTheme.colorScheme.primary)
                 .safeDrawingPadding()
                 .padding(
                     top = 20.dp,
@@ -206,7 +205,7 @@ private fun ShowResults(user: User, data: Map<Int, Int>) {
                         formatTotalCount(user.totalPoints.toFloat()),
                         formatTotalCount(user.totalPointsPossible.toFloat())
                     ),
-                    color = White.copy(alpha = 0.9f),
+                    color = MaterialTheme.colorScheme.surface.copy(alpha = 0.9f),
                     fontWeight = FontWeight.SemiBold,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.padding(vertical = 8.dp)
@@ -307,13 +306,13 @@ private fun PieChart(
             Text(
                 text = "$averagePercentage%",
                 style = MaterialTheme.typography.labelMedium,
-                color = White,
+                color = MaterialTheme.colorScheme.surface,
                 fontWeight = FontWeight.ExtraBold
             )
             Text(
                 text = stringResource(id = R.string.overall_average),
                 style = MaterialTheme.typography.displaySmall,
-                color = White.copy(alpha = 0.6f),
+                color = MaterialTheme.colorScheme.surface.copy(alpha = 0.6f),
                 fontWeight = FontWeight.Medium
             )
         }
@@ -333,7 +332,7 @@ private fun DetailsPieChartItem(
         modifier = Modifier
             .fillMaxWidth()
             .height(itemHeight),
-        colors = CardDefaults.cardColors(containerColor = White.copy(alpha = 0.06f)),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.06f)),
         shape = RoundedCornerShape(14.dp)
     ) {
         Row(
@@ -356,7 +355,7 @@ private fun DetailsPieChartItem(
                 Text(
                     text = categoryName,
                     style = MaterialTheme.typography.displaySmall,
-                    color = White,
+                    color = MaterialTheme.colorScheme.surface,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Start,
                     maxLines = 2
@@ -367,7 +366,7 @@ private fun DetailsPieChartItem(
                 Text(
                     text = "$percentage%",
                     style = MaterialTheme.typography.labelSmall,
-                    color = White.copy(alpha = 0.6f),
+                    color = MaterialTheme.colorScheme.surface.copy(alpha = 0.6f),
                     textAlign = TextAlign.Start
                 )
             }

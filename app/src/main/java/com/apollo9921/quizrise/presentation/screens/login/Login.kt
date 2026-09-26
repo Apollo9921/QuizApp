@@ -30,8 +30,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
-import com.apollo9921.quizrise.presentation.core.PurpleGrey40
-import com.apollo9921.quizrise.presentation.core.White
 import com.apollo9921.quizrise.presentation.navigation.Destination
 import com.google.android.gms.common.SignInButton
 import org.koin.androidx.compose.koinViewModel
@@ -82,6 +80,7 @@ fun LoginRoute(
         navigateToRegister = navigateToRegister
     )
 }
+
 @Composable
 private fun LoginScreen(
     state: LoginViewModel.UIState,
@@ -97,7 +96,7 @@ private fun LoginScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(PurpleGrey40)
+            .background(MaterialTheme.colorScheme.primary)
             .verticalScroll(rememberScrollState())
             .padding(horizontal = 24.dp)
             .safeDrawingPadding(),
@@ -108,7 +107,7 @@ private fun LoginScreen(
             text = stringResource(R.string.greeting),
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Bold,
-            color = White
+            color = MaterialTheme.colorScheme.surface
         )
 
         Spacer(modifier = Modifier.padding(8.dp))
@@ -116,7 +115,7 @@ private fun LoginScreen(
         Text(
             text = stringResource(R.string.login_to_account),
             style = MaterialTheme.typography.labelMedium,
-            color = White
+            color = MaterialTheme.colorScheme.surface
         )
 
         Spacer(modifier = Modifier.padding(32.dp))
@@ -128,19 +127,19 @@ private fun LoginScreen(
                 Text(
                     style = MaterialTheme.typography.displaySmall,
                     text = stringResource(R.string.email_field),
-                    color = White
+                    color = MaterialTheme.colorScheme.surface
                 )
             },
-            leadingIcon = { Icon(Icons.Default.Email, contentDescription = null, tint = White) },
+            leadingIcon = { Icon(Icons.Default.Email, contentDescription = null, tint = MaterialTheme.colorScheme.surface) },
             modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
             singleLine = true,
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = White,
-                unfocusedBorderColor = White,
-                cursorColor = White,
-                focusedTextColor = White,
-                unfocusedTextColor = White
+                focusedBorderColor = MaterialTheme.colorScheme.surface,
+                unfocusedBorderColor = MaterialTheme.colorScheme.surface,
+                cursorColor = MaterialTheme.colorScheme.surface,
+                focusedTextColor = MaterialTheme.colorScheme.surface,
+                unfocusedTextColor = MaterialTheme.colorScheme.surface
             )
         )
 
@@ -153,16 +152,16 @@ private fun LoginScreen(
                 Text(
                     style = MaterialTheme.typography.displaySmall,
                     text = stringResource(R.string.password_field),
-                    color = White
+                    color = MaterialTheme.colorScheme.surface
                 )
             },
-            leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null, tint = White) },
+            leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null, tint = MaterialTheme.colorScheme.surface) },
             trailingIcon = {
                 IconButton(onClick = { passwordVisible = !passwordVisible }) {
                     Icon(
                         imageVector = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
                         contentDescription = null,
-                        tint = White
+                        tint = MaterialTheme.colorScheme.surface
                     )
                 }
             },
@@ -171,11 +170,11 @@ private fun LoginScreen(
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             singleLine = true,
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = White,
-                unfocusedBorderColor = White,
-                cursorColor = White,
-                focusedTextColor = White,
-                unfocusedTextColor = White
+                focusedBorderColor = MaterialTheme.colorScheme.surface,
+                unfocusedBorderColor = MaterialTheme.colorScheme.surface,
+                cursorColor = MaterialTheme.colorScheme.surface,
+                focusedTextColor = MaterialTheme.colorScheme.surface,
+                unfocusedTextColor = MaterialTheme.colorScheme.surface
             )
         )
 
@@ -218,7 +217,7 @@ private fun LoginScreen(
             Text(
                 style = MaterialTheme.typography.labelSmall,
                 text = stringResource(R.string.guest_mode),
-                color = White,
+                color = MaterialTheme.colorScheme.surface,
                 textDecoration = TextDecoration.Underline
             )
         }
@@ -234,7 +233,7 @@ private fun LoginScreen(
                 text = stringResource(R.string.another_option),
                 modifier = Modifier.padding(horizontal = 8.dp),
                 style = MaterialTheme.typography.labelSmall,
-                color = White
+                color = MaterialTheme.colorScheme.surface
             )
             HorizontalDivider(modifier = Modifier.weight(1f))
         }
@@ -262,7 +261,7 @@ private fun LoginScreen(
             Text(
                 style = MaterialTheme.typography.displaySmall,
                 text = stringResource(R.string.do_not_have_account),
-                color = White
+                color = MaterialTheme.colorScheme.surface
             )
         }
     }

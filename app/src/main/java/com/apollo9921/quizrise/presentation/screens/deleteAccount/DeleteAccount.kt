@@ -1,7 +1,6 @@
 package com.apollo9921.quizrise.presentation.screens.deleteAccount
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -29,11 +28,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.apollo9921.quizrise.presentation.components.TopBar
 import com.apollo9921.quizrise.presentation.core.Black
-import com.apollo9921.quizrise.presentation.core.PurpleGrey40
-import com.apollo9921.quizrise.presentation.core.White
 import com.apollo9921.quizrise.presentation.utils.componentSizeByScreen
 import com.apollo9921.quizrise.R
 import com.apollo9921.quizrise.presentation.components.ErrorScreen
+import com.apollo9921.quizrise.presentation.core.QuizAppTheme
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -62,11 +60,11 @@ private fun DeleteAccountScreen(
     Scaffold(
         topBar = {
             TopBar(
-                backgroundColor = PurpleGrey40,
+                backgroundColor = MaterialTheme.colorScheme.primary,
                 onClick = { onCancelClick() }
             )
         },
-        containerColor = PurpleGrey40
+        containerColor = MaterialTheme.colorScheme.primary
     ) { paddingValues ->
         when (state) {
             is DeleteAccountViewModel.UIState.Error -> {
@@ -75,6 +73,7 @@ private fun DeleteAccountScreen(
                     onClick = { onDeleteConfirmClick() }
                 )
             }
+
             DeleteAccountViewModel.UIState.Idle -> {
                 Box(
                     modifier = Modifier
@@ -93,9 +92,12 @@ private fun DeleteAccountScreen(
                         Card(
                             modifier = Modifier.fillMaxWidth(),
                             shape = RoundedCornerShape(24.dp),
-                            border = BorderStroke(1.dp, White.copy(alpha = 0.15f)),
+                            border = BorderStroke(
+                                1.dp,
+                                MaterialTheme.colorScheme.surface.copy(alpha = 0.15f)
+                            ),
                             colors = CardDefaults.cardColors(
-                                containerColor = White.copy(alpha = 0.06f)
+                                containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.06f)
                             )
                         ) {
                             Column(
@@ -117,13 +119,17 @@ private fun DeleteAccountScreen(
                                 Text(
                                     text = stringResource(id = R.string.warning_message),
                                     style = MaterialTheme.typography.labelMedium,
-                                    color = White.copy(alpha = 0.9f),
+                                    color = MaterialTheme.colorScheme.surface.copy(alpha = 0.9f),
                                     fontWeight = FontWeight.Medium,
                                     textAlign = TextAlign.Center
                                 )
 
                                 Spacer(modifier = Modifier.height(24.dp))
-                                HorizontalDivider(color = White.copy(alpha = 0.1f))
+                                HorizontalDivider(
+                                    color = MaterialTheme.colorScheme.surface.copy(
+                                        alpha = 0.1f
+                                    )
+                                )
                                 Spacer(modifier = Modifier.height(20.dp))
 
                                 Column(
@@ -142,7 +148,7 @@ private fun DeleteAccountScreen(
 
                         Card(
                             shape = RoundedCornerShape(20.dp),
-                            colors = CardDefaults.cardColors(containerColor = White),
+                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(componentSizeByScreen(baseSize = 54.dp))
@@ -191,6 +197,7 @@ private fun DeleteAccountScreen(
                     }
                 }
             }
+
             else -> {}
         }
     }
@@ -211,7 +218,7 @@ private fun BulletWarningItem(text: String) {
         )
         Text(
             text = text,
-            color = White.copy(alpha = 0.7f),
+            color = MaterialTheme.colorScheme.surface.copy(alpha = 0.7f),
             style = MaterialTheme.typography.labelSmall,
             fontWeight = FontWeight.Normal,
             textAlign = TextAlign.Start
@@ -219,18 +226,14 @@ private fun BulletWarningItem(text: String) {
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun DeleteAccountScreenPreview() {
-    MaterialTheme {
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .background(PurpleGrey40)) {
-            DeleteAccountScreen(
-                onCancelClick = { false },
-                onDeleteConfirmClick = {},
-                state = DeleteAccountViewModel.UIState.Idle
-            )
-        }
+    QuizAppTheme {
+        DeleteAccountScreen(
+            onCancelClick = { false },
+            onDeleteConfirmClick = {},
+            state = DeleteAccountViewModel.UIState.Idle
+        )
     }
 }

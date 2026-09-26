@@ -26,14 +26,12 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
-import com.apollo9921.quizrise.presentation.core.PurpleGrey40
-import com.apollo9921.quizrise.presentation.core.Red
-import com.apollo9921.quizrise.presentation.core.White
 import com.apollo9921.quizrise.presentation.utils.componentSizeByScreen
 import com.apollo9921.quizrise.presentation.utils.widthOfScreen
 import org.koin.androidx.compose.koinViewModel
 import com.apollo9921.quizrise.R
 import com.apollo9921.quizrise.presentation.components.TopBar
+import com.apollo9921.quizrise.presentation.core.QuizAppTheme
 
 @Composable
 fun EditUserNameRoute(
@@ -70,11 +68,11 @@ private fun ChangeNameScreen(
     Scaffold(
         topBar = {
             TopBar(
-                backgroundColor = PurpleGrey40,
+                backgroundColor = MaterialTheme.colorScheme.primary,
                 onClick = { onBackClick() }
             )
         },
-        containerColor = PurpleGrey40
+        containerColor = MaterialTheme.colorScheme.primary
     ) { paddingValues ->
         Box(
             modifier = Modifier
@@ -100,8 +98,8 @@ private fun ChangeNameScreen(
                         modifier = Modifier
                             .size(140.dp)
                             .clip(CircleShape)
-                            .background(White.copy(alpha = 0.05f))
-                            .border(2.dp, White.copy(alpha = 0.2f), CircleShape),
+                            .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.05f))
+                            .border(2.dp, MaterialTheme.colorScheme.surface.copy(alpha = 0.2f), CircleShape),
                         contentAlignment = Alignment.Center
                     ) {
                         val avatarUrl =
@@ -118,7 +116,7 @@ private fun ChangeNameScreen(
                     Text(
                         text = stringResource(R.string.avatar_update_by_typing),
                         style = MaterialTheme.typography.labelSmall,
-                        color = White.copy(alpha = 0.6f),
+                        color = MaterialTheme.colorScheme.surface.copy(alpha = 0.6f),
                         textAlign = TextAlign.Center
                     )
                 }
@@ -140,14 +138,14 @@ private fun ChangeNameScreen(
                         Icon(
                             imageVector = Icons.Default.Person,
                             contentDescription = null,
-                            tint = White.copy(alpha = 0.7f)
+                            tint = MaterialTheme.colorScheme.surface.copy(alpha = 0.7f)
                         )
                     },
                     supportingText = {
                         Text(
                             text = "${userName.length}/$charsLimit",
                             style = MaterialTheme.typography.labelSmall,
-                            color = White.copy(alpha = 0.7f)
+                            color = MaterialTheme.colorScheme.surface.copy(alpha = 0.7f)
                         )
                     },
                     singleLine = true,
@@ -155,13 +153,13 @@ private fun ChangeNameScreen(
                         capitalization = KeyboardCapitalization.Words
                     ),
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedTextColor = White,
-                        unfocusedTextColor = White,
-                        focusedBorderColor = White,
-                        unfocusedBorderColor = White.copy(alpha = 0.4f),
-                        focusedLabelColor = White,
-                        unfocusedLabelColor = White.copy(alpha = 0.7f),
-                        cursorColor = White
+                        focusedTextColor = MaterialTheme.colorScheme.surface,
+                        unfocusedTextColor = MaterialTheme.colorScheme.surface,
+                        focusedBorderColor = MaterialTheme.colorScheme.surface,
+                        unfocusedBorderColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.4f),
+                        focusedLabelColor = MaterialTheme.colorScheme.surface,
+                        unfocusedLabelColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.7f),
+                        cursorColor = MaterialTheme.colorScheme.surface
                     ),
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -172,7 +170,7 @@ private fun ChangeNameScreen(
                     Text(
                         text = stringResource(uiState.errorMessage),
                         style = MaterialTheme.typography.labelSmall,
-                        color = Red.copy(alpha = 0.6f),
+                        color = MaterialTheme.colorScheme.onError.copy(alpha = 0.6f),
                         textAlign = TextAlign.Center
                     )
                 }
@@ -185,16 +183,16 @@ private fun ChangeNameScreen(
                         .height(56.dp),
                     shape = RoundedCornerShape(16.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = White,
-                        contentColor = PurpleGrey40,
-                        disabledContainerColor = White.copy(alpha = 0.3f),
-                        disabledContentColor = PurpleGrey40.copy(alpha = 0.5f)
+                        containerColor = MaterialTheme.colorScheme.surface,
+                        contentColor = MaterialTheme.colorScheme.primary,
+                        disabledContainerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.3f),
+                        disabledContentColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
                     )
                 ) {
                     if (uiState is EditUsernameViewModel.UiState.Loading) {
                         CircularProgressIndicator(
                             modifier = Modifier.size(24.dp),
-                            color = PurpleGrey40
+                            color = MaterialTheme.colorScheme.primary
                         )
                     } else {
                         Text(
@@ -212,10 +210,12 @@ private fun ChangeNameScreen(
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun PreviewEditUserName() {
-    ChangeNameScreen(
-        initialName = "Jogador1",
-        onBackClick = { false },
-        onSaveClick = {},
-        uiState = EditUsernameViewModel.UiState.Idle
-    )
+    QuizAppTheme {
+        ChangeNameScreen(
+            initialName = "Player1",
+            onBackClick = { false },
+            onSaveClick = {},
+            uiState = EditUsernameViewModel.UiState.Idle
+        )
+    }
 }

@@ -21,10 +21,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.apollo9921.quizrise.presentation.components.BottomNavigationBar
-import com.apollo9921.quizrise.presentation.core.Pink40
-import com.apollo9921.quizrise.presentation.core.Purple40
-import com.apollo9921.quizrise.presentation.core.PurpleGrey40
-import com.apollo9921.quizrise.presentation.core.White
 import com.apollo9921.quizrise.presentation.navigation.Destination
 import com.apollo9921.quizrise.presentation.utils.componentSizeByScreen
 import com.apollo9921.quizrise.presentation.utils.widthOfScreen
@@ -77,7 +73,7 @@ private fun Progress(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(PurpleGrey40)
+                .background(MaterialTheme.colorScheme.primary)
                 .safeDrawingPadding()
                 .padding(bottom = paddingValues.calculateBottomPadding()),
             contentAlignment = Alignment.TopCenter
@@ -108,7 +104,7 @@ private fun Progress(
                             Text(
                                 text = stringResource(R.string.almost_level_up),
                                 style = MaterialTheme.typography.titleLarge,
-                                color = White,
+                                color = MaterialTheme.colorScheme.surface,
                                 fontWeight = FontWeight.Bold,
                                 textAlign = TextAlign.Center
                             )
@@ -116,7 +112,7 @@ private fun Progress(
                             Text(
                                 text = stringResource(R.string.keep_answer_correctly),
                                 style = MaterialTheme.typography.labelSmall,
-                                color = White.copy(alpha = 0.7f),
+                                color = MaterialTheme.colorScheme.surface.copy(alpha = 0.7f),
                                 textAlign = TextAlign.Center
                             )
                         }
@@ -127,14 +123,14 @@ private fun Progress(
                         ) {
                             CircularProgressIndicator(
                                 progress = { 1f },
-                                color = Pink40.copy(alpha = 0.2f),
+                                color = MaterialTheme.colorScheme.tertiary.copy(alpha = 0.2f),
                                 strokeWidth = strokeWidth,
                                 strokeCap = StrokeCap.Round,
                                 modifier = Modifier.fillMaxSize()
                             )
                             CircularProgressIndicator(
                                 progress = { animatedProgress },
-                                color = White,
+                                color = MaterialTheme.colorScheme.surface,
                                 strokeWidth = strokeWidth,
                                 strokeCap = StrokeCap.Round,
                                 modifier = Modifier.fillMaxSize()
@@ -144,14 +140,14 @@ private fun Progress(
                                 Text(
                                     text = "${(progress * 100).toInt()}%",
                                     style = MaterialTheme.typography.titleLarge,
-                                    color = White,
+                                    color = MaterialTheme.colorScheme.surface,
                                     fontWeight = FontWeight.ExtraBold
                                 )
                                 Spacer(modifier = Modifier.height(4.dp))
                                 Text(
                                     text = "$currentPoints / $maxPoints XP",
                                     style = MaterialTheme.typography.labelMedium,
-                                    color = White.copy(alpha = 0.85f),
+                                    color = MaterialTheme.colorScheme.surface.copy(alpha = 0.85f),
                                     fontWeight = FontWeight.SemiBold
                                 )
                             }
@@ -160,7 +156,7 @@ private fun Progress(
                         Button(
                             onClick = navigateToLeaderboard,
                             shape = RoundedCornerShape(16.dp),
-                            colors = ButtonDefaults.buttonColors(containerColor = Purple40),
+                            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary),
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(buttonHeight)
@@ -168,14 +164,14 @@ private fun Progress(
                             Icon(
                                 imageVector = Icons.Default.Leaderboard,
                                 contentDescription = null,
-                                tint = White,
+                                tint = MaterialTheme.colorScheme.surface,
                                 modifier = Modifier.size(componentSizeByScreen(baseSize = 20.dp))
                             )
                             Spacer(modifier = Modifier.width(10.dp))
                             Text(
                                 text = stringResource(id = R.string.leaderboard),
                                 style = MaterialTheme.typography.labelMedium,
-                                color = White,
+                                color = MaterialTheme.colorScheme.surface,
                                 fontWeight = FontWeight.Bold
                             )
                         }

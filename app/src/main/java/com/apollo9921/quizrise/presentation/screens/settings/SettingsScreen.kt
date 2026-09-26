@@ -39,10 +39,7 @@ import com.apollo9921.quizrise.R
 import com.apollo9921.quizrise.domain.util.ConsentManager
 import com.apollo9921.quizrise.presentation.components.TopBar
 import com.apollo9921.quizrise.presentation.core.Green
-import com.apollo9921.quizrise.presentation.core.PurpleGrey40
-import com.apollo9921.quizrise.presentation.core.Red
-import com.apollo9921.quizrise.presentation.core.White
-import com.apollo9921.quizrise.presentation.core.getTypography
+import com.apollo9921.quizrise.presentation.core.QuizAppTheme
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -78,10 +75,10 @@ private fun SettingsScreen(
     var isConsentGiven by remember { mutableStateOf(consentManager.isConsentGranted()) }
 
     Scaffold(
-        containerColor = PurpleGrey40,
+        containerColor = MaterialTheme.colorScheme.primary,
         topBar = {
             TopBar(
-                backgroundColor = PurpleGrey40,
+                backgroundColor = MaterialTheme.colorScheme.primary,
                 title = stringResource(id = R.string.settings),
                 onClick = { onBackClick() }
             )
@@ -116,18 +113,18 @@ private fun SettingsScreen(
                     Text(
                         text = stringResource(id = R.string.consent_ue),
                         style = MaterialTheme.typography.labelMedium,
-                        color = White.copy(alpha = 0.9f),
+                        color = MaterialTheme.colorScheme.surface.copy(alpha = 0.9f),
                         fontWeight = FontWeight.Medium
                     )
                     Text(
                         text = if (isConsentGiven) "On" else "Off",
                         style = MaterialTheme.typography.labelSmall,
-                        color = if (isConsentGiven) Green else Red.copy(alpha = 0.8f)
+                        color = if (isConsentGiven) Green else MaterialTheme.colorScheme.onError.copy(alpha = 0.8f)
                     )
                 }
 
                 HorizontalDivider(
-                    color = White.copy(alpha = 0.1f),
+                    color = MaterialTheme.colorScheme.surface.copy(alpha = 0.1f),
                     modifier = Modifier.padding(horizontal = 12.dp)
                 )
             }
@@ -143,13 +140,13 @@ private fun SettingsScreen(
                 Text(
                     text = stringResource(id = R.string.terms_private_policy),
                     style = MaterialTheme.typography.labelMedium,
-                    color = White.copy(alpha = 0.9f),
+                    color = MaterialTheme.colorScheme.surface.copy(alpha = 0.9f),
                     fontWeight = FontWeight.Medium
                 )
             }
 
             HorizontalDivider(
-                color = White.copy(alpha = 0.1f),
+                color = MaterialTheme.colorScheme.surface.copy(alpha = 0.1f),
                 modifier = Modifier.padding(horizontal = 12.dp)
             )
 
@@ -165,7 +162,7 @@ private fun SettingsScreen(
                 Text(
                     text = stringResource(id = R.string.logout),
                     style = MaterialTheme.typography.labelMedium,
-                    color = Red.copy(alpha = 0.7f),
+                    color = MaterialTheme.colorScheme.onError.copy(alpha = 0.7f),
                     fontWeight = FontWeight.Bold
                 )
             }
@@ -175,7 +172,7 @@ private fun SettingsScreen(
             Text(
                 text = stringResource(id = R.string.delete_account_btn),
                 style = MaterialTheme.typography.labelSmall,
-                color = White.copy(alpha = 0.4f),
+                color = MaterialTheme.colorScheme.surface.copy(alpha = 0.4f),
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .clip(RoundedCornerShape(8.dp))
@@ -187,7 +184,7 @@ private fun SettingsScreen(
             Text(
                 text = "v${BuildConfig.VERSION_NAME}",
                 style = MaterialTheme.typography.labelSmall,
-                color = White.copy(alpha = 0.4f),
+                color = MaterialTheme.colorScheme.surface.copy(alpha = 0.4f),
                 textAlign = TextAlign.Center
             )
 
@@ -199,13 +196,15 @@ private fun SettingsScreen(
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun SettingsScreenPreview() {
-    MaterialTheme(typography = getTypography()) {
+    val context = LocalContext.current
+    val activity = context as? android.app.Activity
+    QuizAppTheme {
         SettingsScreen(
             onBackClick = { true },
             onPrivacyPolicyClick = {},
             onLogoutClick = {},
             onDeleteAccountClick = {},
-            consentManager = ConsentManager(LocalContext.current as android.app.Activity)
+            consentManager = ConsentManager(activity ?: return@QuizAppTheme)
         )
     }
 }
