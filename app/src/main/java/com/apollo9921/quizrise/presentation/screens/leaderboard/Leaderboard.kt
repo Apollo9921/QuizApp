@@ -31,7 +31,6 @@ import com.apollo9921.quizrise.presentation.core.Bronze
 import com.apollo9921.quizrise.presentation.core.Gold
 import com.apollo9921.quizrise.presentation.core.LeaderboardAccentColor
 import com.apollo9921.quizrise.presentation.core.LeaderboardBackground
-import com.apollo9921.quizrise.presentation.core.PurpleGrey40
 import com.apollo9921.quizrise.presentation.core.LeaderboardSurfaceColor
 import com.apollo9921.quizrise.presentation.core.Silver
 import com.apollo9921.quizrise.presentation.core.White
@@ -232,7 +231,7 @@ private fun LeaderboardScreen(
                             modifier = Modifier
                                 .align(Alignment.BottomCenter)
                                 .fillMaxWidth()
-                                .background(PurpleGrey40)
+                                .background(MaterialTheme.colorScheme.primary)
                                 .padding(16.dp)
                         ) {
                             LeaderboardRow(
