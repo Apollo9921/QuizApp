@@ -27,8 +27,6 @@ import androidx.navigation.NavHostController
 import com.apollo9921.quizrise.data.network.dto.TranslatedQuizResult
 import com.apollo9921.quizrise.presentation.components.ErrorScreen
 import com.apollo9921.quizrise.presentation.components.Loading
-import com.apollo9921.quizrise.presentation.core.PurpleGrey40
-import com.apollo9921.quizrise.presentation.core.White
 import com.apollo9921.quizrise.presentation.utils.componentSizeByScreen
 import com.apollo9921.quizrise.presentation.utils.widthOfScreen
 import kotlinx.coroutines.launch
@@ -99,7 +97,7 @@ private fun StartQuiz(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(PurpleGrey40)
+                .background(MaterialTheme.colorScheme.primary)
                 .padding(pv)
         ) {
             when (uiState) {
@@ -197,12 +195,12 @@ private fun ShowQuiz(
             ) {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
-                    colors = CardDefaults.cardColors(containerColor = White.copy(alpha = 0.08f)),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.08f)),
                     shape = RoundedCornerShape(24.dp)
                 ) {
                     Text(
                         text = currentQuestion.question,
-                        color = White,
+                        color = MaterialTheme.colorScheme.surface,
                         style = MaterialTheme.typography.labelMedium,
                         fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Center,
@@ -225,9 +223,9 @@ private fun ShowQuiz(
 
                     Card(
                         shape = RoundedCornerShape(20.dp),
-                        border = BorderStroke(width = 1.dp, color = White.copy(alpha = 0.15f)),
+                        border = BorderStroke(width = 1.dp, color = MaterialTheme.colorScheme.surface.copy(alpha = 0.15f)),
                         colors = CardDefaults.cardColors(
-                            containerColor = White.copy(alpha = 0.06f)
+                            containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.06f)
                         ),
                         modifier = Modifier
                             .fillMaxWidth()
@@ -259,14 +257,14 @@ private fun ShowQuiz(
                                 modifier = Modifier
                                     .size(componentSizeByScreen(baseSize = 36.dp))
                                     .background(
-                                        color = White.copy(alpha = 0.12f),
+                                        color = MaterialTheme.colorScheme.surface.copy(alpha = 0.12f),
                                         shape = RoundedCornerShape(10.dp)
                                     ),
                                 contentAlignment = Alignment.Center
                             ) {
                                 Text(
                                     text = optionLetter,
-                                    color = White.copy(alpha = 0.85f),
+                                    color = MaterialTheme.colorScheme.surface.copy(alpha = 0.85f),
                                     style = MaterialTheme.typography.labelSmall,
                                     fontWeight = FontWeight.Bold
                                 )
@@ -274,7 +272,7 @@ private fun ShowQuiz(
 
                             Text(
                                 text = answer,
-                                color = White,
+                                color = MaterialTheme.colorScheme.surface,
                                 style = MaterialTheme.typography.labelMedium,
                                 fontWeight = FontWeight.Medium,
                                 textAlign = TextAlign.Start,
@@ -288,7 +286,7 @@ private fun ShowQuiz(
 
                 Text(
                     text = "${quizState.progress}",
-                    color = White,
+                    color = MaterialTheme.colorScheme.surface,
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.ExtraBold
                 )
@@ -297,7 +295,7 @@ private fun ShowQuiz(
 
                 Text(
                     text = "Question ${pageNumber + 1} / ${data.size}",
-                    color = White.copy(alpha = 0.6f),
+                    color = MaterialTheme.colorScheme.surface.copy(alpha = 0.6f),
                     style = MaterialTheme.typography.labelSmall,
                     fontWeight = FontWeight.Medium
                 )

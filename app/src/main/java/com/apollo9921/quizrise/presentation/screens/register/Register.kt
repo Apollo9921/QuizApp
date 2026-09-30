@@ -23,8 +23,6 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.apollo9921.quizrise.presentation.core.PurpleGrey40
-import com.apollo9921.quizrise.presentation.core.White
 import org.koin.androidx.compose.koinViewModel
 import com.apollo9921.quizrise.R
 
@@ -44,7 +42,7 @@ fun RegisterRoute(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(PurpleGrey40)
+            .background(MaterialTheme.colorScheme.primary)
             .verticalScroll(rememberScrollState())
             .padding(horizontal = 24.dp)
             .safeDrawingPadding(),
@@ -54,7 +52,7 @@ fun RegisterRoute(
         Text(
             style = MaterialTheme.typography.titleLarge,
             text = stringResource(R.string.create_account),
-            color = White
+            color = MaterialTheme.colorScheme.surface
         )
 
         Spacer(modifier = Modifier.padding(32.dp))
@@ -66,21 +64,21 @@ fun RegisterRoute(
                 Text(
                     style = MaterialTheme.typography.displaySmall,
                     text = stringResource(R.string.email_field),
-                    color = White
+                    color = MaterialTheme.colorScheme.surface
                 )
             },
-            leadingIcon = { Icon(Icons.Default.Email, contentDescription = null, tint = White) },
+            leadingIcon = { Icon(Icons.Default.Email, contentDescription = null, tint = MaterialTheme.colorScheme.surface) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
             singleLine = true,
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = White,
-                unfocusedBorderColor = White,
-                cursorColor = White,
-                focusedTextColor = White,
-                unfocusedTextColor = White
+                focusedBorderColor = MaterialTheme.colorScheme.surface,
+                unfocusedBorderColor = MaterialTheme.colorScheme.surface,
+                cursorColor = MaterialTheme.colorScheme.surface,
+                focusedTextColor = MaterialTheme.colorScheme.surface,
+                unfocusedTextColor = MaterialTheme.colorScheme.surface
             )
         )
 
@@ -93,10 +91,10 @@ fun RegisterRoute(
                 Text(
                     style = MaterialTheme.typography.displaySmall,
                     text = stringResource(R.string.password_field),
-                    color = White
+                    color = MaterialTheme.colorScheme.surface
                 )
             },
-            leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null, tint = White) },
+            leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null, tint = MaterialTheme.colorScheme.surface) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp),
@@ -106,18 +104,18 @@ fun RegisterRoute(
                     Icon(
                         imageVector = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
                         contentDescription = null,
-                        tint = White
+                        tint = MaterialTheme.colorScheme.surface
                     )
                 }
             },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             singleLine = true,
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = White,
-                unfocusedBorderColor = White,
-                cursorColor = White,
-                focusedTextColor = White,
-                unfocusedTextColor = White
+                focusedBorderColor = MaterialTheme.colorScheme.surface,
+                unfocusedBorderColor = MaterialTheme.colorScheme.surface,
+                cursorColor = MaterialTheme.colorScheme.surface,
+                focusedTextColor = MaterialTheme.colorScheme.surface,
+                unfocusedTextColor = MaterialTheme.colorScheme.surface
             )
         )
 
@@ -130,10 +128,10 @@ fun RegisterRoute(
                 Text(
                     style = MaterialTheme.typography.displaySmall,
                     text = stringResource(R.string.confirm_password_field),
-                    color = White
+                    color = MaterialTheme.colorScheme.surface
                 )
             },
-            leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null, tint = White) },
+            leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null, tint = MaterialTheme.colorScheme.surface) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp),
@@ -141,11 +139,11 @@ fun RegisterRoute(
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             singleLine = true,
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = White,
-                unfocusedBorderColor = White,
-                cursorColor = White,
-                focusedTextColor = White,
-                unfocusedTextColor = White
+                focusedBorderColor = MaterialTheme.colorScheme.surface,
+                unfocusedBorderColor = MaterialTheme.colorScheme.surface,
+                cursorColor = MaterialTheme.colorScheme.surface,
+                focusedTextColor = MaterialTheme.colorScheme.surface,
+                unfocusedTextColor = MaterialTheme.colorScheme.surface
             )
         )
 
@@ -186,7 +184,7 @@ fun RegisterRoute(
                 Text(
                     style = MaterialTheme.typography.labelSmall,
                     text = stringResource(R.string.register),
-                    color = White
+                    color = MaterialTheme.colorScheme.surface
                 )
             }
         }
@@ -196,7 +194,7 @@ fun RegisterRoute(
                 Text(
                     style = MaterialTheme.typography.displaySmall,
                     text = stringResource(R.string.have_an_account),
-                    color = White
+                    color = MaterialTheme.colorScheme.surface
                 )
             }
         }

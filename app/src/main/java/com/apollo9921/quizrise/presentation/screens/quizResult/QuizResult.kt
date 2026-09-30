@@ -23,8 +23,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.apollo9921.quizrise.presentation.navigation.Destination
 import com.apollo9921.quizrise.presentation.core.Black
-import com.apollo9921.quizrise.presentation.core.PurpleGrey40
-import com.apollo9921.quizrise.presentation.core.White
 import com.apollo9921.quizrise.presentation.utils.widthOfScreen
 import com.apollo9921.quizrise.presentation.utils.componentSizeByScreen
 import org.koin.androidx.compose.koinViewModel
@@ -96,7 +94,7 @@ private fun QuizResultScreen(
     val maxLayoutWidth = if (screenWidth < 600.dp) Dp.Unspecified else componentSizeByScreen(480.dp)
 
     Scaffold(
-        containerColor = PurpleGrey40
+        containerColor = MaterialTheme.colorScheme.primary
     ) { paddingValues ->
         Box(
             modifier = Modifier
@@ -133,9 +131,9 @@ private fun QuizResultScreen(
                         Card(
                             modifier = Modifier.fillMaxWidth(),
                             shape = RoundedCornerShape(28.dp),
-                            border = BorderStroke(1.dp, White.copy(alpha = 0.15f)),
+                            border = BorderStroke(1.dp, MaterialTheme.colorScheme.surface.copy(alpha = 0.15f)),
                             colors = CardDefaults.cardColors(
-                                containerColor = White.copy(alpha = 0.06f)
+                                containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.06f)
                             )
                         ) {
                             Column(
@@ -170,7 +168,7 @@ private fun QuizResultScreen(
                                     Text(
                                         text = level,
                                         style = MaterialTheme.typography.labelMedium,
-                                        color = White,
+                                        color = MaterialTheme.colorScheme.surface,
                                         fontWeight = FontWeight.Bold,
                                         textAlign = TextAlign.Center
                                     )
@@ -181,7 +179,7 @@ private fun QuizResultScreen(
                                 Text(
                                     text = stringResource(R.string.correct_answers),
                                     style = MaterialTheme.typography.labelSmall,
-                                    color = White.copy(alpha = 0.5f),
+                                    color = MaterialTheme.colorScheme.surface.copy(alpha = 0.5f),
                                     fontWeight = FontWeight.Bold,
                                     textAlign = TextAlign.Center
                                 )
@@ -191,14 +189,14 @@ private fun QuizResultScreen(
                                 Text(
                                     text = "$correctAnswers / $total",
                                     style = MaterialTheme.typography.titleLarge,
-                                    color = White,
+                                    color = MaterialTheme.colorScheme.surface,
                                     fontWeight = FontWeight.Black,
                                     textAlign = TextAlign.Center
                                 )
 
                                 Spacer(modifier = Modifier.height(24.dp))
                                 HorizontalDivider(
-                                    color = White.copy(alpha = 0.1f),
+                                    color = MaterialTheme.colorScheme.surface.copy(alpha = 0.1f),
                                     modifier = Modifier.padding(horizontal = 16.dp)
                                 )
                                 Spacer(modifier = Modifier.height(24.dp))
@@ -209,7 +207,7 @@ private fun QuizResultScreen(
                                         pointsReceived
                                     ).uppercase(),
                                     style = MaterialTheme.typography.labelMedium,
-                                    color = White,
+                                    color = MaterialTheme.colorScheme.surface,
                                     fontWeight = FontWeight.ExtraBold,
                                     textAlign = TextAlign.Center
                                 )
@@ -235,7 +233,7 @@ private fun QuizResultScreen(
                             Text(
                                 text = stringResource(id = R.string.see_wrong_answers),
                                 style = MaterialTheme.typography.labelMedium,
-                                color = White,
+                                color = MaterialTheme.colorScheme.surface,
                                 fontWeight = FontWeight.Bold,
                                 textAlign = TextAlign.Center,
                                 textDecoration = TextDecoration.Underline,
@@ -246,7 +244,7 @@ private fun QuizResultScreen(
 
                         Card(
                             shape = RoundedCornerShape(20.dp),
-                            colors = CardDefaults.cardColors(containerColor = White),
+                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(componentSizeByScreen(baseSize = 54.dp))

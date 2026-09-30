@@ -30,9 +30,6 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.apollo9921.quizrise.presentation.navigation.Destination
-import com.apollo9921.quizrise.presentation.core.Purple40
-import com.apollo9921.quizrise.presentation.core.PurpleGrey40
-import com.apollo9921.quizrise.presentation.core.White
 import kotlinx.coroutines.*
 import android.content.res.Configuration
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -83,7 +80,7 @@ fun OnBoard(navHostController: NavHostController) {
                     Text(
                         style = MaterialTheme.typography.labelMedium,
                         text = stringResource(id = R.string.back),
-                        color = White,
+                        color = MaterialTheme.colorScheme.surface,
                         modifier = Modifier
                             .padding(8.dp)
                             .clickable {
@@ -97,7 +94,7 @@ fun OnBoard(navHostController: NavHostController) {
                     Text(
                         style = MaterialTheme.typography.labelMedium,
                         text = stringResource(id = R.string.next),
-                        color = White,
+                        color = MaterialTheme.colorScheme.surface,
                         modifier = Modifier
                             .padding(8.dp)
                             .clickable {
@@ -112,7 +109,7 @@ fun OnBoard(navHostController: NavHostController) {
             state = state,
             modifier = Modifier
                 .fillMaxSize()
-                .background(PurpleGrey40)
+                .background(MaterialTheme.colorScheme.primary)
                 .safeDrawingPadding()
                 .padding(bottom = it.calculateBottomPadding())
         ) { page ->
@@ -143,7 +140,7 @@ fun OnBoard(navHostController: NavHostController) {
                 Text(
                     style = MaterialTheme.typography.titleLarge,
                     text = stringResource(id = onBoardingTitle[page]),
-                    color = White,
+                    color = MaterialTheme.colorScheme.surface,
                     modifier = Modifier.padding(top = 6.dp)
                 )
 
@@ -160,8 +157,8 @@ fun OnBoard(navHostController: NavHostController) {
                             }
                         },
                         shape = RoundedCornerShape(20.dp),
-                        border = BorderStroke(width = 2.dp, color = White),
-                        colors = ButtonDefaults.buttonColors(containerColor = Purple40),
+                        border = BorderStroke(width = 2.dp, color = MaterialTheme.colorScheme.surface),
+                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary),
                         modifier = Modifier
                             .fillMaxWidth(if (isLandscape) 0.5f else 0.8f)
                             .height(60.dp)
@@ -169,7 +166,7 @@ fun OnBoard(navHostController: NavHostController) {
                         Text(
                             style = MaterialTheme.typography.labelMedium,
                             text = stringResource(id = R.string.getStarted),
-                            color = White,
+                            color = MaterialTheme.colorScheme.surface,
                             fontWeight = FontWeight.Bold
                         )
                     }

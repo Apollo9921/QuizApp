@@ -27,8 +27,6 @@ import com.apollo9921.quizrise.R
 import com.apollo9921.quizrise.presentation.components.BottomNavigationBar
 import com.apollo9921.quizrise.presentation.components.QuizTooltipIcon
 import com.apollo9921.quizrise.presentation.navigation.Destination
-import com.apollo9921.quizrise.presentation.core.PurpleGrey40
-import com.apollo9921.quizrise.presentation.core.White
 import com.apollo9921.quizrise.presentation.utils.componentSizeByScreen
 import com.apollo9921.quizrise.presentation.utils.widthOfScreen
 
@@ -98,7 +96,7 @@ private fun CategoriesScreen(
     Scaffold(
         bottomBar = { BottomNavigationBar(navHostController) },
         topBar = { QuizTooltipIcon(text = stringResource(id = R.string.tooltip_categories)) },
-        containerColor = PurpleGrey40
+        containerColor = MaterialTheme.colorScheme.primary
     ) { paddingValues ->
         Box(
             modifier = Modifier
@@ -120,9 +118,9 @@ private fun CategoriesScreen(
                 items(categories.size) { index ->
                     Card(
                         shape = RoundedCornerShape(20.dp),
-                        border = BorderStroke(width = 1.dp, color = White.copy(alpha = 0.15f)),
+                        border = BorderStroke(width = 1.dp, color = MaterialTheme.colorScheme.surface.copy(alpha = 0.15f)),
                         colors = CardDefaults.cardColors(
-                            containerColor = White.copy(alpha = 0.06f)
+                            containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.06f)
                         ),
                         modifier = Modifier
                             .fillMaxWidth()
@@ -155,7 +153,7 @@ private fun CategoriesScreen(
 
                             Text(
                                 text = stringResource(id = categories[index]),
-                                color = White,
+                                color = MaterialTheme.colorScheme.surface,
                                 style = MaterialTheme.typography.labelSmall,
                                 fontWeight = FontWeight.Bold,
                                 textAlign = TextAlign.Center,
