@@ -3,6 +3,7 @@ package com.apollo9921.quizrise.presentation.screens.leaderboard
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.apollo9921.quizrise.R
+import com.apollo9921.quizrise.domain.usecase.FetchUserUseCase
 import com.apollo9921.quizrise.domain.usecase.GetTopPlayersByCategoryUseCase
 import com.apollo9921.quizrise.domain.usecase.GetTopPlayersByLevelUseCase
 import com.apollo9921.quizrise.domain.util.PlayerLevel
@@ -21,7 +22,8 @@ import java.io.IOException
 class LeaderboardViewModel(
     private val firebaseAuth: FirebaseAuth,
     private val getTopPlayersByLevelUseCase: GetTopPlayersByLevelUseCase,
-    private val getTopPlayersByCategoryUseCase: GetTopPlayersByCategoryUseCase
+    private val getTopPlayersByCategoryUseCase: GetTopPlayersByCategoryUseCase,
+    private val fetchUserUseCase: FetchUserUseCase
 ) : ViewModel() {
 
     private val currentUserId: String
@@ -29,6 +31,8 @@ class LeaderboardViewModel(
 
     private val _uiState = MutableStateFlow<UIState>(UIState.Idle)
     val uiState = _uiState.asStateFlow()
+
+    private var currentLevel = PlayerLevel.RECRUIT.badgeName
 
     data class LeaderboardItem(
         val position: Int,
@@ -53,12 +57,29 @@ class LeaderboardViewModel(
 
     init {
         _uiState.value = UIState.Success(data = LeaderboardUiState(isLoading = true))
-        getTopPlayersByLevel(selectedBadge = PlayerLevel.RECRUIT.badgeName)
+        fetchUser()
+    }
+
+    private fun fetchUser() {
+        viewModelScope.launch {
+            val fetchUser = fetchUserUseCase.invoke()
+            if (fetchUser.isSuccess) {
+                val user = fetchUser.getOrNull()
+                if (user != null) {
+                    currentLevel = PlayerLevel.getLevelByPoints(user.totalPoints).badgeName
+                    getTopPlayersByLevel(selectedBadge = currentLevel)
+                } else {
+                    _uiState.value = UIState.Error(message = R.string.unexpected_error)
+                }
+            } else {
+                _uiState.value = UIState.Error(message = R.string.unexpected_error)
+            }
+        }
     }
 
     fun changeTab(tab: Int) {
         if (tab == 0) {
-            getTopPlayersByLevel(selectedBadge = PlayerLevel.RECRUIT.badgeName)
+            getTopPlayersByLevel(selectedBadge = currentLevel)
         } else if (tab == 1) {
             getTopPlayersByCategory(selectedCategory = QuizCategory.ARTS_AND_LITERATURE.categoryName)
         }

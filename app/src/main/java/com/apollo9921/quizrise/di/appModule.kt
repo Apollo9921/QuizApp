@@ -108,7 +108,7 @@ val viewModelModule = module {
     viewModel { ProfileViewModel(get(), get(), get()) }
     viewModel { LoginViewModel(get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { RegisterViewModel(get()) }
-    viewModel { LeaderboardViewModel(get(), get(), get()) }
+    viewModel { LeaderboardViewModel(get(), get(), get(), get()) }
     viewModel { ResultsViewModel(get(), get()) }
     viewModel { DeleteAccountViewModel(get()) }
     viewModel { EditUsernameViewModel(get(), get(), get()) }
