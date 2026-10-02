@@ -41,9 +41,11 @@ import com.apollo9921.quizrise.domain.usecase.PostUserAndResultsUseCase
 import com.apollo9921.quizrise.domain.usecase.PostUserAnonymouslyUseCase
 import com.apollo9921.quizrise.domain.usecase.SaveQuizUseCase
 import com.apollo9921.quizrise.domain.usecase.UpdateNameUseCase
+import com.apollo9921.quizrise.domain.usecase.UpdatePasswordByLinkUseCase
 import com.apollo9921.quizrise.domain.usecase.UpdateUserSessionUseCase
 import com.apollo9921.quizrise.presentation.screens.deleteAccount.DeleteAccountViewModel
 import com.apollo9921.quizrise.presentation.screens.editUsername.EditUsernameViewModel
+import com.apollo9921.quizrise.presentation.screens.forgotPassword.ForgotPasswordViewModel
 import com.apollo9921.quizrise.presentation.screens.leaderboard.LeaderboardViewModel
 import com.apollo9921.quizrise.presentation.screens.profile.ProfileViewModel
 import com.apollo9921.quizrise.presentation.screens.progress.ProgressViewModel
@@ -113,6 +115,7 @@ val viewModelModule = module {
     viewModel { DeleteAccountViewModel(get()) }
     viewModel { EditUsernameViewModel(get(), get(), get()) }
     viewModel { SettingsScreenViewModel(get(), get(), get()) }
+    viewModel { ForgotPasswordViewModel(get()) }
 }
 
 val useCaseModule = module {
@@ -139,4 +142,5 @@ val useCaseModule = module {
     factory { UpdateNameUseCase(get(), get()) }
     factory { SaveQuizUseCase(androidContext(), get(), get(), get()) }
     factory { CalculateQuizResultUseCase(get()) }
+    factory { UpdatePasswordByLinkUseCase(get()) }
 }

@@ -1,8 +1,10 @@
 package com.apollo9921.quizrise.presentation.screens.forgotPassword
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -10,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -21,6 +24,7 @@ import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.LockReset
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -43,26 +47,41 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.apollo9921.quizrise.presentation.components.TopBar
 import com.apollo9921.quizrise.presentation.core.QuizAppTheme
 import com.apollo9921.quizrise.presentation.utils.componentSizeByScreen
 import com.apollo9921.quizrise.R
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun ForgotPasswordRoute(navHostController: NavHostController) {
+fun ForgotPasswordRoute(
+    navHostController: NavHostController,
+    viewModel: ForgotPasswordViewModel = koinViewModel<ForgotPasswordViewModel>()
+) {
     val navigateBack = { navHostController.navigateUp() }
+    val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
+    val validateEmail = { email: String -> viewModel.validateEmail(email) }
+    val resetPassword = { email: String -> viewModel.sendResetLink(email) }
 
     ForgotPasswordScreen(
-        navigateBack = navigateBack
+        navigateBack = navigateBack,
+        onSendResetLinkClick = resetPassword,
+        validateEmail = validateEmail,
+        uiState = uiState
     )
 }
 
 @Composable
 private fun ForgotPasswordScreen(
-    navigateBack: () -> Boolean
+    navigateBack: () -> Boolean,
+    onSendResetLinkClick: (String) -> Unit,
+    validateEmail: (String) -> Boolean,
+    uiState: ForgotPasswordViewModel.UIState
 ) {
     var email by rememberSaveable { mutableStateOf("") }
+    var isEmailError by rememberSaveable { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
 
     Scaffold(
@@ -71,6 +90,27 @@ private fun ForgotPasswordScreen(
                 backgroundColor = MaterialTheme.colorScheme.primary,
                 onClick = { navigateBack() }
             )
+        },
+        snackbarHost = {
+            if (uiState is ForgotPasswordViewModel.UIState.Success) {
+                Row(
+                    modifier = Modifier
+                        .wrapContentWidth()
+                        .background(
+                            MaterialTheme.colorScheme.secondary,
+                            shape = RoundedCornerShape(16.dp)
+                        )
+                        .padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Text(
+                        text = stringResource(uiState.message),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.surface
+                    )
+                }
+            }
         }
     ) { paddingValues ->
         Box(
@@ -130,7 +170,7 @@ private fun ForgotPasswordScreen(
                     value = email,
                     onValueChange = {
                         email = it
-                        //if (isEmailError) isEmailError = false
+                        isEmailError = !validateEmail(email)
                     },
                     modifier = Modifier.fillMaxWidth(),
                     label = {
@@ -153,15 +193,15 @@ private fun ForgotPasswordScreen(
                             tint = MaterialTheme.colorScheme.surface.copy(alpha = 0.7f)
                         )
                     },
-                    //isError = isEmailError,
+                    isError = isEmailError,
                     supportingText = {
-                        //if (isEmailError) {
+                        if (isEmailError) {
                             Text(
                                 text = stringResource(R.string.invalid_email_format),
                                 color = MaterialTheme.colorScheme.error,
                                 style = MaterialTheme.typography.labelSmall
                             )
-                       //}
+                        }
                     },
                     singleLine = true,
                     shape = RoundedCornerShape(16.dp),
@@ -172,9 +212,7 @@ private fun ForgotPasswordScreen(
                     keyboardActions = KeyboardActions(
                         onDone = {
                             focusManager.clearFocus()
-                            /*if (validateEmail()) {
-                                onSendResetLinkClick(email.trim())
-                            }*/
+                            if (!isEmailError) onSendResetLinkClick(email.trim())
                         }
                     ),
                     colors = OutlinedTextFieldDefaults.colors(
@@ -186,11 +224,20 @@ private fun ForgotPasswordScreen(
                         errorBorderColor = MaterialTheme.colorScheme.error,
                         errorCursorColor = MaterialTheme.colorScheme.error,
                         errorLabelColor = MaterialTheme.colorScheme.error,
-                        errorTrailingIconColor = MaterialTheme.colorScheme.error
+                        errorTrailingIconColor = MaterialTheme.colorScheme.error,
+                        errorSupportingTextColor = MaterialTheme.colorScheme.surface
                     )
                 )
 
                 Spacer(modifier = Modifier.height(24.dp))
+
+                if (uiState is ForgotPasswordViewModel.UIState.Error) {
+                    Text(
+                        text = stringResource(uiState.message),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
 
                 Box(
                     modifier = Modifier
@@ -201,25 +248,31 @@ private fun ForgotPasswordScreen(
                     Button(
                         onClick = {
                             focusManager.clearFocus()
-                            /*if (validateEmail()) {
-                                onSendResetLinkClick(email.trim())
-                            }*/
+                            if (!isEmailError) onSendResetLinkClick(email.trim())
                         },
                         shape = RoundedCornerShape(16.dp),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = MaterialTheme.colorScheme.secondary,
                             contentColor = MaterialTheme.colorScheme.surface
                         ),
+                        enabled = validateEmail(email),
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(componentSizeByScreen(baseSize = 56.dp))
                     ) {
-                        Text(
-                            text = stringResource(R.string.send_link),
-                            style = MaterialTheme.typography.labelMedium,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.surface
-                        )
+                        if (uiState is ForgotPasswordViewModel.UIState.Loading) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(24.dp),
+                                color = MaterialTheme.colorScheme.surface
+                            )
+                        } else {
+                            Text(
+                                text = stringResource(R.string.send_link),
+                                style = MaterialTheme.typography.labelMedium,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.surface
+                            )
+                        }
                     }
                 }
 
@@ -233,6 +286,11 @@ private fun ForgotPasswordScreen(
 @Composable
 private fun ForgotPasswordScreenPreview() {
     QuizAppTheme {
-        ForgotPasswordScreen(navigateBack = { false })
+        ForgotPasswordScreen(
+            navigateBack = { false },
+            onSendResetLinkClick = {},
+            validateEmail = { true },
+            uiState = ForgotPasswordViewModel.UIState.Idle
+        )
     }
 }
