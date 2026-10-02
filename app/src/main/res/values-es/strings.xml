@@ -129,4 +129,8 @@
     <string name="consent_ue">Consentimiento RGPD (UE)</string>
     <string name="random">Aleatorio</string>
     <string name="random_system">El sistema elige la dificultad</string>
+    <string name="forgot_password">¿Olvidaste tu contraseña? Haz clic aquí</string>
+    <string name="forgot_password_title">¿Olvidaste tu contraseña?</string>
+    <string name="forgot_password_description">Introduce el correo electrónico asociado a tu cuenta. Te enviaremos un enlace para reestablecer tu contraseña.</string>
+    <string name="send_link">Enviar enlace</string>
 </resources>
