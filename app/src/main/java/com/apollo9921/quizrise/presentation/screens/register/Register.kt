@@ -173,7 +173,11 @@ fun RegisterRoute(
                 .fillMaxWidth()
                 .wrapContentHeight()
                 .padding(horizontal = 16.dp, vertical = 16.dp),
-            enabled = state !is RegisterViewModel.UIState.Loading
+            enabled = state !is RegisterViewModel.UIState.Loading,
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.secondary,
+                contentColor = MaterialTheme.colorScheme.surface
+            )
         ) {
             if (state is RegisterViewModel.UIState.Loading) {
                 CircularProgressIndicator(
