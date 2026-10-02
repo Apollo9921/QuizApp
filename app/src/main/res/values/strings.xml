@@ -145,5 +145,5 @@
     <string name="forgot_password_title">Forgot Password?</string>
     <string name="forgot_password_description">Enter the associated email address to your account. We will send you a link to reset your password.</string>
     <string name="send_link">Send Link</string>
-    <string name="link_sent">Sent link to reset password</string>
+    <string name="link_sent">Sent link to reset password, please check if went to your spam folder</string>
 </resources>

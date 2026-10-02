@@ -106,7 +106,7 @@ private fun ForgotPasswordScreen(
                 ) {
                     Text(
                         text = stringResource(uiState.message),
-                        style = MaterialTheme.typography.labelSmall,
+                        style = MaterialTheme.typography.displaySmall,
                         color = MaterialTheme.colorScheme.surface
                     )
                 }
