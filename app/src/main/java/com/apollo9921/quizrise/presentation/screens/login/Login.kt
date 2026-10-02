@@ -3,6 +3,7 @@ package com.apollo9921.quizrise.presentation.screens.login
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.foundation.layout.*
@@ -71,13 +72,15 @@ fun LoginRoute(
     val onGoogleSignInClick = remember { { viewModel.startSignInByGoogle(navHostController) } }
     val navigateToRegister = remember { { navHostController.navigate(Destination.Register.passArgument(isAnonymous = false)) } }
     val signInAnonymously = remember { { viewModel.signInAnonymously(navHostController) } }
+    val forgotPassword = { navHostController.navigate(Destination.ForgotPassword.route) }
 
     LoginScreen(
         state = state,
         onLoginClick = onLoginClick,
         onGoogleSignInClick = onGoogleSignInClick,
         signInAnonymously = signInAnonymously,
-        navigateToRegister = navigateToRegister
+        navigateToRegister = navigateToRegister,
+        forgotPassword = forgotPassword
     )
 }
 
@@ -87,7 +90,8 @@ private fun LoginScreen(
     onLoginClick: (String, String) -> Unit,
     onGoogleSignInClick: () -> Unit,
     signInAnonymously: () -> Unit,
-    navigateToRegister: () -> Unit
+    navigateToRegister: () -> Unit,
+    forgotPassword: () -> Unit
 ) {
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
@@ -178,7 +182,7 @@ private fun LoginScreen(
             )
         )
 
-        Spacer(modifier = Modifier.padding(24.dp))
+        Spacer(modifier = Modifier.padding(16.dp))
 
         if (state is LoginViewModel.UIState.Error) {
             Text(
@@ -196,7 +200,11 @@ private fun LoginScreen(
                 .wrapContentHeight()
                 .padding(horizontal = 16.dp),
             shape = RoundedCornerShape(8.dp),
-            enabled = state !is LoginViewModel.UIState.Loading
+            enabled = state !is LoginViewModel.UIState.Loading,
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.secondary,
+                contentColor = MaterialTheme.colorScheme.surface
+            )
         ) {
             if (state is LoginViewModel.UIState.Loading) {
                 CircularProgressIndicator(
@@ -210,6 +218,16 @@ private fun LoginScreen(
                 )
             }
         }
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        Text(
+            style = MaterialTheme.typography.displaySmall,
+            text = stringResource(R.string.forgot_password),
+            color = MaterialTheme.colorScheme.surface,
+            modifier = Modifier
+                .clickable { forgotPassword() }
+        )
 
         Spacer(modifier = Modifier.height(24.dp))
 

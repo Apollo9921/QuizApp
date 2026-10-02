@@ -10,4 +10,5 @@ interface AuthRepository {
     suspend fun loginWithEmail(email: String, password: String): AppResult<Unit>
     suspend fun checkIfUserExists(): AppResult<Boolean>
     suspend fun signInAnonymously(): AppResult<Unit>
+    suspend fun sendPasswordResetEmail(email: String): AppResult<Unit>
 }

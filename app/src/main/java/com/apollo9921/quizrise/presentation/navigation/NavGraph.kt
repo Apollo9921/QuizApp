@@ -28,6 +28,7 @@ import com.apollo9921.quizrise.presentation.screens.profile.ProfileRoute
 import com.apollo9921.quizrise.presentation.screens.boarding.OnBoard
 import com.apollo9921.quizrise.presentation.screens.deleteAccount.DeleteAccountRoute
 import com.apollo9921.quizrise.presentation.screens.editUsername.EditUserNameRoute
+import com.apollo9921.quizrise.presentation.screens.forgotPassword.ForgotPasswordRoute
 import com.apollo9921.quizrise.presentation.screens.leaderboard.LeaderboardRoute
 import com.apollo9921.quizrise.presentation.screens.login.LoginRoute
 import com.apollo9921.quizrise.presentation.screens.quizLevel.LevelDifficulty
@@ -49,6 +50,7 @@ fun AnimationNav(navHostController: NavHostController, startDestination: String)
             val screenName = when {
                 currentRoute.startsWith("onBoard") -> "OnBoard"
                 currentRoute.startsWith("login") -> "Login"
+                currentRoute.startsWith("forgot_password") -> "ForgotPassword"
                 currentRoute.startsWith("register") -> "Register"
                 currentRoute.startsWith("categories") -> "Categories"
                 currentRoute.startsWith("progress") -> "Progress"
@@ -105,6 +107,23 @@ fun AnimationNav(navHostController: NavHostController, startDestination: String)
             }
         ) {
             LoginRoute(navHostController)
+        }
+        composable(
+            route = Destination.ForgotPassword.route,
+            enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Left,
+                    animationSpec = tween(700)
+                )
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Right,
+                    animationSpec = tween(700)
+                )
+            }
+        ) {
+            ForgotPasswordRoute(navHostController)
         }
         composable(
             route = Destination.Register.route,
