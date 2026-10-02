@@ -156,4 +156,13 @@ class AuthRepositoryImpl(
             }
         }
     }
+
+    override suspend fun sendPasswordResetEmail(email: String): AppResult<Unit> {
+        return try {
+            auth.sendPasswordResetEmail(email).await()
+            AppResult.Success(Unit)
+        } catch (_: Exception) {
+            AppResult.Error(AppError.Unknown)
+        }
+    }
 }
