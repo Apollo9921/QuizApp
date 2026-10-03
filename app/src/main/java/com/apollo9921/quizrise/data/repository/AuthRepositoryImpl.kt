@@ -161,8 +161,11 @@ class AuthRepositoryImpl(
         return try {
             auth.sendPasswordResetEmail(email).await()
             AppResult.Success(Unit)
-        } catch (_: Exception) {
-            AppResult.Error(AppError.Unknown)
+        } catch (e: Exception) {
+            when (e) {
+                is FirebaseNetworkException -> AppResult.Error(AppError.Network)
+                else -> AppResult.Error(AppError.Unknown)
+            }
         }
     }
 }

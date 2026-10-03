@@ -43,6 +43,10 @@ class ForgotPasswordViewModel(
                             _uiState.value = UIState.Error(message = R.string.invalid_email_format)
                         }
 
+                        is AppError.Network -> {
+                            _uiState.value = UIState.Error(message = R.string.no_internet_connection)
+                        }
+
                         else -> {
                             _uiState.value = UIState.Error(message = R.string.unexpected_error)
                         }
