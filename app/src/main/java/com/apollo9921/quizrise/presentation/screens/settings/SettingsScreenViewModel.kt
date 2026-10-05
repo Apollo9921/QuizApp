@@ -50,7 +50,7 @@ class SettingsScreenViewModel(
                 .build()
             customTabsIntent.launchUrl(
                 context,
-                Uri.parse("https://apollo9921.github.io/quizrise-privacy-policy/")
+                Uri.parse("https://apollo9921.github.io/EurekaGuesser-privacy-policy/")
             )
         }
     }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Quiz Rise</string>
+    <string name="app_name">Eureka Guesser</string>
     <string name="register">Registro</string>
     <string name="have_an_account">¿Ya tienes una cuenta? Inicia sesión</string>
     <string name="onBoard1">Bienvenido a la aplicación de preguntas</string>
@@ -88,7 +88,7 @@
     <string name="warning_message">Esta acción es completamente irreversível. Al eliminar tu cuenta perderás permanentemente:</string>
     <string name="all_points_warning">Todos tus puntos acumulados.</string>
     <string name="progress_warning">Tu progreso, nivel y insignias (Badges).</string>
-    <string name="history_warning">Tu historial en QuizRise.</string>
+    <string name="history_warning">Tu historial en Eureka Guesser.</string>
     <string name="leaderboard_warning">Tu posición en la clasificación mundial.</string>
     <string name="keep_account">Conservar mi cuenta</string>
     <string name="delete_account">Sí, eliminar permanentemente</string>
@@ -115,7 +115,7 @@
     <string name="average_points">Media General: %1$d%%</string>
     <string name="performance_top_categories">Desempeño en las mejores categorías</string>
     <string name="can_you_beat_me">¿Puedes superarme?</string>
-    <string name="share_text">Conseguiste superar a mi puntuación en QuizRise? ⚡ Descarga ya:</string>
+    <string name="share_text">Conseguiste superar a mi puntuación en Eureka Guesser? ⚡ Descarga ya:</string>
     <string name="title_intent">Compartir resultado por</string>
     <string name="recruit_level">Recluta</string>
     <string name="explorer_level">Explorador</string>
