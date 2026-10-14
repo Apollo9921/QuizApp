@@ -4,6 +4,7 @@ import com.apollo9921.quizrise.domain.model.results.Results
 import com.apollo9921.quizrise.domain.model.user.User
 import com.apollo9921.quizrise.domain.repository.LeaderboardRepository
 import com.apollo9921.quizrise.domain.result.AppError
+import com.apollo9921.quizrise.domain.result.AppResult
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import io.ktor.client.network.sockets.ConnectTimeoutException
@@ -35,13 +36,13 @@ class LeaderboardRepositoryImpl(
             }
             .addOnFailureListener { exception ->
                 when(exception) {
-                    is HttpRequestTimeoutException -> AppError.Timeout
-                    is ConnectTimeoutException -> AppError.NoInternetConnection
-                    is IOException -> AppError.Network
-                    is RedirectResponseException -> AppError.Server
-                    is ClientRequestException -> AppError.BadRequest
-                    is ServerResponseException -> AppError.ServerDown
-                    else -> AppError.Unknown
+                    is HttpRequestTimeoutException -> AppResult.Error(AppError.Timeout)
+                    is ConnectTimeoutException -> AppResult.Error(AppError.NoInternetConnection)
+                    is IOException -> AppResult.Error(AppError.Network)
+                    is RedirectResponseException -> AppResult.Error(AppError.Server)
+                    is ClientRequestException -> AppResult.Error(AppError.BadRequest)
+                    is ServerResponseException -> AppResult.Error(AppError.ServerDown)
+                    else -> AppResult.Error(AppError.Unknown)
                 }
             }
     }
@@ -66,13 +67,13 @@ class LeaderboardRepositoryImpl(
             }
             .addOnFailureListener { exception ->
                 when(exception) {
-                    is HttpRequestTimeoutException -> AppError.Timeout
-                    is ConnectTimeoutException -> AppError.NoInternetConnection
-                    is IOException -> AppError.Network
-                    is RedirectResponseException -> AppError.Server
-                    is ClientRequestException -> AppError.BadRequest
-                    is ServerResponseException -> AppError.ServerDown
-                    else -> AppError.Unknown
+                    is HttpRequestTimeoutException -> AppResult.Error(AppError.Timeout)
+                    is ConnectTimeoutException -> AppResult.Error(AppError.NoInternetConnection)
+                    is IOException -> AppResult.Error(AppError.Network)
+                    is RedirectResponseException -> AppResult.Error(AppError.Server)
+                    is ClientRequestException -> AppResult.Error(AppError.BadRequest)
+                    is ServerResponseException -> AppResult.Error(AppError.ServerDown)
+                    else -> AppResult.Error(AppError.Unknown)
                 }
             }
     }

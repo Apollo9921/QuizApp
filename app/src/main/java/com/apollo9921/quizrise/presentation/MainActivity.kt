@@ -31,6 +31,7 @@ import com.google.android.play.core.install.model.UpdateAvailability
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import org.koin.compose.KoinContext
 
 class MainActivity : ComponentActivity() {
 
@@ -75,22 +76,24 @@ class MainActivity : ComponentActivity() {
         }
 
         setContent {
-            QuizAppTheme {
-                startDestination?.let { destination ->
-                    navHostController = rememberNavController()
-                    AnimationNav(
-                        navHostController = navHostController,
-                        startDestination = destination
-                    )
+            KoinContext {
+                QuizAppTheme {
+                    startDestination?.let { destination ->
+                        navHostController = rememberNavController()
+                        AnimationNav(
+                            navHostController = navHostController,
+                            startDestination = destination
+                        )
 
-                    LaunchedEffect(Unit) {
-                        checkForAppUpdate()
+                        LaunchedEffect(Unit) {
+                            checkForAppUpdate()
 
-                        consentManager.gatherConsent(
-                            testDeviceHashedId = if (BuildConfig.DEBUG) "MY_HASHED_DEVICE_ID" else null
-                        ) { canRequestAds ->
-                            if (canRequestAds) {
-                                MobileAds.initialize(this@MainActivity)
+                            consentManager.gatherConsent(
+                                testDeviceHashedId = if (BuildConfig.DEBUG) "MY_HASHED_DEVICE_ID" else null
+                            ) { canRequestAds ->
+                                if (canRequestAds) {
+                                    MobileAds.initialize(this@MainActivity)
+                                }
                             }
                         }
                     }

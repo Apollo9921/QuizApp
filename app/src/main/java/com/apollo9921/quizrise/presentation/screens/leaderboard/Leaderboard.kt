@@ -9,7 +9,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Leaderboard
 import androidx.compose.material3.*
-import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -152,13 +151,13 @@ private fun LeaderboardScreen(
                 modifier = Modifier.fillMaxSize()
             ) {
                 Column(modifier = Modifier.fillMaxSize()) {
-                    TabRow(
+                    SecondaryTabRow(
                         selectedTabIndex = uiState.selectedTab,
                         containerColor = LeaderboardBackground,
                         contentColor = LeaderboardAccentColor,
-                        indicator = { tabPositions ->
+                        indicator = {
                             TabRowDefaults.SecondaryIndicator(
-                                Modifier.tabIndicatorOffset(tabPositions[uiState.selectedTab]),
+                                modifier = Modifier.tabIndicatorOffset(uiState.selectedTab),
                                 color = LeaderboardAccentColor
                             )
                         }

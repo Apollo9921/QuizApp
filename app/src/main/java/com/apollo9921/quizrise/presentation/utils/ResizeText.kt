@@ -1,16 +1,27 @@
 package com.apollo9921.quizrise.presentation.utils
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun widthOfScreen() = LocalConfiguration.current.screenWidthDp.dp
+fun widthOfScreen(): Dp {
+    val configuration = LocalWindowInfo.current.containerSize
+    val density = LocalDensity.current
+
+    return with(density) { configuration.width.toDp() }
+}
 
 @Composable
-fun heightOfScreen() = LocalConfiguration.current.screenHeightDp.dp
+fun heightOfScreen(): Dp {
+    val configuration = LocalWindowInfo.current.containerSize
+    val density = LocalDensity.current
+
+    return with(density) { configuration.height.toDp() }
+}
 
 @Composable
 fun textSizeByScreen(baseSize: TextUnit): TextUnit {
