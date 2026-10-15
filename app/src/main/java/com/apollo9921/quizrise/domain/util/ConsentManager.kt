@@ -24,6 +24,13 @@ class ConsentManager(private val activity: Activity) {
         return purposeConsents.isNotEmpty() && purposeConsents[0] == '1'
     }
 
+    fun isConsentGrantedOrNotRequired(): Boolean {
+        val isNotRequired = consentInformation.privacyOptionsRequirementStatus ==
+                ConsentInformation.PrivacyOptionsRequirementStatus.NOT_REQUIRED
+
+        return isNotRequired || isConsentGranted()
+    }
+
     fun gatherConsent(
         testDeviceHashedId: String? = null,
         onConsentGathered: (canRequestAds: Boolean) -> Unit
@@ -53,12 +60,12 @@ class ConsentManager(private val activity: Activity) {
                         Log.e("UMP_LOG", "Error to show form: ${formError.message}")
                     }
 
-                    updateFirebaseConsent(isConsentGranted())
+                    updateFirebaseConsent(isConsentGrantedOrNotRequired())
                     onConsentGathered(consentInformation.canRequestAds())
                 }
             },
             { requestConsentError ->
-                updateFirebaseConsent(isConsentGranted())
+                updateFirebaseConsent(isConsentGrantedOrNotRequired())
                 onConsentGathered(consentInformation.canRequestAds())
                 Log.e("UMP_LOG", "Error updating consent: ${requestConsentError.message}")
             }
@@ -75,7 +82,7 @@ class ConsentManager(private val activity: Activity) {
             if (formError != null) {
                 Log.e("UMP_LOG", "Error reopen privacy options: ${formError.message}")
             }
-            updateFirebaseConsent(isConsentGranted())
+            updateFirebaseConsent(isConsentGrantedOrNotRequired())
             onDismiss(formError)
         }
     }
