@@ -11,12 +11,12 @@ plugins {
 
 android {
     namespace 'com.apollo9921.quizrise'
-    compileSdk 36
+    compileSdk 37
 
     defaultConfig {
         applicationId "com.apollo9921.quizrise"
         minSdk 24
-        targetSdk 36
+        targetSdk 37
         versionCode 23
         versionName "1.1.3"
 
@@ -26,7 +26,7 @@ android {
         }
     }
 
-    def localProperties = new java.util.Properties()
+    def localProperties = new Properties()
     def localPropertiesFile = rootProject.file("local.properties")
     if (localPropertiesFile.exists()) {
         localProperties.load(localPropertiesFile.newInputStream())
@@ -89,14 +89,14 @@ android {
 }
 
 dependencies {
-    def composeBom = platform('androidx.compose:compose-bom:2024.12.01')
+    def composeBom = platform('androidx.compose:compose-bom:2026.09.00')
     implementation composeBom
     androidTestImplementation composeBom
 
     // Core Android & Lifecycle (Actual latest versions)
-    implementation 'androidx.core:core-ktx:1.15.0'
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.8.7'
-    implementation 'androidx.activity:activity-compose:1.9.3'
+    implementation 'androidx.core:core-ktx:1.19.1'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.11.0'
+    implementation 'androidx.activity:activity-compose:1.13.0'
 
     // Compose Libraries (Managed by BOM)
     implementation 'androidx.compose.ui:ui'
@@ -106,41 +106,41 @@ dependencies {
 
     // Testing
     testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.2.1'
+    androidTestImplementation 'androidx.test.ext:junit:1.3.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
     debugImplementation 'androidx.compose.ui:ui-tooling'
     debugImplementation 'androidx.compose.ui:ui-test-manifest'
-    testImplementation("io.mockk:mockk:1.13.13")
-    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.9.0"
+    testImplementation("io.mockk:mockk:1.14.11")
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.11.0"
 
     // Splash API
-    implementation 'androidx.core:core-splashscreen:1.0.1'
+    implementation 'androidx.core:core-splashscreen:1.2.0'
 
     // Navigation (Latest stable is 2.8.5)
     implementation "androidx.navigation:navigation-compose:2.8.5"
 
     // Lottie Files
-    implementation "com.airbnb.android:lottie-compose:6.6.0"
+    implementation "com.airbnb.android:lottie-compose:6.7.1"
 
     // Data Store
-    implementation "androidx.datastore:datastore-preferences:1.1.1"
+    implementation "androidx.datastore:datastore-preferences:1.2.1"
 
     // Coil (Image Loading)
     implementation("io.coil-kt:coil-compose:2.7.0")
 
     // Room
-    def room_version = "2.7.0-alpha11"
+    def room_version = "2.8.5"
     implementation "androidx.room:room-runtime:$room_version"
     ksp "androidx.room:room-compiler:$room_version"
     implementation "androidx.room:room-ktx:$room_version"
     androidTestImplementation "androidx.room:room-testing:$room_version"
 
     // Lifecycle components
-    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7"
-    implementation "androidx.lifecycle:lifecycle-runtime-compose:2.8.7"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.11.0"
+    implementation "androidx.lifecycle:lifecycle-runtime-compose:2.11.0"
 
     // Coroutines
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.11.0'
 
     // Ktor Client
     def ktor_version = "2.3.12"
@@ -150,10 +150,10 @@ dependencies {
     implementation "io.ktor:ktor-serialization-kotlinx-json:$ktor_version"
     implementation "io.ktor:ktor-client-logging:$ktor_version"
 
-    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3"
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.11.0"
 
     // DateTime Desugaring
-    coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:2.1.3"
+    coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:2.1.5"
 
     // Koin
     def koin_version = "4.0.0"
@@ -162,41 +162,42 @@ dependencies {
     implementation "io.insert-koin:koin-androidx-navigation:$koin_version"
 
     // Firebase
-    implementation platform('com.google.firebase:firebase-bom:33.7.0')
+    implementation platform('com.google.firebase:firebase-bom:35.0.0')
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-crashlytics'
     implementation 'com.google.firebase:firebase-auth'
     implementation 'com.google.firebase:firebase-firestore'
-    implementation "com.google.android.libraries.identity.googleid:googleid:1.1.1"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.9.0"
-    implementation("com.google.firebase:firebase-functions-ktx:21.0.0")
+    implementation "com.google.android.libraries.identity.googleid:googleid:1.2.1"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.11.0"
+    implementation("com.google.firebase:firebase-functions-ktx:21.2.1")
 
     // Credentials
-    implementation "androidx.credentials:credentials:1.2.2"
-    implementation "androidx.credentials:credentials-play-services-auth:1.2.2"
+    implementation "androidx.credentials:credentials:1.6.0"
+    implementation "androidx.credentials:credentials-play-services-auth:1.6.0"
+    implementation("com.google.android.libraries.identity.googleid:googleid:1.2.1")
 
     // WorkManager
-    implementation "androidx.work:work-runtime-ktx:2.9.0"
+    implementation "androidx.work:work-runtime-ktx:2.12.0"
 
     // Icons
     implementation("androidx.compose.material:material-icons-extended")
 
     // Window Manager and Size Class for Foldables
-    implementation "androidx.window:window:1.3.0"
+    implementation "androidx.window:window:1.5.1"
     implementation "androidx.compose.material3:material3-window-size-class"
 
     // Browser Tabs
-    implementation("androidx.browser:browser:1.8.0")
+    implementation("androidx.browser:browser:1.10.0")
 
-    implementation 'com.google.android.gms:play-services-auth:21.3.0'
+    implementation 'com.google.android.gms:play-services-auth:21.2.0'
 
     // In-App Play Store
     implementation("com.google.android.play:app-update-ktx:2.1.0")
 
     // Google User Messaging Platform SDK
-    implementation("com.google.android.ump:user-messaging-platform:3.0.0")
-    implementation("com.google.android.gms:play-services-ads:23.3.0")
+    implementation("com.google.android.ump:user-messaging-platform:4.0.0")
+    implementation("com.google.android.gms:play-services-ads:25.5.0")
 
     // Material Design Components
-    implementation("com.google.android.material:material:1.12.0")
+    implementation("com.google.android.material:material:1.14.0")
 }

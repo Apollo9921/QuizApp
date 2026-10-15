@@ -92,11 +92,10 @@ class UserRepositoryImpl(
 
     override suspend fun postUserAndResults(user: User, results: List<Results>): AppResult<Unit> {
         return withContext(ioDispatcher) {
-            val currentUser = FirebaseAuth.getInstance().currentUser
-
-            if (currentUser == null) {
-                return@withContext AppResult.Error(AppError.Unauthorized)
-            }
+            val currentUser =
+                FirebaseAuth.getInstance().currentUser ?: return@withContext AppResult.Error(
+                    AppError.Unauthorized
+                )
 
             val userId = currentUser.uid
 
@@ -136,11 +135,10 @@ class UserRepositoryImpl(
         results: Results
     ): AppResult<Unit> {
         return withContext(ioDispatcher) {
-            val currentUser = FirebaseAuth.getInstance().currentUser
-
-            if (currentUser == null) {
-                return@withContext AppResult.Error(AppError.Unauthorized)
-            }
+            val currentUser =
+                FirebaseAuth.getInstance().currentUser ?: return@withContext AppResult.Error(
+                    AppError.Unauthorized
+                )
 
             val userId = currentUser.uid
 
@@ -289,11 +287,10 @@ class UserRepositoryImpl(
 
     override suspend fun postSession(session: String, user: User): AppResult<Unit> {
         return withContext(ioDispatcher) {
-            val currentUser = FirebaseAuth.getInstance().currentUser
-
-            if (currentUser == null) {
-                return@withContext AppResult.Error(AppError.Unauthorized)
-            }
+            val currentUser =
+                FirebaseAuth.getInstance().currentUser ?: return@withContext AppResult.Error(
+                    AppError.Unauthorized
+                )
 
             val userId = currentUser.uid
 
@@ -372,8 +369,10 @@ class UserRepositoryImpl(
                 when (e.code) {
                     com.google.firebase.firestore.FirebaseFirestoreException.Code.UNAVAILABLE ->
                         AppResult.Error(AppError.NoInternetConnection)
+
                     com.google.firebase.firestore.FirebaseFirestoreException.Code.PERMISSION_DENIED ->
                         AppResult.Error(AppError.Unauthorized)
+
                     else -> AppResult.Error(AppError.Unknown)
                 }
             } catch (_: IllegalStateException) {

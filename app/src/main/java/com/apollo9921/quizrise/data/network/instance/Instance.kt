@@ -23,7 +23,7 @@ object Instance {
         }
 
         install(Logging.Companion) {
-            logger = Logger.Companion.DEFAULT
+            logger = Logger.DEFAULT
             level = LogLevel.ALL
         }
 

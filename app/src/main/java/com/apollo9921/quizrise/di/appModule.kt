@@ -78,7 +78,6 @@ val localModule = module {
             "quiz_database"
         ).build()
     }
-
     single { get<QuizDatabase>().userDao() }
     single { get<QuizDatabase>().resultsDao() }
 }
