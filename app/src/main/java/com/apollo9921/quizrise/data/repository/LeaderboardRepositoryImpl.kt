@@ -79,7 +79,7 @@ class LeaderboardRepositoryImpl(private val firestore: FirebaseFirestore) : Lead
     override suspend fun getPlayerAheadByCategory(
         selectedCategory: String,
         correctAnswers: Int,
-        onSuccess: (Results?) -> Unit,
+        onSuccess: (Results?, Int?) -> Unit,
         onFailure: (Exception) -> Unit
     ) {
         firestore.collectionGroup("results")
@@ -94,7 +94,7 @@ class LeaderboardRepositoryImpl(private val firestore: FirebaseFirestore) : Lead
                     val extractedUserId = doc.reference.parent.parent?.id ?: ""
                     result?.copy(userId = extractedUserId)
                 }
-                onSuccess(resultAhead)
+                onSuccess(resultAhead, correctAnswers * 5)
             }
             .addOnFailureListener { exception ->
                 onFailure(exception)
@@ -104,7 +104,7 @@ class LeaderboardRepositoryImpl(private val firestore: FirebaseFirestore) : Lead
     override suspend fun getPlayerBehindByCategory(
         selectedCategory: String,
         correctAnswers: Int,
-        onSuccess: (Results?) -> Unit,
+        onSuccess: (Results?, Int?) -> Unit,
         onFailure: (Exception) -> Unit
     ) {
         firestore.collectionGroup("results")
@@ -119,7 +119,7 @@ class LeaderboardRepositoryImpl(private val firestore: FirebaseFirestore) : Lead
                     val extractedUserId = doc.reference.parent.parent?.id ?: ""
                     result?.copy(userId = extractedUserId)
                 }
-                onSuccess(resultAhead)
+                onSuccess(resultAhead, correctAnswers * 5)
             }
             .addOnFailureListener { exception ->
                 onFailure(exception)

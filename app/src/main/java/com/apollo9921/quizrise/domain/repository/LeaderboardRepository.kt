@@ -6,6 +6,6 @@ import com.apollo9921.quizrise.domain.model.user.User
 interface LeaderboardRepository {
     suspend fun getTopPlayersByLevel(selectedBadge: String, onSuccess: (List<User>) -> Unit, onFailure: (Exception) -> Unit)
     suspend fun getTopPlayersByCategory(selectedCategory: String, onSuccess: (List<Results>) -> Unit, onFailure: (Exception) -> Unit)
-    suspend fun getPlayerAheadByCategory(selectedCategory: String, correctAnswers: Int, onSuccess: (Results?) -> Unit, onFailure: (Exception) -> Unit)
-    suspend fun getPlayerBehindByCategory(selectedCategory: String, correctAnswers: Int, onSuccess: (Results?) -> Unit, onFailure: (Exception) -> Unit)
+    suspend fun getPlayerAheadByCategory(selectedCategory: String, correctAnswers: Int, onSuccess: (Results?, Int?) -> Unit, onFailure: (Exception) -> Unit)
+    suspend fun getPlayerBehindByCategory(selectedCategory: String, correctAnswers: Int, onSuccess: (Results?, Int?) -> Unit, onFailure: (Exception) -> Unit)
 }
