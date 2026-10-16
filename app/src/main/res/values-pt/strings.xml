@@ -134,4 +134,6 @@
     <string name="forgot_password_description">Introduz o e-mail associado à tua conta. Enviaremos um link para redefinires a tua palavra-passe.</string>
     <string name="send_link">Enviar Link</string>
     <string name="link_sent">Link enviado para redefinição da password, verifique se foi para a sua pasta de spam</string>
+    <string name="points_behind_by_category_by_user_ahead">Estás a %1$d pontos atrás do %2$s na categoria %3$s</string>
+    <string name="points_ahead_by_category_by_user_behind">Estás a %1$d pontos a frente do %2$s na categoria %3$s</string>
 </resources>

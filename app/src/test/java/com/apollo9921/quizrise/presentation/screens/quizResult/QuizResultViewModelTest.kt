@@ -3,6 +3,8 @@ package com.apollo9921.quizrise.presentation.screens.quizResult
 import com.apollo9921.quizrise.domain.result.AppError
 import com.apollo9921.quizrise.domain.result.AppResult
 import com.apollo9921.quizrise.domain.usecase.CalculateQuizResultUseCase
+import com.apollo9921.quizrise.domain.usecase.GetPlayerAheadByCategoryUseCase
+import com.apollo9921.quizrise.domain.usecase.GetPlayerBehindByCategoryUseCase
 import com.apollo9921.quizrise.domain.usecase.SaveQuizUseCase
 import com.apollo9921.quizrise.utils.MainDispatcherRule
 import io.mockk.coEvery
@@ -21,6 +23,9 @@ class QuizResultViewModelTest {
 
     private val calculateQuizResultUseCase = mockk<CalculateQuizResultUseCase>()
     private val saveQuizUseCase = mockk<SaveQuizUseCase>()
+    private val getPlayerAheadByCategoryUseCase = mockk<GetPlayerAheadByCategoryUseCase>()
+    private val getPlayerBehindByCategoryUseCase = mockk<GetPlayerBehindByCategoryUseCase>()
+
 
     private lateinit var viewModel: QuizResultViewModel
 
@@ -28,6 +33,8 @@ class QuizResultViewModelTest {
         viewModel = QuizResultViewModel(
             calculateQuizResultUseCase,
             saveQuizUseCase,
+            getPlayerAheadByCategoryUseCase,
+            getPlayerBehindByCategoryUseCase,
             category,
             correctAnswers,
             incorrectAnswers
@@ -42,6 +49,7 @@ class QuizResultViewModelTest {
         val incorrectAnswers = 2
 
         coEvery { calculateQuizResultUseCase.invoke(correctAnswers) } returns AppResult.Success(Pair(15, 20))
+        coEvery { getPlayerAheadByCategoryUseCase.invoke(category, any(), any()) } returns Unit
         coEvery { saveQuizUseCase.invoke(category, correctAnswers, incorrectAnswers) } returns AppResult.Success(Unit)
 
         // --- ACT ---
@@ -81,6 +89,7 @@ class QuizResultViewModelTest {
         val incorrectAnswers = 2
 
         coEvery { calculateQuizResultUseCase.invoke(correctAnswers) } returns AppResult.Success(Pair(15, 20))
+        coEvery { getPlayerAheadByCategoryUseCase.invoke(category, any(), any()) } returns Unit
         coEvery { saveQuizUseCase.invoke(category, correctAnswers, incorrectAnswers) } returns AppResult.Error(AppError.Unknown)
 
         // --- ACT ---
