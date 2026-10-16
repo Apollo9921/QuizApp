@@ -14,9 +14,7 @@ import io.ktor.client.plugins.RedirectResponseException
 import io.ktor.client.plugins.ServerResponseException
 import java.io.IOException
 
-class LeaderboardRepositoryImpl(
-    private val firestore: FirebaseFirestore
-): LeaderboardRepository {
+class LeaderboardRepositoryImpl(private val firestore: FirebaseFirestore) : LeaderboardRepository {
 
     override suspend fun getTopPlayersByLevel(
         selectedBadge: String,
@@ -35,7 +33,7 @@ class LeaderboardRepositoryImpl(
                 onSuccess(players)
             }
             .addOnFailureListener { exception ->
-                when(exception) {
+                when (exception) {
                     is HttpRequestTimeoutException -> AppResult.Error(AppError.Timeout)
                     is ConnectTimeoutException -> AppResult.Error(AppError.NoInternetConnection)
                     is IOException -> AppResult.Error(AppError.Network)
@@ -66,7 +64,7 @@ class LeaderboardRepositoryImpl(
                 onSuccess(categoryLeaders)
             }
             .addOnFailureListener { exception ->
-                when(exception) {
+                when (exception) {
                     is HttpRequestTimeoutException -> AppResult.Error(AppError.Timeout)
                     is ConnectTimeoutException -> AppResult.Error(AppError.NoInternetConnection)
                     is IOException -> AppResult.Error(AppError.Network)
@@ -75,6 +73,56 @@ class LeaderboardRepositoryImpl(
                     is ServerResponseException -> AppResult.Error(AppError.ServerDown)
                     else -> AppResult.Error(AppError.Unknown)
                 }
+            }
+    }
+
+    override suspend fun getPlayerAheadByCategory(
+        selectedCategory: String,
+        correctAnswers: Int,
+        onSuccess: (Results?) -> Unit,
+        onFailure: (Exception) -> Unit
+    ) {
+        firestore.collectionGroup("results")
+            .whereEqualTo("category", selectedCategory)
+            .whereGreaterThan("correctAnswers", correctAnswers)
+            .orderBy("correctAnswers", Query.Direction.ASCENDING)
+            .limit(1)
+            .get()
+            .addOnSuccessListener { snapshot ->
+                val resultAhead = snapshot.documents.firstOrNull()?.let { doc ->
+                    val result = doc.toObject(Results::class.java)
+                    val extractedUserId = doc.reference.parent.parent?.id ?: ""
+                    result?.copy(userId = extractedUserId)
+                }
+                onSuccess(resultAhead)
+            }
+            .addOnFailureListener { exception ->
+                onFailure(exception)
+            }
+    }
+
+    override suspend fun getPlayerBehindByCategory(
+        selectedCategory: String,
+        correctAnswers: Int,
+        onSuccess: (Results?) -> Unit,
+        onFailure: (Exception) -> Unit
+    ) {
+        firestore.collectionGroup("results")
+            .whereEqualTo("category", selectedCategory)
+            .whereLessThan("correctAnswers", correctAnswers)
+            .orderBy("correctAnswers", Query.Direction.DESCENDING)
+            .limit(1)
+            .get()
+            .addOnSuccessListener { snapshot ->
+                val resultAhead = snapshot.documents.firstOrNull()?.let { doc ->
+                    val result = doc.toObject(Results::class.java)
+                    val extractedUserId = doc.reference.parent.parent?.id ?: ""
+                    result?.copy(userId = extractedUserId)
+                }
+                onSuccess(resultAhead)
+            }
+            .addOnFailureListener { exception ->
+                onFailure(exception)
             }
     }
 }
