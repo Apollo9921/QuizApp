@@ -17,7 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -34,7 +34,7 @@ import com.apollo9921.quizrise.presentation.utils.componentSizeByScreen
 
 @Composable
 fun LevelDifficulty(navHostController: NavHostController, category: String) {
-    val context = LocalContext.current
+    val context = LocalResources.current
     val levelsDifficulty = listOf(
         R.string.easy_translatable,
         R.string.medium_translatable,
@@ -166,7 +166,7 @@ fun LevelDifficulty(navHostController: NavHostController, category: String) {
                             onClick = {
                                 val finalResId =
                                     if (isRandomMode) levelsDifficulty.random() else selectedOption
-                                val finalLevelString = context.resources.getString(finalResId)
+                                val finalLevelString = context.getString(finalResId)
 
                                 navHostController.navigate(
                                     Destination.StartQuiz.passArgument(
