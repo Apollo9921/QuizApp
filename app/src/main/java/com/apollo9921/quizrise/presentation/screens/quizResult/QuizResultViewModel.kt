@@ -3,12 +3,14 @@ package com.apollo9921.quizrise.presentation.screens.quizResult
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavHostController
 import com.apollo9921.quizrise.R
 import com.apollo9921.quizrise.domain.result.AppResult
 import com.apollo9921.quizrise.domain.usecase.CalculateQuizResultUseCase
 import com.apollo9921.quizrise.domain.usecase.GetPlayerAheadByCategoryUseCase
 import com.apollo9921.quizrise.domain.usecase.GetPlayerBehindByCategoryUseCase
 import com.apollo9921.quizrise.domain.usecase.SaveQuizUseCase
+import com.apollo9921.quizrise.presentation.navigation.Destination
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -18,6 +20,7 @@ class QuizResultViewModel(
     private val saveQuizUseCase: SaveQuizUseCase,
     private val getPlayerAheadByCategoryUseCase: GetPlayerAheadByCategoryUseCase,
     private val getPlayerBehindByCategoryUseCase: GetPlayerBehindByCategoryUseCase,
+    val level: String,
     val category: String,
     val correctAnswers: Int,
     val incorrectAnswers: Int
@@ -41,6 +44,7 @@ class QuizResultViewModel(
             val pointsToNextLevel: Int = 0,
             val quizResultUiState: QuizResultUiState = QuizResultUiState()
         ) : UIState()
+
         data class Error(val message: Int) : UIState()
     }
 
@@ -54,27 +58,22 @@ class QuizResultViewModel(
                 _uiState.value = UIState.Idle
                 val calculateResponse = calculateQuizResultUseCase.invoke(correctAnswers)
                 if (calculateResponse is AppResult.Success) {
-                    _uiState.value =
-                        UIState.Success(
-                            pointsReceived = calculateResponse.data.first,
-                            pointsToNextLevel = calculateResponse.data.second
-                        )
-                    getPlayerAhead()
+                    val result = saveQuizUseCase.invoke(category, correctAnswers, incorrectAnswers)
+                    if (result is AppResult.Error) {
+                        _uiState.value = UIState.Error(message = R.string.unexpected_error)
+                        return@launch
+                    }
+                    getPlayerAhead(calculateResponse)
                 } else {
                     _uiState.value = UIState.Error(message = R.string.unexpected_error)
                 }
-                val result = saveQuizUseCase.invoke(category, correctAnswers, incorrectAnswers)
-                if (result is AppResult.Error) {
-                    _uiState.value = UIState.Error(message = R.string.unexpected_error)
-                }
-
             } catch (_: Exception) {
                 _uiState.value = UIState.Error(message = R.string.unexpected_error)
             }
         }
     }
 
-    private fun getPlayerAhead() {
+    private fun getPlayerAhead(calculateResponse: AppResult.Success<Pair<Int, Int>>) {
         viewModelScope.launch {
             getPlayerAheadByCategoryUseCase.invoke(
                 selectedCategory = category,
@@ -83,23 +82,30 @@ class QuizResultViewModel(
                         val totalPointsOfAheadUser = result.correctAnswers * 5
                         val difference = totalPointsOfAheadUser - totalPointsOfCurrentUser
                         _uiState.value = UIState.Success(
+                            pointsReceived = calculateResponse.data.first,
+                            pointsToNextLevel = calculateResponse.data.second,
                             quizResultUiState = QuizResultUiState(
                                 userNameAheadOrBehind = result.username,
                                 totalPointsBehind = difference
                             )
                         )
                     } else {
-                        getPlayerBehind()
+                        getPlayerBehind(calculateResponse)
                     }
                 },
                 onFailure = {
                     Log.e("QuizResultViewModel", "Failed to fetch player ahead ${it.message}")
+                    _uiState.value =
+                        UIState.Success(
+                            pointsReceived = calculateResponse.data.first,
+                            pointsToNextLevel = calculateResponse.data.second
+                        )
                 }
             )
         }
     }
 
-    private fun getPlayerBehind() {
+    private fun getPlayerBehind(calculateResponse: AppResult.Success<Pair<Int, Int>>) {
         viewModelScope.launch {
             getPlayerBehindByCategoryUseCase.invoke(
                 selectedCategory = category,
@@ -108,6 +114,8 @@ class QuizResultViewModel(
                         val totalPointsOfBehindUser = result.correctAnswers * 5
                         val difference = totalPointsOfCurrentUser - totalPointsOfBehindUser
                         _uiState.value = UIState.Success(
+                            pointsReceived = calculateResponse.data.first,
+                            pointsToNextLevel = calculateResponse.data.second,
                             quizResultUiState = QuizResultUiState(
                                 userNameAheadOrBehind = result.username,
                                 totalPointsAhead = difference
@@ -117,8 +125,21 @@ class QuizResultViewModel(
                 },
                 onFailure = {
                     Log.e("QuizResultViewModel", "Failed to fetch player behind ${it.message}")
+                    _uiState.value =
+                        UIState.Success(
+                            pointsReceived = calculateResponse.data.first,
+                            pointsToNextLevel = calculateResponse.data.second
+                        )
                 }
             )
+        }
+    }
+
+    fun playAgainQuiz(navHostController: NavHostController) {
+        _uiState.value = UIState.Idle
+        viewModelScope.launch {
+            navHostController.popBackStack()
+            navHostController.navigate(Destination.StartQuiz.passArgument(category, level))
         }
     }
 }

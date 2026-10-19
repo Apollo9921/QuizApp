@@ -47,6 +47,7 @@ fun QuizResultRoute(
     level: String,
     viewModel: QuizResultViewModel = koinViewModel {
         parametersOf(
+            level,
             category,
             correctAnswers,
             incorrectAnswers
@@ -56,6 +57,7 @@ fun QuizResultRoute(
     val total = viewModel.total
     val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
     val retry = { viewModel.saveQuizProcess() }
+    val playAgain = { viewModel.playAgainQuiz(navHostController) }
     val navigateToWrongAnswers = {
         navHostController.navigate(
             Destination.WrongAnswers.passArgument(
@@ -74,7 +76,8 @@ fun QuizResultRoute(
         uiState = uiState,
         retry = retry,
         level = level,
-        category = category
+        category = category,
+        playAgain = playAgain
     )
 }
 
@@ -89,6 +92,7 @@ private fun QuizResultScreen(
     retry: () -> Unit,
     level: String,
     category: String,
+    playAgain: () -> Unit,
 ) {
     BackHandler(enabled = true) {}
 
@@ -274,6 +278,31 @@ private fun QuizResultScreen(
                             )
                             Spacer(modifier = Modifier.height(componentSizeByScreen(baseSize = 40.dp)))
                         }
+
+                        Card(
+                            shape = RoundedCornerShape(20.dp),
+                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(componentSizeByScreen(baseSize = 54.dp))
+                                .clip(RoundedCornerShape(20.dp))
+                                .clickable { playAgain() }
+                        ) {
+                            Box(
+                                modifier = Modifier.fillMaxSize(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = stringResource(id = R.string.play_again),
+                                    color = Black,
+                                    style = MaterialTheme.typography.labelMedium,
+                                    fontWeight = FontWeight.Bold,
+                                    textAlign = TextAlign.Center
+                                )
+                            }
+                        }
+
+                        Spacer(modifier = Modifier.height(componentSizeByScreen(baseSize = 20.dp)))
 
                         Card(
                             shape = RoundedCornerShape(20.dp),

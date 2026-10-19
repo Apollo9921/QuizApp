@@ -148,4 +148,5 @@
     <string name="link_sent">Sent link to reset password, please check if went to your spam folder</string>
     <string name="points_behind_by_category_by_user_ahead">You are %1$d points behind by %2$s on category %3$s</string>
     <string name="points_ahead_by_category_by_user_behind">You are %1$d points ahead by %2$s on category %3$s</string>
+    <string name="play_again">Play Again!</string>
 </resources>
