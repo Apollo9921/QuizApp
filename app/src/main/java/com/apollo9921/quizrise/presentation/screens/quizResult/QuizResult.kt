@@ -47,6 +47,7 @@ fun QuizResultRoute(
     level: String,
     viewModel: QuizResultViewModel = koinViewModel {
         parametersOf(
+            level,
             category,
             correctAnswers,
             incorrectAnswers
@@ -56,6 +57,7 @@ fun QuizResultRoute(
     val total = viewModel.total
     val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
     val retry = { viewModel.saveQuizProcess() }
+    val playAgain = { viewModel.playAgainQuiz(navHostController) }
     val navigateToWrongAnswers = {
         navHostController.navigate(
             Destination.WrongAnswers.passArgument(
@@ -73,7 +75,9 @@ fun QuizResultRoute(
         navigateToWrongAnswers = navigateToWrongAnswers,
         uiState = uiState,
         retry = retry,
-        level = level
+        level = level,
+        category = category,
+        playAgain = playAgain
     )
 }
 
@@ -87,6 +91,8 @@ private fun QuizResultScreen(
     uiState: QuizResultViewModel.UIState,
     retry: () -> Unit,
     level: String,
+    category: String,
+    playAgain: () -> Unit,
 ) {
     BackHandler(enabled = true) {}
 
@@ -118,6 +124,7 @@ private fun QuizResultScreen(
                 is QuizResultViewModel.UIState.Success -> {
                     val pointsReceived = uiState.pointsReceived
                     val pointsNextLevel = uiState.pointsToNextLevel
+                    val quizResultUiState = uiState.quizResultUiState
 
                     Column(
                         modifier = Modifier
@@ -224,6 +231,36 @@ private fun QuizResultScreen(
                                     fontWeight = FontWeight.SemiBold,
                                     textAlign = TextAlign.Center
                                 )
+
+                                Spacer(modifier = Modifier.height(24.dp))
+
+                                if (quizResultUiState.totalPointsBehind > 0) {
+                                    Text(
+                                        text = stringResource(
+                                            id = R.string.points_behind_by_category_by_user_ahead,
+                                            quizResultUiState.totalPointsBehind,
+                                            quizResultUiState.userNameAheadOrBehind,
+                                            category
+                                        ),
+                                        style = MaterialTheme.typography.labelMedium,
+                                        color = MaterialTheme.colorScheme.surface,
+                                        fontWeight = FontWeight.SemiBold,
+                                        textAlign = TextAlign.Center
+                                    )
+                                } else if (quizResultUiState.totalPointsAhead > 0) {
+                                    Text(
+                                        text = stringResource(
+                                            id = R.string.points_ahead_by_category_by_user_behind,
+                                            quizResultUiState.totalPointsAhead,
+                                            quizResultUiState.userNameAheadOrBehind,
+                                            category
+                                        ),
+                                        style = MaterialTheme.typography.labelMedium,
+                                        color = MaterialTheme.colorScheme.surface,
+                                        fontWeight = FontWeight.SemiBold,
+                                        textAlign = TextAlign.Center
+                                    )
+                                }
                             }
                         }
 
@@ -241,6 +278,31 @@ private fun QuizResultScreen(
                             )
                             Spacer(modifier = Modifier.height(componentSizeByScreen(baseSize = 40.dp)))
                         }
+
+                        Card(
+                            shape = RoundedCornerShape(20.dp),
+                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(componentSizeByScreen(baseSize = 54.dp))
+                                .clip(RoundedCornerShape(20.dp))
+                                .clickable { playAgain() }
+                        ) {
+                            Box(
+                                modifier = Modifier.fillMaxSize(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = stringResource(id = R.string.play_again),
+                                    color = Black,
+                                    style = MaterialTheme.typography.labelMedium,
+                                    fontWeight = FontWeight.Bold,
+                                    textAlign = TextAlign.Center
+                                )
+                            }
+                        }
+
+                        Spacer(modifier = Modifier.height(componentSizeByScreen(baseSize = 20.dp)))
 
                         Card(
                             shape = RoundedCornerShape(20.dp),

@@ -25,8 +25,10 @@ import io.ktor.client.plugins.RedirectResponseException
 import io.ktor.client.plugins.ServerResponseException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeout
 import java.io.IOException
 import java.net.UnknownHostException
 import java.util.concurrent.TimeUnit
@@ -143,33 +145,38 @@ class UserRepositoryImpl(
             val userId = currentUser.uid
 
             try {
-                val userRef = firestore.collection("users").document(userId)
-                val resultRef = userRef.collection("results").document(results.category)
+                withTimeout(5000L) {
+                    val userRef = firestore.collection("users").document(userId)
+                    val resultRef = userRef.collection("results").document(results.category)
 
-                val batch = firestore.batch()
+                    val batch = firestore.batch()
 
-                batch.update(
-                    userRef,
-                    "badge", user.badge,
-                    "totalPoints", FieldValue.increment(user.totalPoints.toLong()),
-                    "totalPointsPossible", FieldValue.increment(user.totalPointsPossible.toLong())
-                )
+                    batch.update(
+                        userRef,
+                        "badge",
+                        user.badge,
+                        "totalPoints",
+                        FieldValue.increment(user.totalPoints.toLong()),
+                        "totalPointsPossible",
+                        FieldValue.increment(user.totalPointsPossible.toLong())
+                    )
 
-                batch.set(
-                    resultRef,
-                    mapOf(
-                        "correctAnswers" to FieldValue.increment(results.correctAnswers.toLong()),
-                        "incorrectAnswers" to FieldValue.increment(results.incorrectAnswers.toLong()),
-                        "category" to results.category
-                    ),
-                    com.google.firebase.firestore.SetOptions.merge()
-                )
+                    batch.set(
+                        resultRef,
+                        mapOf(
+                            "correctAnswers" to FieldValue.increment(results.correctAnswers.toLong()),
+                            "incorrectAnswers" to FieldValue.increment(results.incorrectAnswers.toLong()),
+                            "category" to results.category
+                        ),
+                        com.google.firebase.firestore.SetOptions.merge()
+                    )
 
-                batch.commit().await()
+                    batch.commit().await()
+                }
                 AppResult.Success(Unit)
 
             } catch (e: Exception) {
-                if (e is UnknownHostException || e.cause is UnknownHostException) {
+                if (e is UnknownHostException || e.cause is UnknownHostException || e is TimeoutCancellationException || e.cause is TimeoutCancellationException) {
                     scheduleUpdateWorker(user, results)
                     AppResult.Success(Unit)
                 } else {
@@ -344,7 +351,7 @@ class UserRepositoryImpl(
     override suspend fun postUserName(name: String, results: List<Results>): AppResult<Unit> {
         return withContext(ioDispatcher) {
             try {
-                kotlinx.coroutines.withTimeout(5000) {
+                withTimeout(5000) {
                     val currentUser = FirebaseAuth.getInstance().currentUser
                         ?: return@withTimeout AppResult.Error(AppError.Unauthorized)
 
@@ -361,7 +368,7 @@ class UserRepositoryImpl(
                     batch.commit().await()
                 }
                 AppResult.Success(Unit)
-            } catch (_: kotlinx.coroutines.TimeoutCancellationException) {
+            } catch (_: TimeoutCancellationException) {
                 AppResult.Error(AppError.NoInternetConnection)
             } catch (_: com.google.firebase.FirebaseNetworkException) {
                 AppResult.Error(AppError.NoInternetConnection)

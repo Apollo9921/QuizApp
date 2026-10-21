@@ -134,4 +134,7 @@
     <string name="forgot_password_description">Introduce el correo electrónico asociado a tu cuenta. Te enviaremos un enlace para reestablecer tu contraseña.</string>
     <string name="send_link">Enviar enlace</string>
     <string name="link_sent">Enlace enviado para reestablecer la contraseña, comprueba si lo has enviado a tu carpeta de spam</string>
+    <string name="points_behind_by_category_by_user_ahead">Estás %1$d puntos detras por %2$s en categoría %3$s</string>
+    <string name="points_ahead_by_category_by_user_behind">Estás %1$d puntos delante por %2$s en categoría %3$s</string>
+    <string name="play_again">Jugar de nuevo!</string>
 </resources>

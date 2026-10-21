@@ -192,6 +192,7 @@ class QuizViewModel(
         val previousState = _uiState.value as UIState.Success
         if (currentPage >= previousState.quiz.size - 1 && !hasNavigatedToResult) {
             hasNavigatedToResult = true
+            navHostController.popBackStack()
             navHostController.navigate(
                 Destination.QuizResult.passArgument(
                     category = category,
