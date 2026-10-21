@@ -5,6 +5,9 @@ import com.apollo9921.quizrise.R
 import com.apollo9921.quizrise.domain.model.results.Results
 import com.apollo9921.quizrise.domain.repository.LeaderboardRepository
 import com.apollo9921.quizrise.domain.repository.ResultsRepository
+import com.apollo9921.quizrise.domain.result.AppError
+import com.apollo9921.quizrise.domain.result.AppResult
+import com.apollo9921.quizrise.domain.util.NetworkHelper
 import com.apollo9921.quizrise.domain.util.QuizCategory
 
 class GetPlayerAheadByCategoryUseCase(
@@ -15,7 +18,7 @@ class GetPlayerAheadByCategoryUseCase(
     suspend operator fun invoke(
         selectedCategory: String,
         onSuccess: (Results?, Int?) -> Unit,
-        onFailure: (Exception) -> Unit
+        onFailure: (AppResult<Unit>) -> Unit
     ) {
         val results = resultsRepository.fetchResults()
         if (results.isSuccess) {
@@ -34,14 +37,16 @@ class GetPlayerAheadByCategoryUseCase(
             }
             val resultByCategory = results.getOrThrow().first { it.category == categoryKey }
             val currentUserCorrectAnswers = resultByCategory.correctAnswers
+            val networkHelper = NetworkHelper(context)
             leaderboardRepository.getPlayerAheadByCategory(
+                networkHelper,
                 categoryKey,
                 currentUserCorrectAnswers,
                 onSuccess,
                 onFailure
             )
         } else {
-            onFailure(Exception("Failed to fetch user"))
+            onFailure(AppResult.Error(AppError.Unknown))
         }
     }
 }
