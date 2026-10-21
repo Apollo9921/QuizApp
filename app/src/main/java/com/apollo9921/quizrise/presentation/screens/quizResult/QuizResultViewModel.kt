@@ -1,6 +1,5 @@
 package com.apollo9921.quizrise.presentation.screens.quizResult
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
@@ -61,9 +60,9 @@ class QuizResultViewModel(
                     val result = saveQuizUseCase.invoke(category, correctAnswers, incorrectAnswers)
                     if (result is AppResult.Error) {
                         _uiState.value = UIState.Error(message = R.string.unexpected_error)
-                        return@launch
+                    } else {
+                        getPlayerAhead(calculateResponse)
                     }
-                    getPlayerAhead(calculateResponse)
                 } else {
                     _uiState.value = UIState.Error(message = R.string.unexpected_error)
                 }
@@ -94,7 +93,6 @@ class QuizResultViewModel(
                     }
                 },
                 onFailure = {
-                    Log.e("QuizResultViewModel", "Failed to fetch player ahead ${it.message}")
                     _uiState.value =
                         UIState.Success(
                             pointsReceived = calculateResponse.data.first,
@@ -124,7 +122,6 @@ class QuizResultViewModel(
                     }
                 },
                 onFailure = {
-                    Log.e("QuizResultViewModel", "Failed to fetch player behind ${it.message}")
                     _uiState.value =
                         UIState.Success(
                             pointsReceived = calculateResponse.data.first,
