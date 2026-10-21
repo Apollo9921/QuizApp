@@ -5,6 +5,7 @@ import com.apollo9921.quizrise.domain.model.user.User
 import com.apollo9921.quizrise.domain.repository.LeaderboardRepository
 import com.apollo9921.quizrise.domain.result.AppError
 import com.apollo9921.quizrise.domain.result.AppResult
+import com.apollo9921.quizrise.domain.util.NetworkHelper
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import io.ktor.client.network.sockets.ConnectTimeoutException
@@ -12,6 +13,7 @@ import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.plugins.HttpRequestTimeoutException
 import io.ktor.client.plugins.RedirectResponseException
 import io.ktor.client.plugins.ServerResponseException
+import kotlinx.coroutines.tasks.await
 import java.io.IOException
 
 class LeaderboardRepositoryImpl(private val firestore: FirebaseFirestore) : LeaderboardRepository {
@@ -77,52 +79,66 @@ class LeaderboardRepositoryImpl(private val firestore: FirebaseFirestore) : Lead
     }
 
     override suspend fun getPlayerAheadByCategory(
+        networkHelper: NetworkHelper,
         selectedCategory: String,
         correctAnswers: Int,
         onSuccess: (Results?, Int?) -> Unit,
-        onFailure: (Exception) -> Unit
+        onFailure: (AppResult<Unit>) -> Unit
     ) {
-        firestore.collectionGroup("results")
-            .whereEqualTo("category", selectedCategory)
-            .whereGreaterThan("correctAnswers", correctAnswers)
-            .orderBy("correctAnswers", Query.Direction.ASCENDING)
-            .limit(1)
-            .get()
-            .addOnSuccessListener { snapshot ->
-                val resultAhead = snapshot.documents.firstOrNull()?.let { doc ->
-                    val result = doc.toObject(Results::class.java)
-                    val extractedUserId = doc.reference.parent.parent?.id ?: ""
-                    result?.copy(userId = extractedUserId)
-                }
-                onSuccess(resultAhead, correctAnswers * 5)
+        try {
+            if (!networkHelper.isNetworkAvailable()) {
+                onFailure(AppResult.Error(AppError.NoInternetConnection))
+                return
             }
-            .addOnFailureListener { exception ->
-                onFailure(exception)
+
+            val snapshot = firestore.collectionGroup("results")
+                .whereEqualTo("category", selectedCategory)
+                .whereGreaterThan("correctAnswers", correctAnswers)
+                .orderBy("correctAnswers", Query.Direction.ASCENDING)
+                .limit(1)
+                .get()
+                .await()
+
+            val resultAhead = snapshot.documents.firstOrNull()?.let { doc ->
+                val result = doc.toObject(Results::class.java)
+                val extractedUserId = doc.reference.parent.parent?.id ?: ""
+                result?.copy(userId = extractedUserId)
             }
+
+            onSuccess(resultAhead, correctAnswers * 5)
+        } catch (_: Exception) {
+            onFailure(AppResult.Error(AppError.Unknown))
+        }
     }
 
     override suspend fun getPlayerBehindByCategory(
+        networkHelper: NetworkHelper,
         selectedCategory: String,
         correctAnswers: Int,
         onSuccess: (Results?, Int?) -> Unit,
-        onFailure: (Exception) -> Unit
+        onFailure: (AppResult<Unit>) -> Unit
     ) {
-        firestore.collectionGroup("results")
-            .whereEqualTo("category", selectedCategory)
-            .whereLessThan("correctAnswers", correctAnswers)
-            .orderBy("correctAnswers", Query.Direction.DESCENDING)
-            .limit(1)
-            .get()
-            .addOnSuccessListener { snapshot ->
-                val resultAhead = snapshot.documents.firstOrNull()?.let { doc ->
-                    val result = doc.toObject(Results::class.java)
-                    val extractedUserId = doc.reference.parent.parent?.id ?: ""
-                    result?.copy(userId = extractedUserId)
-                }
-                onSuccess(resultAhead, correctAnswers * 5)
+        try {
+            if (!networkHelper.isNetworkAvailable()) {
+                onFailure(AppResult.Error(AppError.NoInternetConnection))
+                return
             }
-            .addOnFailureListener { exception ->
-                onFailure(exception)
+            val snapshot = firestore.collectionGroup("results")
+                .whereEqualTo("category", selectedCategory)
+                .whereLessThan("correctAnswers", correctAnswers)
+                .orderBy("correctAnswers", Query.Direction.DESCENDING)
+                .limit(1)
+                .get()
+                .await()
+
+            val resultBehind = snapshot.documents.firstOrNull()?.let { doc ->
+                val result = doc.toObject(Results::class.java)
+                val extractedUserId = doc.reference.parent.parent?.id ?: ""
+                result?.copy(userId = extractedUserId)
             }
+            onSuccess(resultBehind, correctAnswers * 5)
+        } catch (_: Exception) {
+            onFailure(AppResult.Error(AppError.Unknown))
+        }
     }
 }
