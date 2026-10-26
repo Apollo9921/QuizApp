@@ -16,6 +16,7 @@ import com.apollo9921.quizrise.domain.repository.UserRepository
 import com.apollo9921.quizrise.domain.result.AppError
 import com.apollo9921.quizrise.domain.result.AppResult
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.AggregateSource
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import io.ktor.client.network.sockets.ConnectTimeoutException
@@ -388,5 +389,26 @@ class UserRepositoryImpl(
                 AppResult.Error(AppError.Unknown)
             }
         }
+    }
+
+    override suspend fun getUserLevelRank(
+        badge: String,
+        totalPoints: Int,
+        onSuccess: (Int) -> Unit,
+        onFailure: (Exception) -> Unit
+    ) {
+        firestore.collection("users")
+            .whereEqualTo("badge", badge)
+            .whereGreaterThan("totalPoints", totalPoints)
+            .count()
+            .get(AggregateSource.SERVER)
+            .addOnSuccessListener { snapshot ->
+                val playersAheadCount = snapshot.count.toInt()
+                val myRank = playersAheadCount + 1
+                onSuccess(myRank)
+            }
+            .addOnFailureListener { exception ->
+                onFailure(exception)
+            }
     }
 }

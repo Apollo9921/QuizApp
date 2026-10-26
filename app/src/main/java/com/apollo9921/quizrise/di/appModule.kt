@@ -33,6 +33,7 @@ import com.apollo9921.quizrise.domain.usecase.GetPlayerBehindByCategoryUseCase
 import com.apollo9921.quizrise.domain.usecase.GetQuizUseCase
 import com.apollo9921.quizrise.domain.usecase.GetTopPlayersByCategoryUseCase
 import com.apollo9921.quizrise.domain.usecase.GetTopPlayersByLevelUseCase
+import com.apollo9921.quizrise.domain.usecase.GetUserLevelRankUseCase
 import com.apollo9921.quizrise.domain.usecase.InsertResultsUseCase
 import com.apollo9921.quizrise.domain.usecase.InsertNewResultsUseCase
 import com.apollo9921.quizrise.domain.usecase.InsertUserUseCase
@@ -108,7 +109,7 @@ val viewModelModule = module {
     viewModel { QuizViewModel(get(), get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { ProgressViewModel(get(), get()) }
     viewModel { QuizResultViewModel(get(), get(), get(), get(), get(), get(), get(),get()) }
-    viewModel { ProfileViewModel(get(), get(), get()) }
+    viewModel { ProfileViewModel(get(), get(), get(), get()) }
     viewModel { LoginViewModel(get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { RegisterViewModel(get()) }
     viewModel { LeaderboardViewModel(get(), get(), get(), get()) }
@@ -146,4 +147,5 @@ val useCaseModule = module {
     factory { UpdatePasswordByLinkUseCase(get()) }
     factory { GetPlayerAheadByCategoryUseCase(get(), get(), androidContext()) }
     factory { GetPlayerBehindByCategoryUseCase(get(), get(), androidContext()) }
+    factory { GetUserLevelRankUseCase(get()) }
 }
