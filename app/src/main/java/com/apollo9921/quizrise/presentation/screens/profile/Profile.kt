@@ -4,6 +4,7 @@ import android.content.res.Configuration
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Arrangement
@@ -19,6 +20,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
@@ -55,6 +58,7 @@ fun ProfileRoute(
     val context = LocalContext.current
     val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
     val badgeState = viewModel.badgeState.collectAsStateWithLifecycle().value
+    val rankState = viewModel.rankState.collectAsStateWithLifecycle().value
     val fetchUser = { viewModel.fetchUser(context) }
     val navigateToChangeName = { navHostController.navigate(Destination.EditUserName.route) }
     val navigateToSettings = { navHostController.navigate(Destination.Settings.route) }
@@ -67,6 +71,7 @@ fun ProfileRoute(
         navHostController = navHostController,
         uiState = uiState,
         badgeState = badgeState,
+        rankState = rankState,
         onSettingsClick = { navigateToSettings() },
         navigateToChangeName = navigateToChangeName
     )
@@ -76,6 +81,7 @@ fun ProfileRoute(
 private fun ProfileScreen(
     navHostController: NavHostController,
     uiState: ProfileViewModel.UIState,
+    rankState: Int?,
     badgeState: ProfileViewModel.Badge,
     onSettingsClick: () -> Unit = {},
     navigateToChangeName: () -> Unit
@@ -100,7 +106,7 @@ private fun ProfileScreen(
                             .error(R.drawable.person)
                             .build()
                     )
-                    ShowProfile(user, painter, badgeState, onSettingsClick, navigateToChangeName)
+                    ShowProfile(user, rankState, painter, badgeState, onSettingsClick, navigateToChangeName)
                 }
 
                 else -> {}
@@ -112,6 +118,7 @@ private fun ProfileScreen(
 @Composable
 private fun ShowProfile(
     user: User,
+    rank: Int?,
     painter: AsyncImagePainter,
     badgeState: ProfileViewModel.Badge,
     onSettingsClick: () -> Unit,
@@ -234,7 +241,8 @@ private fun ShowProfile(
                     badgeIcon = painterResource(id = badgeState.badge),
                     badgeName = user.badge,
                     progress = percentage.toFloat(),
-                    badgeIconSize = badgeIconSize
+                    badgeIconSize = badgeIconSize,
+                    userRank = rank
                 )
 
                 Spacer(modifier = Modifier.height(32.dp))
@@ -301,11 +309,12 @@ private fun StatCard(
 }
 
 @Composable
-private fun BadgeCard(
+fun BadgeCard(
     badgeIcon: Painter,
     badgeName: String,
     progress: Float,
     badgeIconSize: Dp,
+    userRank: Int? = null
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -337,12 +346,22 @@ private fun BadgeCard(
                 modifier = Modifier.weight(1f),
                 verticalArrangement = Arrangement.spacedBy(6.dp)
             ) {
-                Text(
-                    text = stringResource(R.string.badge).uppercase(),
-                    style = MaterialTheme.typography.displaySmall,
-                    color = MaterialTheme.colorScheme.surface.copy(alpha = 0.5f),
-                    fontWeight = FontWeight.Bold
-                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = stringResource(R.string.badge).uppercase(),
+                        style = MaterialTheme.typography.displaySmall,
+                        color = MaterialTheme.colorScheme.surface.copy(alpha = 0.5f),
+                        fontWeight = FontWeight.Bold
+                    )
+                    userRank?.let { rank ->
+                        RankBadge(rank = rank)
+                    }
+                }
+
                 Text(
                     text = badgeName,
                     style = MaterialTheme.typography.labelMedium,
@@ -366,6 +385,53 @@ private fun BadgeCard(
     }
 }
 
+@Composable
+private fun RankBadge(rank: Int) {
+    val (backgroundBrush, textColor, borderColor) = when (rank) {
+        1 -> Triple(
+            Brush.horizontalGradient(listOf(Color(0xFFFFD700), Color(0xFFFFA500))), // Ouro
+            Color(0xFF1F1200),
+            Color(0xFFFFE066)
+        )
+        2 -> Triple(
+            Brush.horizontalGradient(listOf(Color(0xFFE0E0E0), Color(0xFF9E9E9E))), // Prata
+            Color(0xFF111111),
+            Color(0xFFFFFFFF)
+        )
+        3 -> Triple(
+            Brush.horizontalGradient(listOf(Color(0xFFCD7F32), Color(0xFFA0522D))), // Bronze
+            Color(0xFF1F0B00),
+            Color(0xFFFFB88C)
+        )
+        else -> Triple(
+            Brush.horizontalGradient(
+                listOf(
+                    MaterialTheme.colorScheme.surface.copy(alpha = 0.15f),
+                    MaterialTheme.colorScheme.surface.copy(alpha = 0.10f)
+                )
+            ),
+            MaterialTheme.colorScheme.surface,
+            MaterialTheme.colorScheme.surface.copy(alpha = 0.25f)
+        )
+    }
+
+    Box(
+        modifier = Modifier
+            .clip(RoundedCornerShape(12.dp))
+            .background(backgroundBrush)
+            .border(1.dp, borderColor, RoundedCornerShape(12.dp))
+            .padding(horizontal = 10.dp, vertical = 3.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = "#$rank",
+            style = MaterialTheme.typography.labelSmall,
+            fontWeight = FontWeight.ExtraBold,
+            color = textColor
+        )
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 private fun ProfileScreenDarkPreview() {
@@ -377,8 +443,8 @@ private fun ProfileScreenDarkPreview() {
             navHostController = rememberNavController(),
             uiState = ProfileViewModel.UIState.Success(mockUser),
             badgeState = mockBadge,
-            onSettingsClick = {},
-            navigateToChangeName = {}
+            rankState = 3,
+            navigateToChangeName = {},
         )
     }
 }
