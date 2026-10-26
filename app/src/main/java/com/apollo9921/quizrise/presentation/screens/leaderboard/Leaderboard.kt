@@ -1,5 +1,6 @@
 package com.apollo9921.quizrise.presentation.screens.leaderboard
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Arrangement
@@ -15,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -39,6 +41,7 @@ import org.koin.androidx.compose.koinViewModel
 import com.apollo9921.quizrise.R
 import com.apollo9921.quizrise.presentation.components.QuizTooltipIcon
 import com.apollo9921.quizrise.presentation.components.RankingRulesDialog
+import com.apollo9921.quizrise.presentation.utils.componentSizeByScreen
 
 @Composable
 fun LeaderboardRoute(
@@ -96,6 +99,8 @@ private fun LeaderboardScreen(
     navigateBack: () -> Boolean
 ) {
     var isRankingRulesDialogVisible by remember { mutableStateOf(false) }
+    val top1Badge =
+        if (uiState.selectedTab == 0) null else QuizCategory.getBadgeDrawableTop1ForCategory(uiState.selectedFilter)
     Scaffold(
         topBar = {
             TopBar(
@@ -214,6 +219,7 @@ private fun LeaderboardScreen(
                             items(uiState.leaderboardList.size) { index ->
                                 LeaderboardRow(
                                     item = uiState.leaderboardList[index],
+                                    top1Badge = top1Badge,
                                     surfaceColor = LeaderboardSurfaceColor,
                                     accentColor = LeaderboardAccentColor
                                 )
@@ -235,8 +241,9 @@ private fun LeaderboardScreen(
                         ) {
                             LeaderboardRow(
                                 item = userItem,
+                                top1Badge = null,
                                 surfaceColor = Color(0xFF0369A1),
-                                accentColor = White
+                                accentColor = White,
                             )
                         }
                     }
@@ -249,6 +256,7 @@ private fun LeaderboardScreen(
 @Composable
 private fun LeaderboardRow(
     item: LeaderboardItem,
+    top1Badge: Int?,
     surfaceColor: Color,
     accentColor: Color
 ) {
@@ -263,7 +271,8 @@ private fun LeaderboardRow(
             modifier = Modifier
                 .padding(16.dp)
                 .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Absolute.SpaceBetween
         ) {
             val positionColor = when (item.position) {
                 1 -> Gold
@@ -280,18 +289,29 @@ private fun LeaderboardRow(
                 modifier = Modifier.width(48.dp)
             )
 
-            Text(
-                style = MaterialTheme.typography.labelSmall,
-                text = if (item.isCurrentUser)
-                    stringResource(id = R.string.current_user, item.username)
-                else
-                    item.username,
-                fontWeight = if (item.isCurrentUser) FontWeight.Bold else FontWeight.Normal,
-                color = White,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.weight(1f)
-            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                if (positionColor == Gold && top1Badge != null) {
+                    Image(
+                        painter = painterResource(id = top1Badge),
+                        contentDescription = null,
+                        modifier = Modifier.size(componentSizeByScreen(48.dp))
+                    )
+                }
+
+                Text(
+                    style = MaterialTheme.typography.labelSmall,
+                    text = if (item.isCurrentUser)
+                        stringResource(id = R.string.current_user, item.username)
+                    else
+                        item.username,
+                    fontWeight = if (item.isCurrentUser) FontWeight.Bold else FontWeight.Normal,
+                    color = White,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
 
             Text(
                 style = MaterialTheme.typography.labelSmall,
