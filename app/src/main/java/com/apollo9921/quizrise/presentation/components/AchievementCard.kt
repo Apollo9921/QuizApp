@@ -64,24 +64,39 @@ fun AchievementsSection(achievements: List<Achievement>) {
                     color = MaterialTheme.colorScheme.surface.copy(alpha = 0.5f),
                     fontWeight = FontWeight.Bold
                 )
-                Text(
-                    text = stringResource(id = R.string.see_more),
-                    style = MaterialTheme.typography.displaySmall,
-                    color = MaterialTheme.colorScheme.surface.copy(alpha = 0.5f),
-                    fontWeight = FontWeight.Medium,
-                    modifier = Modifier
-                        .clickable {  }
-                )
+                if (achievements.isNotEmpty()) {
+                    Text(
+                        text = stringResource(id = R.string.see_more),
+                        style = MaterialTheme.typography.displaySmall,
+                        color = MaterialTheme.colorScheme.surface.copy(alpha = 0.5f),
+                        fontWeight = FontWeight.Medium,
+                        modifier = Modifier
+                            .clickable { }
+                    )
+                }
             }
 
-            FlowRow(
-                modifier = Modifier.fillMaxWidth().wrapContentHeight(),
-                maxItemsInEachRow = 3,
-                verticalArrangement = Arrangement.Top,
-                horizontalArrangement = Arrangement.Start
-            ) {
-                achievements.take(3).forEach {
-                    AchievementItem(achievement = it)
+            if (achievements.isEmpty()) {
+                Text(
+                    text = stringResource(id = R.string.no_achievements),
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.surface.copy(alpha = 0.5f),
+                    fontWeight = FontWeight.Medium,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = componentSizeByScreen(baseSize = 16.dp))
+                )
+            } else {
+                FlowRow(
+                    modifier = Modifier.fillMaxWidth().wrapContentHeight(),
+                    maxItemsInEachRow = 3,
+                    verticalArrangement = Arrangement.Top,
+                    horizontalArrangement = Arrangement.Start
+                ) {
+                    achievements.take(3).forEach {
+                        AchievementItem(achievement = it)
+                    }
                 }
             }
         }

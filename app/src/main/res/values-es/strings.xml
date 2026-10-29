@@ -139,4 +139,5 @@
     <string name="play_again">Jugar de nuevo!</string>
     <string name="achievements">Conquistas</string>
     <string name="see_more">Ver más -></string>
+    <string name="no_achievements">No hay conquistas todavía</string>
 </resources>

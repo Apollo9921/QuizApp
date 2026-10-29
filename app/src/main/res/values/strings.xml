@@ -151,4 +151,5 @@
     <string name="play_again">Play Again!</string>
     <string name="achievements">Achievements</string>
     <string name="see_more">See more -></string>
+    <string name="no_achievements">No Achievements so far</string>
 </resources>
