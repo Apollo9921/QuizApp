@@ -137,4 +137,6 @@
     <string name="points_behind_by_category_by_user_ahead">Estás %1$d puntos detras por %2$s en categoría %3$s</string>
     <string name="points_ahead_by_category_by_user_behind">Estás %1$d puntos delante por %2$s en categoría %3$s</string>
     <string name="play_again">Jugar de nuevo!</string>
+    <string name="achievements">Conquistas</string>
+    <string name="see_more">Ver más -></string>
 </resources>
