@@ -7,7 +7,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -46,6 +45,8 @@ import com.apollo9921.quizrise.presentation.utils.componentSizeByScreen
 import com.apollo9921.quizrise.presentation.utils.formatTotalCount
 import org.koin.androidx.compose.koinViewModel
 import com.apollo9921.quizrise.R
+import com.apollo9921.quizrise.presentation.components.Achievement
+import com.apollo9921.quizrise.presentation.components.AchievementsSection
 import com.apollo9921.quizrise.presentation.components.QuizTooltipIcon
 import com.apollo9921.quizrise.presentation.core.QuizAppTheme
 import com.apollo9921.quizrise.presentation.navigation.Destination
@@ -244,6 +245,18 @@ private fun ShowProfile(
                     badgeIconSize = badgeIconSize,
                     userRank = rank
                 )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                //TODO delete this dummy data and get from viewModel
+                val sampleAchievements = listOf(
+                    Achievement("Top 1 on Arts and Literature", R.drawable.badge_arts_and_literature_top1),
+                    Achievement("Top 1 on Film and Tv", R.drawable.badge_film_tv_top1),
+                    Achievement("TOP 1 on Music", R.drawable.badge_music_top1),
+                    Achievement("TOP 1 on Music", R.drawable.badge_music_top1)
+                )
+
+                AchievementsSection(achievements = sampleAchievements)
 
                 Spacer(modifier = Modifier.height(32.dp))
             }
