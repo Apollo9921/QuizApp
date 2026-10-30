@@ -110,7 +110,7 @@ private fun AchievementItem(achievement: Achievement) {
             .width(componentSizeByScreen(baseSize = 110.dp))
             .wrapContentHeight()
             .padding(5.dp),
-        horizontalAlignment = Alignment.Start,
+        horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
         Image(
