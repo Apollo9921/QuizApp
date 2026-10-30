@@ -411,4 +411,25 @@ class UserRepositoryImpl(
                 onFailure(exception)
             }
     }
+
+    override suspend fun getMyCategoryRank(
+        selectedCategory: String,
+        currentUserCorrectAnswers: Int,
+        onSuccess: (Int) -> Unit,
+        onFailure: (Exception) -> Unit
+    ) {
+        firestore.collectionGroup("results")
+            .whereEqualTo("category", selectedCategory)
+            .whereGreaterThan("correctAnswers", currentUserCorrectAnswers)
+            .count()
+            .get(AggregateSource.SERVER)
+            .addOnSuccessListener { snapshot ->
+                val playersAheadCount = snapshot.count.toInt()
+                val myRank = playersAheadCount + 1
+                onSuccess(myRank)
+            }
+            .addOnFailureListener { exception ->
+                onFailure(exception)
+            }
+    }
 }
