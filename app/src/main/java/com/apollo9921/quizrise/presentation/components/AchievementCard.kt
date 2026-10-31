@@ -94,7 +94,7 @@ fun AchievementsSection(achievements: List<Achievement>) {
                     verticalArrangement = Arrangement.Top,
                     horizontalArrangement = Arrangement.Start
                 ) {
-                    achievements.take(3).forEach {
+                    achievements.sortedBy { it.title }.take(3).forEach {
                         AchievementItem(achievement = it)
                     }
                 }
