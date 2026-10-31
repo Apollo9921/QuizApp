@@ -60,6 +60,7 @@ fun ProfileRoute(
     val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
     val badgeState = viewModel.badgeState.collectAsStateWithLifecycle().value
     val rankState = viewModel.rankState.collectAsStateWithLifecycle().value
+    val categoriesRank = viewModel.categoriesRankState.collectAsStateWithLifecycle().value
     val fetchUser = { viewModel.fetchUser(context) }
     val navigateToChangeName = { navHostController.navigate(Destination.EditUserName.route) }
     val navigateToSettings = { navHostController.navigate(Destination.Settings.route) }
@@ -73,6 +74,7 @@ fun ProfileRoute(
         uiState = uiState,
         badgeState = badgeState,
         rankState = rankState,
+        categoriesRankState = categoriesRank,
         onSettingsClick = { navigateToSettings() },
         navigateToChangeName = navigateToChangeName
     )
@@ -83,6 +85,7 @@ private fun ProfileScreen(
     navHostController: NavHostController,
     uiState: ProfileViewModel.UIState,
     rankState: Int?,
+    categoriesRankState: List<Achievement>,
     badgeState: ProfileViewModel.Badge,
     onSettingsClick: () -> Unit = {},
     navigateToChangeName: () -> Unit
@@ -107,7 +110,15 @@ private fun ProfileScreen(
                             .error(R.drawable.person)
                             .build()
                     )
-                    ShowProfile(user, rankState, painter, badgeState, onSettingsClick, navigateToChangeName)
+                    ShowProfile(
+                        user,
+                        rankState,
+                        categoriesRankState,
+                        painter,
+                        badgeState,
+                        onSettingsClick,
+                        navigateToChangeName
+                    )
                 }
 
                 else -> {}
@@ -120,6 +131,7 @@ private fun ProfileScreen(
 private fun ShowProfile(
     user: User,
     rank: Int?,
+    categoriesRankState: List<Achievement>,
     painter: AsyncImagePainter,
     badgeState: ProfileViewModel.Badge,
     onSettingsClick: () -> Unit,
@@ -248,15 +260,7 @@ private fun ShowProfile(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                //TODO delete this dummy data and get from viewModel
-                val sampleAchievements = listOf(
-                    Achievement("Top 1 on Arts and Literature", R.drawable.badge_arts_and_literature_top1),
-                    Achievement("Top 1 on Film and Tv", R.drawable.badge_film_tv_top1),
-                    Achievement("TOP 1 on Music", R.drawable.badge_music_top1),
-                    Achievement("TOP 1 on Music", R.drawable.badge_music_top1)
-                )
-
-                AchievementsSection(achievements = sampleAchievements)
+                AchievementsSection(achievements = categoriesRankState)
 
                 Spacer(modifier = Modifier.height(32.dp))
             }
@@ -406,16 +410,19 @@ private fun RankBadge(rank: Int) {
             Color(0xFF1F1200),
             Color(0xFFFFE066)
         )
+
         2 -> Triple(
             Brush.horizontalGradient(listOf(Color(0xFFE0E0E0), Color(0xFF9E9E9E))), // Prata
             Color(0xFF111111),
             Color(0xFFFFFFFF)
         )
+
         3 -> Triple(
             Brush.horizontalGradient(listOf(Color(0xFFCD7F32), Color(0xFFA0522D))), // Bronze
             Color(0xFF1F0B00),
             Color(0xFFFFB88C)
         )
+
         else -> Triple(
             Brush.horizontalGradient(
                 listOf(
@@ -450,14 +457,17 @@ private fun RankBadge(rank: Int) {
 private fun ProfileScreenDarkPreview() {
     val mockUser = User(name = "Golden Hercules", totalPoints = 750, badge = "Newbie")
     val mockBadge = ProfileViewModel.Badge(badge = R.drawable.newbie, badgeLevel = 1000)
+    val mockAchievements = listOf(Achievement("Music", R.drawable.badge_music_top1))
 
     QuizAppTheme {
         ProfileScreen(
             navHostController = rememberNavController(),
             uiState = ProfileViewModel.UIState.Success(mockUser),
-            badgeState = mockBadge,
             rankState = 3,
-            navigateToChangeName = {},
+            categoriesRankState = mockAchievements,
+            badgeState = mockBadge,
+            onSettingsClick = {},
+            navigateToChangeName = {}
         )
     }
 }

@@ -28,6 +28,7 @@ import com.apollo9921.quizrise.domain.usecase.FetchResultsUseCase
 import com.apollo9921.quizrise.domain.usecase.FetchUserUseCase
 import com.apollo9921.quizrise.domain.usecase.FormatProgressPercentageUseCase
 import com.apollo9921.quizrise.domain.usecase.FormatQuizUseCase
+import com.apollo9921.quizrise.domain.usecase.GetMyCategoryRankUseCase
 import com.apollo9921.quizrise.domain.usecase.GetPlayerAheadByCategoryUseCase
 import com.apollo9921.quizrise.domain.usecase.GetPlayerBehindByCategoryUseCase
 import com.apollo9921.quizrise.domain.usecase.GetQuizUseCase
@@ -46,6 +47,7 @@ import com.apollo9921.quizrise.domain.usecase.SaveQuizUseCase
 import com.apollo9921.quizrise.domain.usecase.UpdateNameUseCase
 import com.apollo9921.quizrise.domain.usecase.UpdatePasswordByLinkUseCase
 import com.apollo9921.quizrise.domain.usecase.UpdateUserSessionUseCase
+import com.apollo9921.quizrise.domain.util.NetworkObserver
 import com.apollo9921.quizrise.presentation.screens.deleteAccount.DeleteAccountViewModel
 import com.apollo9921.quizrise.presentation.screens.editUsername.EditUsernameViewModel
 import com.apollo9921.quizrise.presentation.screens.forgotPassword.ForgotPasswordViewModel
@@ -109,7 +111,7 @@ val viewModelModule = module {
     viewModel { QuizViewModel(get(), get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { ProgressViewModel(get(), get()) }
     viewModel { QuizResultViewModel(get(), get(), get(), get(), get(), get(), get(),get()) }
-    viewModel { ProfileViewModel(get(), get(), get(), get()) }
+    viewModel { ProfileViewModel(get(), get(), get(), get(), get(), get()) }
     viewModel { LoginViewModel(get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { RegisterViewModel(get()) }
     viewModel { LeaderboardViewModel(get(), get(), get(), get()) }
@@ -148,4 +150,6 @@ val useCaseModule = module {
     factory { GetPlayerAheadByCategoryUseCase(get(), get(), androidContext()) }
     factory { GetPlayerBehindByCategoryUseCase(get(), get(), androidContext()) }
     factory { GetUserLevelRankUseCase(get()) }
+    factory { GetMyCategoryRankUseCase(get(), get()) }
+    factory { NetworkObserver(androidContext()) }
 }
