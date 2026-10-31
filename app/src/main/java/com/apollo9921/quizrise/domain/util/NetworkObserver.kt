@@ -24,6 +24,10 @@ class NetworkObserver(context: Context) {
             override fun onLost(network: Network) {
                 launch { send(false) }
             }
+
+            override fun onUnavailable() {
+                launch { send(false) }
+            }
         }
 
         val request = NetworkRequest.Builder()
