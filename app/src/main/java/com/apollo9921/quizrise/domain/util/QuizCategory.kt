@@ -26,6 +26,10 @@ enum class QuizCategory(
             return QuizCategory.entries.firstOrNull { it.categoryName == name }?.resourceId ?: ARTS_AND_LITERATURE.resourceId
         }
 
+        fun getAllCategories(): List<QuizCategory> {
+            return entries
+        }
+
         fun getBadgeDrawableTop1ForCategory(categoryName: String): Int? {
             return when (categoryName) {
                 ARTS_AND_LITERATURE.categoryName -> R.drawable.badge_arts_and_literature_top1
