@@ -27,6 +27,7 @@ import com.apollo9921.quizrise.R
 import com.apollo9921.quizrise.domain.util.QuizCategory
 import com.apollo9921.quizrise.presentation.components.TopBar
 import com.apollo9921.quizrise.presentation.core.QuizAppTheme
+import com.apollo9921.quizrise.presentation.utils.componentSizeByScreen
 
 data class AchievementDetail(
     val title: String,
@@ -134,7 +135,7 @@ private fun DetailedAchievementItem(achievement: AchievementDetail) {
     ) {
         Box(
             modifier = Modifier
-                .size(90.dp)
+                .size(componentSizeByScreen(90.dp))
                 .clip(RoundedCornerShape(20.dp))
                 .background(
                     color = MaterialTheme.colorScheme.surface.copy(
@@ -152,8 +153,8 @@ private fun DetailedAchievementItem(achievement: AchievementDetail) {
         ) {
             Image(
                 painter = painterResource(id = achievement.iconRes),
-                contentDescription = achievement.title,
-                modifier = Modifier.size(56.dp),
+                contentDescription = stringResource(QuizCategory.getResourceByName(achievement.title)),
+                modifier = Modifier.size(componentSizeByScreen(90.dp)),
                 colorFilter = if (!achievement.isUnlocked) {
                     ColorFilter.tint(MaterialTheme.colorScheme.surface.copy(alpha = 0.5f))
                 } else null
@@ -163,7 +164,7 @@ private fun DetailedAchievementItem(achievement: AchievementDetail) {
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = achievement.title,
+            text = stringResource(QuizCategory.getResourceByName(achievement.title)),
             style = MaterialTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.surface,
             fontWeight = if (achievement.isUnlocked) FontWeight.Bold else FontWeight.Medium,
@@ -180,12 +181,16 @@ private fun AchievementsScreenPreview() {
         AchievementsScreen(
             onBackClick = {},
             achievements = listOf(
-                AchievementDetail("Primeiro Passo", R.drawable.newbie, true),
-                AchievementDetail("Mestre Quiz", R.drawable.intermediate, true),
-                AchievementDetail("Lendário", R.drawable.legend, false),
-                AchievementDetail("Explorador", R.drawable.geography, false),
-                AchievementDetail("Cientista", R.drawable.science, false),
-                AchievementDetail("Historiador", R.drawable.history, false)
+                AchievementDetail(QuizCategory.ARTS_AND_LITERATURE.categoryName, R.drawable.badge_arts_and_literature_top1, true),
+                AchievementDetail(QuizCategory.FILM_AND_TV.categoryName, R.drawable.badge_film_tv_top1, true),
+                AchievementDetail(QuizCategory.FOOD_AND_DRINK.categoryName, R.drawable.badge_food_drink_top1, false),
+                AchievementDetail(QuizCategory.GENERAL_KNOWLEDGE.categoryName, R.drawable.badge_general_knowledge_top1, true),
+                AchievementDetail(QuizCategory.GEOGRAPHY.categoryName, R.drawable.badge_geography_top1, false),
+                AchievementDetail(QuizCategory.HISTORY.categoryName, R.drawable.badge_history_top1, false),
+                AchievementDetail(QuizCategory.MUSIC.categoryName, R.drawable.badge_music_top1, true),
+                AchievementDetail(QuizCategory.SCIENCE.categoryName, R.drawable.badge_science_top1, false),
+                AchievementDetail(QuizCategory.SOCIETY_AND_CULTURE.categoryName, R.drawable.badge_society_culture_top1, false),
+                AchievementDetail(QuizCategory.SPORT_AND_LEISURE.categoryName, R.drawable.badge_sport_leisure_top1, false)
             )
         )
     }

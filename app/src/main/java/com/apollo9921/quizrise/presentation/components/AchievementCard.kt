@@ -27,6 +27,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.apollo9921.quizrise.R
+import com.apollo9921.quizrise.domain.util.QuizCategory
 import com.apollo9921.quizrise.presentation.navigation.Destination
 import com.apollo9921.quizrise.presentation.utils.componentSizeByScreen
 
@@ -130,7 +131,7 @@ private fun AchievementItem(achievement: Achievement) {
         )
 
         Text(
-            text = achievement.title,
+            text = stringResource(QuizCategory.getResourceByName(achievement.title)),
             style = MaterialTheme.typography.displaySmall,
             color = MaterialTheme.colorScheme.surface,
             fontWeight = FontWeight.Bold,
