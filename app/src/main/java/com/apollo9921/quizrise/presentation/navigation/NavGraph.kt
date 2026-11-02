@@ -17,6 +17,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
 import com.apollo9921.quizrise.R
+import com.apollo9921.quizrise.presentation.screens.achievements.AchievementsRoute
 import com.google.firebase.Firebase
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.analytics
@@ -38,6 +39,7 @@ import com.apollo9921.quizrise.presentation.screens.register.RegisterRoute
 import com.apollo9921.quizrise.presentation.screens.results.ResultsRoute
 import com.apollo9921.quizrise.presentation.screens.settings.SettingsScreenRoute
 import com.apollo9921.quizrise.presentation.screens.wrongAnswers.WrongAnswersRoute
+import kotlin.emptyArray
 
 @Composable
 fun AnimationNav(navHostController: NavHostController, startDestination: String) {
@@ -64,6 +66,7 @@ fun AnimationNav(navHostController: NavHostController, startDestination: String)
                 currentRoute.startsWith("quiz_result") -> "QuizResult"
                 currentRoute.startsWith("wrong_answers") -> "WrongAnswers"
                 currentRoute.startsWith("settings") -> "Settings"
+                currentRoute.startsWith("achievements") -> "Achievements"
                 else -> currentRoute
             }
 
@@ -346,6 +349,26 @@ fun AnimationNav(navHostController: NavHostController, startDestination: String)
                 question = question,
                 incorrectAnswers = incorrect,
                 correctAnswers = correct
+            )
+        }
+        composable(
+            route = Destination.Achievements.route,
+            arguments = listOf(
+                navArgument("achievementsTitle") {
+                    type = NavType.StringArrayType
+                },
+                navArgument("achievementsIcon") {
+                    type = NavType.IntArrayType
+                }
+            )
+        ) {
+            val achievementsTitle = it.arguments?.getStringArray("achievementsTitle") ?: emptyArray<String>()
+            val achievementsIcon = it.arguments?.getIntArray("achievementsIcon")
+
+            AchievementsRoute(
+                navHostController = navHostController,
+                achievementsTitle = achievementsTitle.toList(),
+                achievementsIcon = achievementsIcon?.toList() ?: emptyList()
             )
         }
     }

@@ -25,7 +25,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.apollo9921.quizrise.R
+import com.apollo9921.quizrise.presentation.navigation.Destination
 import com.apollo9921.quizrise.presentation.utils.componentSizeByScreen
 
 data class Achievement(
@@ -34,7 +36,7 @@ data class Achievement(
 )
 
 @Composable
-fun AchievementsSection(achievements: List<Achievement>) {
+fun AchievementsSection(achievements: List<Achievement>, navHostController: NavHostController) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         border = BorderStroke(
@@ -71,7 +73,14 @@ fun AchievementsSection(achievements: List<Achievement>) {
                         color = MaterialTheme.colorScheme.surface.copy(alpha = 0.5f),
                         fontWeight = FontWeight.Medium,
                         modifier = Modifier
-                            .clickable { }
+                            .clickable {
+                                navHostController.navigate(
+                                    Destination.Achievements.passArgument(
+                                        achievementsTitle = achievements.map { it.title },
+                                        achievementsIcon = achievements.map { it.iconRes }
+                                    )
+                                )
+                            }
                     )
                 }
             }

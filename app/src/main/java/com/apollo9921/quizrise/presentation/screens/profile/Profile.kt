@@ -111,6 +111,7 @@ private fun ProfileScreen(
                             .build()
                     )
                     ShowProfile(
+                        navHostController,
                         user,
                         rankState,
                         categoriesRankState,
@@ -129,6 +130,7 @@ private fun ProfileScreen(
 
 @Composable
 private fun ShowProfile(
+    navHostController: NavHostController,
     user: User,
     rank: Int?,
     categoriesRankState: List<Achievement>,
@@ -260,7 +262,7 @@ private fun ShowProfile(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                AchievementsSection(achievements = categoriesRankState)
+                AchievementsSection(achievements = categoriesRankState, navHostController = navHostController)
 
                 Spacer(modifier = Modifier.height(32.dp))
             }
@@ -466,7 +468,6 @@ private fun ProfileScreenDarkPreview() {
             rankState = 3,
             categoriesRankState = mockAchievements,
             badgeState = mockBadge,
-            onSettingsClick = {},
             navigateToChangeName = {}
         )
     }
