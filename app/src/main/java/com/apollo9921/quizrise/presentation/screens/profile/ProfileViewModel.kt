@@ -37,6 +37,8 @@ class ProfileViewModel(
     private var _categoriesRankState = MutableStateFlow<List<Achievement>>(emptyList())
     val categoriesRankState = _categoriesRankState.asStateFlow()
 
+    private var allDataLoaded = false
+
     data class Badge(
         var badge: Int = 0,
         var badgeLevel: Int = 0
@@ -48,6 +50,7 @@ class ProfileViewModel(
     }
 
     init {
+        allDataLoaded = false
         observeNetworkConnectivity()
     }
 
@@ -55,9 +58,10 @@ class ProfileViewModel(
         viewModelScope.launch {
             networkObserver.isConnected.collect { isOnline ->
                 val currentState = _uiState.value
-                if (isOnline && currentState is UIState.Success) {
+                if (isOnline && currentState is UIState.Success && !allDataLoaded) {
                     getUserRank(currentState.user)
                     getCategoriesRank()
+                    allDataLoaded = true
                 }
             }
         }
@@ -76,6 +80,9 @@ class ProfileViewModel(
 
                 _badgeState.value = Badge(badgeSymbol, badgeMaxPoints)
                 _uiState.value = UIState.Success(user = data)
+                if (!allDataLoaded) {
+                    observeNetworkConnectivity()
+                }
             }
         }
     }
