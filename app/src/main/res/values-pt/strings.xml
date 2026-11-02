@@ -140,4 +140,5 @@
     <string name="achievements">Conquistas</string>
     <string name="see_more">Ver mais -></string>
     <string name="no_achievements">Sem Conquistas ainda</string>
+    <string name="top1_each_category">Top 1 de cada categoria</string>
 </resources>
