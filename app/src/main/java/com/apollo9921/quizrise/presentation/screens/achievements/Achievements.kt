@@ -42,10 +42,18 @@ fun AchievementsRoute(
 ) {
     val allCategories = QuizCategory.getAllCategories()
 
-    val achievementsList = achievementsTitle.zip(achievementsIcon).mapNotNull { (title, iconRes) ->
-        if (title != null && iconRes != null && allCategories.any { it.categoryName == title }) {
+    val achievementsList = allCategories.map { category ->
+        val title = achievementsTitle.find { it == category.categoryName }
+        val iconRes = achievementsIcon.find { it == QuizCategory.getBadgeDrawableTop1ForCategory(category.categoryName) } ?: 0
+        if (title != null) {
             AchievementDetail(title, iconRes, true)
-        } else null
+        } else {
+            AchievementDetail(
+                category.categoryName,
+                QuizCategory.getBadgeDrawableTop1ForCategory(category.categoryName),
+                false
+            )
+        }
     }
 
     AchievementsScreen(

@@ -30,7 +30,7 @@ enum class QuizCategory(
             return entries
         }
 
-        fun getBadgeDrawableTop1ForCategory(categoryName: String): Int? {
+        fun getBadgeDrawableTop1ForCategory(categoryName: String): Int {
             return when (categoryName) {
                 ARTS_AND_LITERATURE.categoryName -> R.drawable.badge_arts_and_literature_top1
                 FILM_AND_TV.categoryName -> R.drawable.badge_film_tv_top1
@@ -42,7 +42,7 @@ enum class QuizCategory(
                 SCIENCE.categoryName -> R.drawable.badge_science_top1
                 SOCIETY_AND_CULTURE.categoryName -> R.drawable.badge_society_culture_top1
                 SPORT_AND_LEISURE.categoryName -> R.drawable.badge_sport_leisure_top1
-                else -> null
+                else -> { R.drawable.badge_arts_and_literature_top1 }
             }
         }
     }
