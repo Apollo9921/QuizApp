@@ -30,6 +30,7 @@ import com.apollo9921.quizrise.presentation.core.QuizAppTheme
 import com.apollo9921.quizrise.presentation.utils.componentSizeByScreen
 
 data class AchievementDetail(
+    val position: Int = 0,
     val title: String,
     val iconRes: Int,
     val isUnlocked: Boolean
@@ -37,24 +38,37 @@ data class AchievementDetail(
 
 @Composable
 fun AchievementsRoute(
-    navHostController: NavHostController,
-    achievementsTitle: List<String?>,
-    achievementsIcon: List<Int?>
+    navHostController: NavHostController,achievementsTitle: List<String?>,
+    achievementsIcon: List<Int?>,
+    rank: List<Int?>
 ) {
     val allCategories = QuizCategory.getAllCategories()
 
-    val achievementsList = allCategories.map { category ->
-        val title = achievementsTitle.find { it == category.categoryName }
-        val iconRes = achievementsIcon.find { it == QuizCategory.getBadgeDrawableTop1ForCategory(category.categoryName) } ?: 0
-        if (title != null) {
-            AchievementDetail(title, iconRes, true)
-        } else {
+    val userStatsMap = achievementsTitle.indices.associate { i ->
+        (achievementsTitle[i] ?: "") to (rank.getOrNull(i) to achievementsIcon.getOrNull(i))
+    }
+
+    val achievementsList = allCategories.flatMap { category ->
+        val categoryName = category.categoryName
+        val userStat = userStatsMap[categoryName]
+        val userRank = userStat?.first ?: 0
+
+        listOf(
+            // Top 1 Achievement
             AchievementDetail(
-                category.categoryName,
-                QuizCategory.getBadgeDrawableTop1ForCategory(category.categoryName),
-                false
+                position = 1,
+                title = categoryName,
+                iconRes = userStat?.second ?: R.drawable.badge_arts_and_literature_top1,
+                isUnlocked = userRank == 1
+            ),
+            // Top 5 Achievement
+            AchievementDetail(
+                position = 5,
+                title = categoryName,
+                iconRes = userStat?.second ?: R.drawable.badge_arts_and_literature_top1,
+                isUnlocked = userRank in 1..5
             )
-        }
+        )
     }
 
     AchievementsScreen(
@@ -113,7 +127,32 @@ private fun AchievementsScreen(
                     }
                 }
 
-                items(achievements) { achievement ->
+                items(achievements.filter { it.position == 1 }.sortedBy { it.title }) { achievement ->
+                    DetailedAchievementItem(achievement = achievement)
+                }
+
+                item(span = { GridItemSpan(3) }) {
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.Start
+                    ) {
+                        Text(
+                            text = "TOP 5",
+                            style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.surface
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(
+                            text = stringResource(R.string.top1_each_category),
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.surface.copy(alpha = 0.6f)
+                        )
+                        Spacer(modifier = Modifier.height(12.dp))
+                    }
+                }
+
+                items(achievements.filter { it.position == 5 }.sortedBy { it.title }) { achievement ->
                     DetailedAchievementItem(achievement = achievement)
                 }
             }
@@ -181,16 +220,66 @@ private fun AchievementsScreenPreview() {
         AchievementsScreen(
             onBackClick = {},
             achievements = listOf(
-                AchievementDetail(QuizCategory.ARTS_AND_LITERATURE.categoryName, R.drawable.badge_arts_and_literature_top1, true),
-                AchievementDetail(QuizCategory.FILM_AND_TV.categoryName, R.drawable.badge_film_tv_top1, true),
-                AchievementDetail(QuizCategory.FOOD_AND_DRINK.categoryName, R.drawable.badge_food_drink_top1, false),
-                AchievementDetail(QuizCategory.GENERAL_KNOWLEDGE.categoryName, R.drawable.badge_general_knowledge_top1, true),
-                AchievementDetail(QuizCategory.GEOGRAPHY.categoryName, R.drawable.badge_geography_top1, false),
-                AchievementDetail(QuizCategory.HISTORY.categoryName, R.drawable.badge_history_top1, false),
-                AchievementDetail(QuizCategory.MUSIC.categoryName, R.drawable.badge_music_top1, true),
-                AchievementDetail(QuizCategory.SCIENCE.categoryName, R.drawable.badge_science_top1, false),
-                AchievementDetail(QuizCategory.SOCIETY_AND_CULTURE.categoryName, R.drawable.badge_society_culture_top1, false),
-                AchievementDetail(QuizCategory.SPORT_AND_LEISURE.categoryName, R.drawable.badge_sport_leisure_top1, false)
+                AchievementDetail(
+                    position = 1,
+                    QuizCategory.ARTS_AND_LITERATURE.categoryName,
+                    R.drawable.badge_arts_and_literature_top1,
+                    true
+                ),
+                AchievementDetail(
+                    position = 1,
+                    QuizCategory.FILM_AND_TV.categoryName,
+                    R.drawable.badge_film_tv_top1,
+                    true
+                ),
+                AchievementDetail(
+                    position = 1,
+                    QuizCategory.FOOD_AND_DRINK.categoryName,
+                    R.drawable.badge_food_drink_top1,
+                    false
+                ),
+                AchievementDetail(
+                    position = 1,
+                    QuizCategory.GENERAL_KNOWLEDGE.categoryName,
+                    R.drawable.badge_general_knowledge_top1,
+                    true
+                ),
+                AchievementDetail(
+                    position = 3,
+                    QuizCategory.GEOGRAPHY.categoryName,
+                    R.drawable.badge_geography_top1,
+                    false
+                ),
+                AchievementDetail(
+                    position = 1,
+                    QuizCategory.HISTORY.categoryName,
+                    R.drawable.badge_history_top1,
+                    false
+                ),
+                AchievementDetail(
+                    position = 5,
+                    QuizCategory.MUSIC.categoryName,
+                    R.drawable.badge_music_top1,
+                    true
+                ),
+                AchievementDetail(
+                    position = 2,
+                    QuizCategory.SCIENCE.categoryName,
+                    R.drawable.badge_science_top1,
+                    false
+                ),
+                AchievementDetail(
+                    position = 4,
+                    QuizCategory.SOCIETY_AND_CULTURE.categoryName,
+                    R.drawable.badge_society_culture_top1,
+                    false
+                ),
+                AchievementDetail(
+                    position = 1,
+                    QuizCategory.SPORT_AND_LEISURE.categoryName,
+                    R.drawable.badge_sport_leisure_top1,
+                    false
+                )
             )
         )
     }

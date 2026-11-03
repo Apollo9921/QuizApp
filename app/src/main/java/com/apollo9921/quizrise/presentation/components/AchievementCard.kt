@@ -32,6 +32,7 @@ import com.apollo9921.quizrise.presentation.navigation.Destination
 import com.apollo9921.quizrise.presentation.utils.componentSizeByScreen
 
 data class Achievement(
+    val position: Int = 0,
     val title: String,
     val iconRes: Int
 )
@@ -77,6 +78,7 @@ fun AchievementsSection(achievements: List<Achievement>, navHostController: NavH
                             .clickable {
                                 navHostController.navigate(
                                     Destination.Achievements.passArgument(
+                                        rank = achievements.map { it.position },
                                         achievementsTitle = achievements.map { it.title },
                                         achievementsIcon = achievements.map { it.iconRes }
                                     )

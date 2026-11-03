@@ -62,11 +62,16 @@ sealed class Destination(val route: String) {
         }
     }
 
-    data object Achievements : Destination(route = "achievements?achievementsTitle={achievementsTitle}&achievementsIcon={achievementsIcon}") {
-        fun passArgument(achievementsTitle: List<String>, achievementsIcon: List<Int>): String {
+    data object Achievements : Destination(route = "achievements?achievementsTitle={achievementsTitle}&achievementsIcon={achievementsIcon}&rank={rank}") {
+        fun passArgument(
+            achievementsTitle: List<String>,
+            achievementsIcon: List<Int>,
+            rank: List<Int>
+        ): String {
             val titleParams = achievementsTitle.joinToString("&") { "achievementsTitle=$it" }
             val iconParams = achievementsIcon.joinToString("&") { "achievementsIcon=$it" }
-            return "achievements?$titleParams&$iconParams"
+            val rankParams = rank.joinToString("&") { "rank=$it" }
+            return "achievements?$titleParams&$iconParams&$rankParams"
         }
     }
 }

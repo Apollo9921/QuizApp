@@ -459,7 +459,7 @@ private fun RankBadge(rank: Int) {
 private fun ProfileScreenDarkPreview() {
     val mockUser = User(name = "Golden Hercules", totalPoints = 750, badge = "Newbie")
     val mockBadge = ProfileViewModel.Badge(badge = R.drawable.newbie, badgeLevel = 1000)
-    val mockAchievements = listOf(Achievement("Music", R.drawable.badge_music_top1))
+    val mockAchievements = listOf(Achievement(position = 1, "Music", R.drawable.badge_music_top1))
 
     QuizAppTheme {
         ProfileScreen(

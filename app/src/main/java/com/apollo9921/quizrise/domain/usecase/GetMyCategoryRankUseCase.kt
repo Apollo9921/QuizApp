@@ -23,20 +23,21 @@ class GetMyCategoryRankUseCase(
                     selectedCategory = result.category,
                     currentUserCorrectAnswers = result.correctAnswers,
                     onSuccess = { rank ->
-                        if (rank > 1) {
-                            onSuccess(null)
-                        } else {
-                            val categoryAchievement =
+                        if (rank in 1..5) {
+                            var categoryAchievement = 0
+                            categoryAchievement = if (rank == 1) {
                                 QuizCategory.getBadgeDrawableTop1ForCategory(result.category)
-                            if (categoryAchievement != null) {
-                                val achievement = Achievement(
-                                    title = result.category,
-                                    iconRes = categoryAchievement
-                                )
-                                onSuccess(achievement)
                             } else {
-                                onSuccess(null)
+                                QuizCategory.getBadgeDrawableTop5ForCategory(result.category)
                             }
+                            val achievement = Achievement(
+                                position = rank,
+                                title = result.category,
+                                iconRes = categoryAchievement
+                            )
+                            onSuccess(achievement)
+                        } else {
+                            onSuccess(null)
                         }
                     },
                     onFailure = { _ ->

@@ -359,16 +359,21 @@ fun AnimationNav(navHostController: NavHostController, startDestination: String)
                 },
                 navArgument("achievementsIcon") {
                     type = NavType.IntArrayType
+                },
+                navArgument("rank") {
+                    type = NavType.IntArrayType
                 }
             )
         ) {
             val achievementsTitle = it.arguments?.getStringArray("achievementsTitle") ?: emptyArray<String>()
             val achievementsIcon = it.arguments?.getIntArray("achievementsIcon")
+            val rank = it.arguments?.getIntArray("rank")
 
             AchievementsRoute(
                 navHostController = navHostController,
                 achievementsTitle = achievementsTitle.toList(),
-                achievementsIcon = achievementsIcon?.toList() ?: emptyList()
+                achievementsIcon = achievementsIcon?.toList() ?: emptyList(),
+                rank = rank?.toList() ?: emptyList()
             )
         }
     }
