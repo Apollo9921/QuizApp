@@ -65,7 +65,7 @@ fun AchievementsRoute(
             AchievementDetail(
                 position = 5,
                 title = categoryName,
-                iconRes = userStat?.second ?: R.drawable.badge_arts_and_literature_top1,
+                iconRes = userStat?.second ?: R.drawable.badge_arts_and_literature_top5,
                 isUnlocked = userRank in 1..5
             )
         )
