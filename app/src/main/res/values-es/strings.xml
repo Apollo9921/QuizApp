@@ -141,4 +141,5 @@
     <string name="see_more">Ver más -></string>
     <string name="no_achievements">No hay conquistas todavía</string>
     <string name="top1_each_category">Top 1 de cada categoría</string>
+    <string name="top5_each_category">Top 5 de cada categoría</string>
 </resources>

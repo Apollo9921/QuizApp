@@ -144,7 +144,7 @@ private fun AchievementsScreen(
                         )
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(
-                            text = stringResource(R.string.top1_each_category),
+                            text = stringResource(R.string.top5_each_category),
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.surface.copy(alpha = 0.6f)
                         )
