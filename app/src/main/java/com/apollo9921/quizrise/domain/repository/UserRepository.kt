@@ -20,4 +20,5 @@ interface UserRepository {
     suspend fun updateName(name: String, oldName: String) : Result<Unit>
     suspend fun postUserName(name: String, results: List<Results>) : AppResult<Unit>
     suspend fun getUserLevelRank(badge: String, totalPoints: Int, onSuccess: (Int) -> Unit, onFailure: (Exception) -> Unit)
+    suspend fun getMyCategoryRank(selectedCategory: String, currentUserCorrectAnswers: Int, onSuccess: (Int) -> Unit, onFailure: (Exception) -> Unit)
 }

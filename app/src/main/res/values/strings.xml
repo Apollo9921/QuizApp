@@ -149,4 +149,9 @@
     <string name="points_behind_by_category_by_user_ahead">You are %1$d points behind by %2$s on category %3$s</string>
     <string name="points_ahead_by_category_by_user_behind">You are %1$d points ahead by %2$s on category %3$s</string>
     <string name="play_again">Play Again!</string>
+    <string name="achievements">Achievements</string>
+    <string name="see_more">See more -></string>
+    <string name="no_achievements">No Achievements so far</string>
+    <string name="top1_each_category">Top 1 of each category</string>
+    <string name="top5_each_category">Top 5 of each category</string>
 </resources>

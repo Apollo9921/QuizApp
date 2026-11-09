@@ -25,5 +25,41 @@ enum class QuizCategory(
         fun getResourceByName(name: String): Int {
             return QuizCategory.entries.firstOrNull { it.categoryName == name }?.resourceId ?: ARTS_AND_LITERATURE.resourceId
         }
+
+        fun getAllCategories(): List<QuizCategory> {
+            return entries
+        }
+
+        fun getBadgeDrawableTop1ForCategory(categoryName: String): Int {
+            return when (categoryName) {
+                ARTS_AND_LITERATURE.categoryName -> R.drawable.badge_arts_and_literature_top1
+                FILM_AND_TV.categoryName -> R.drawable.badge_film_tv_top1
+                FOOD_AND_DRINK.categoryName -> R.drawable.badge_food_drink_top1
+                GENERAL_KNOWLEDGE.categoryName -> R.drawable.badge_general_knowledge_top1
+                GEOGRAPHY.categoryName -> R.drawable.badge_geography_top1
+                HISTORY.categoryName -> R.drawable.badge_history_top1
+                MUSIC.categoryName -> R.drawable.badge_music_top1
+                SCIENCE.categoryName -> R.drawable.badge_science_top1
+                SOCIETY_AND_CULTURE.categoryName -> R.drawable.badge_society_culture_top1
+                SPORT_AND_LEISURE.categoryName -> R.drawable.badge_sport_leisure_top1
+                else -> { R.drawable.badge_arts_and_literature_top1 }
+            }
+        }
+
+        fun getBadgeDrawableTop5ForCategory(categoryName: String): Int {
+            return when (categoryName) {
+                ARTS_AND_LITERATURE.categoryName -> R.drawable.badge_arts_and_literature_top5
+                FILM_AND_TV.categoryName -> R.drawable.badge_film_and_tv_top5
+                FOOD_AND_DRINK.categoryName -> R.drawable.badge_food_and_drink_top5
+                GENERAL_KNOWLEDGE.categoryName -> R.drawable.badge_general_knowlegde_top5
+                GEOGRAPHY.categoryName -> R.drawable.badge_geography_top5
+                HISTORY.categoryName -> R.drawable.badge_history_top5
+                MUSIC.categoryName -> R.drawable.badge_music_top5
+                SCIENCE.categoryName -> R.drawable.badge_science_top5
+                SOCIETY_AND_CULTURE.categoryName -> R.drawable.badge_society_and_culture_top5
+                SPORT_AND_LEISURE.categoryName -> R.drawable.badge_sport_and_leisure_top5
+                else -> { R.drawable.badge_arts_and_literature_top5 }
+            }
+        }
     }
 }

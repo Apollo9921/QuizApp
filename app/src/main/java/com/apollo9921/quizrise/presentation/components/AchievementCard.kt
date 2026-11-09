@@ -1,0 +1,143 @@
+package com.apollo9921.quizrise.presentation.components
+
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import com.apollo9921.quizrise.R
+import com.apollo9921.quizrise.domain.util.QuizCategory
+import com.apollo9921.quizrise.presentation.navigation.Destination
+import com.apollo9921.quizrise.presentation.utils.componentSizeByScreen
+
+data class Achievement(
+    val position: Int = 0,
+    val title: String,
+    val iconRes: Int
+)
+
+@Composable
+fun AchievementsSection(achievements: List<Achievement>, navHostController: NavHostController) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        border = BorderStroke(
+            width = 1.dp,
+            color = MaterialTheme.colorScheme.surface.copy(alpha = 0.15f)
+        ),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface.copy(
+                alpha = 0.06f
+            )
+        ),
+        shape = RoundedCornerShape(20.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(componentSizeByScreen(baseSize = 12.dp))
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = stringResource(id = R.string.achievements).uppercase(),
+                    style = MaterialTheme.typography.displaySmall,
+                    color = MaterialTheme.colorScheme.surface.copy(alpha = 0.5f),
+                    fontWeight = FontWeight.Bold
+                )
+                if (achievements.isNotEmpty()) {
+                    Text(
+                        text = stringResource(id = R.string.see_more),
+                        style = MaterialTheme.typography.displaySmall,
+                        color = MaterialTheme.colorScheme.surface.copy(alpha = 0.5f),
+                        fontWeight = FontWeight.Medium,
+                        modifier = Modifier
+                            .clickable {
+                                navHostController.navigate(
+                                    Destination.Achievements.passArgument(
+                                        rank = achievements.map { it.position },
+                                        achievementsTitle = achievements.map { it.title },
+                                        achievementsIcon = achievements.map { it.iconRes }
+                                    )
+                                )
+                            }
+                    )
+                }
+            }
+
+            if (achievements.isEmpty()) {
+                Text(
+                    text = stringResource(id = R.string.no_achievements),
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.surface.copy(alpha = 0.5f),
+                    fontWeight = FontWeight.Medium,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = componentSizeByScreen(baseSize = 16.dp))
+                )
+            } else {
+                FlowRow(
+                    modifier = Modifier.fillMaxWidth().wrapContentHeight(),
+                    maxItemsInEachRow = 3,
+                    verticalArrangement = Arrangement.Top,
+                    horizontalArrangement = Arrangement.Start
+                ) {
+                    achievements.sortedBy { it.title }.take(3).forEach {
+                        AchievementItem(achievement = it)
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun AchievementItem(achievement: Achievement) {
+    Column(
+        modifier = Modifier
+            .width(componentSizeByScreen(baseSize = 110.dp))
+            .wrapContentHeight()
+            .padding(5.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Image(
+            painter = painterResource(id = achievement.iconRes),
+            contentDescription = achievement.title,
+            modifier = Modifier
+                .size(componentSizeByScreen(baseSize = 110.dp))
+        )
+
+        Text(
+            text = stringResource(QuizCategory.getResourceByName(achievement.title)),
+            style = MaterialTheme.typography.displaySmall,
+            color = MaterialTheme.colorScheme.surface,
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Center,
+        )
+    }
+}

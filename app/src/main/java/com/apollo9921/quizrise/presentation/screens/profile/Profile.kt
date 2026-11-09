@@ -7,7 +7,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -46,6 +45,8 @@ import com.apollo9921.quizrise.presentation.utils.componentSizeByScreen
 import com.apollo9921.quizrise.presentation.utils.formatTotalCount
 import org.koin.androidx.compose.koinViewModel
 import com.apollo9921.quizrise.R
+import com.apollo9921.quizrise.presentation.components.Achievement
+import com.apollo9921.quizrise.presentation.components.AchievementsSection
 import com.apollo9921.quizrise.presentation.components.QuizTooltipIcon
 import com.apollo9921.quizrise.presentation.core.QuizAppTheme
 import com.apollo9921.quizrise.presentation.navigation.Destination
@@ -59,6 +60,7 @@ fun ProfileRoute(
     val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
     val badgeState = viewModel.badgeState.collectAsStateWithLifecycle().value
     val rankState = viewModel.rankState.collectAsStateWithLifecycle().value
+    val categoriesRank = viewModel.categoriesRankState.collectAsStateWithLifecycle().value
     val fetchUser = { viewModel.fetchUser(context) }
     val navigateToChangeName = { navHostController.navigate(Destination.EditUserName.route) }
     val navigateToSettings = { navHostController.navigate(Destination.Settings.route) }
@@ -72,6 +74,7 @@ fun ProfileRoute(
         uiState = uiState,
         badgeState = badgeState,
         rankState = rankState,
+        categoriesRankState = categoriesRank,
         onSettingsClick = { navigateToSettings() },
         navigateToChangeName = navigateToChangeName
     )
@@ -82,6 +85,7 @@ private fun ProfileScreen(
     navHostController: NavHostController,
     uiState: ProfileViewModel.UIState,
     rankState: Int?,
+    categoriesRankState: List<Achievement>,
     badgeState: ProfileViewModel.Badge,
     onSettingsClick: () -> Unit = {},
     navigateToChangeName: () -> Unit
@@ -106,7 +110,16 @@ private fun ProfileScreen(
                             .error(R.drawable.person)
                             .build()
                     )
-                    ShowProfile(user, rankState, painter, badgeState, onSettingsClick, navigateToChangeName)
+                    ShowProfile(
+                        navHostController,
+                        user,
+                        rankState,
+                        categoriesRankState,
+                        painter,
+                        badgeState,
+                        onSettingsClick,
+                        navigateToChangeName
+                    )
                 }
 
                 else -> {}
@@ -117,8 +130,10 @@ private fun ProfileScreen(
 
 @Composable
 private fun ShowProfile(
+    navHostController: NavHostController,
     user: User,
     rank: Int?,
+    categoriesRankState: List<Achievement>,
     painter: AsyncImagePainter,
     badgeState: ProfileViewModel.Badge,
     onSettingsClick: () -> Unit,
@@ -244,6 +259,10 @@ private fun ShowProfile(
                     badgeIconSize = badgeIconSize,
                     userRank = rank
                 )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                AchievementsSection(achievements = categoriesRankState, navHostController = navHostController)
 
                 Spacer(modifier = Modifier.height(32.dp))
             }
@@ -393,16 +412,19 @@ private fun RankBadge(rank: Int) {
             Color(0xFF1F1200),
             Color(0xFFFFE066)
         )
+
         2 -> Triple(
             Brush.horizontalGradient(listOf(Color(0xFFE0E0E0), Color(0xFF9E9E9E))), // Prata
             Color(0xFF111111),
             Color(0xFFFFFFFF)
         )
+
         3 -> Triple(
             Brush.horizontalGradient(listOf(Color(0xFFCD7F32), Color(0xFFA0522D))), // Bronze
             Color(0xFF1F0B00),
             Color(0xFFFFB88C)
         )
+
         else -> Triple(
             Brush.horizontalGradient(
                 listOf(
@@ -437,14 +459,16 @@ private fun RankBadge(rank: Int) {
 private fun ProfileScreenDarkPreview() {
     val mockUser = User(name = "Golden Hercules", totalPoints = 750, badge = "Newbie")
     val mockBadge = ProfileViewModel.Badge(badge = R.drawable.newbie, badgeLevel = 1000)
+    val mockAchievements = listOf(Achievement(position = 1, "Music", R.drawable.badge_music_top1))
 
     QuizAppTheme {
         ProfileScreen(
             navHostController = rememberNavController(),
             uiState = ProfileViewModel.UIState.Success(mockUser),
-            badgeState = mockBadge,
             rankState = 3,
-            navigateToChangeName = {},
+            categoriesRankState = mockAchievements,
+            badgeState = mockBadge,
+            navigateToChangeName = {}
         )
     }
 }
