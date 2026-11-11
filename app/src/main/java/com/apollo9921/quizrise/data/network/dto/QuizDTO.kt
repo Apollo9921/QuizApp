@@ -13,5 +13,6 @@ data class QuizDTO(
     val question: QuestionDTO,
     val regions: List<String?>,
     val tags: List<String>,
-    val type: String
+    val type: String,
+    val hint: String? = null
 )

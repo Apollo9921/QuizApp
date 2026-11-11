@@ -12,6 +12,7 @@ import io.ktor.client.request.accept
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
+import kotlinx.serialization.json.Json
 
 object Instance {
 
@@ -27,8 +28,12 @@ object Instance {
             level = LogLevel.ALL
         }
 
-        install(ContentNegotiation.Plugin) {
-            json()
+        install(ContentNegotiation) {
+            json(Json {
+                ignoreUnknownKeys = true
+                coerceInputValues = true
+                prettyPrint = true
+            })
         }
 
         defaultRequest {

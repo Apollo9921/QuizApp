@@ -10,5 +10,6 @@ data class Quiz(
     val question: Question,
     val regions: List<String?>,
     val tags: List<String>,
-    val type: String
+    val type: String,
+    val hint: String? = null
 )

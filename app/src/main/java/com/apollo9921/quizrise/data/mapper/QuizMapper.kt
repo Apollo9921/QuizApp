@@ -16,7 +16,8 @@ fun QuizDTO.toQuiz(): Quiz {
         regions = regions,
         tags = tags,
         type = type,
-        question = question.toQuestion()
+        question = question.toQuestion(),
+        hint = hint
     )
 }
 
