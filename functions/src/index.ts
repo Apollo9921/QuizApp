@@ -26,7 +26,7 @@ export const getTranslatedQuiz = onCall(
   },
   async (request) => {
     const ai = new GoogleGenerativeAI(geminiApiKey.value());
-    const model = ai.getGenerativeModel({model: "gemini-2.5-flash"});
+    const model = ai.getGenerativeModel({model: "gemini-3.5-flash-lite"});
     const {questions, language} = request.data;
 
     const normalizedLanguage = language.toLowerCase();

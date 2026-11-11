@@ -14,7 +14,7 @@ if (!admin.apps.length) {
 const db = admin.firestore();
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY || "MY_GEMINI_API_KEY";
 const ai = new GoogleGenerativeAI(GEMINI_API_KEY);
-const model = ai.getGenerativeModel({model: "gemini-2.5-flash"});
+const model = ai.getGenerativeModel({model: "gemini-3.5-flash-lite"});
 
 const TARGET_LANGUAGES = ["pt", "es"];
 const BATCH_SIZE = 15;
