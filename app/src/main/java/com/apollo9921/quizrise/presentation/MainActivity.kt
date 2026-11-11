@@ -1,6 +1,5 @@
 package com.apollo9921.quizrise.presentation
 
-import android.app.AlertDialog
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -136,13 +135,6 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun popupSnackBarForCompleteUpdate() {
-        AlertDialog.Builder(this)
-            .setTitle("Update Completed")
-            .setMessage("New version ready to install. Please restart the app.")
-            .setPositiveButton("Restart Now") { _, _ ->
-                appUpdateManager.completeUpdate()
-            }
-            .setCancelable(false)
-            .show()
+        appUpdateManager.completeUpdate()
     }
 }
