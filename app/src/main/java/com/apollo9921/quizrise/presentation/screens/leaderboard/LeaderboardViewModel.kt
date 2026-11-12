@@ -8,6 +8,7 @@ import com.apollo9921.quizrise.domain.usecase.GetTopPlayersByCategoryUseCase
 import com.apollo9921.quizrise.domain.usecase.GetTopPlayersByLevelUseCase
 import com.apollo9921.quizrise.domain.util.PlayerLevel
 import com.apollo9921.quizrise.domain.util.QuizCategory
+import com.apollo9921.quizrise.presentation.utils.formatTotalCount
 import com.google.firebase.auth.FirebaseAuth
 import io.ktor.client.network.sockets.ConnectTimeoutException
 import io.ktor.client.plugins.ClientRequestException
@@ -110,7 +111,7 @@ class LeaderboardViewModel(
                         LeaderboardItem(
                             position = index + 1,
                             username = item.name,
-                            scoreDetail = "${item.totalPoints} pts",
+                            scoreDetail = "${formatTotalCount(item.totalPoints.toFloat())} pts",
                             isCurrentUser = item.id == currentUserId
                         )
                     }
@@ -153,7 +154,7 @@ class LeaderboardViewModel(
                         LeaderboardItem(
                             position = index + 1,
                             username = item.username,
-                            scoreDetail = "${item.correctAnswers * 5} pts",
+                            scoreDetail = "${formatTotalCount(item.correctAnswers.toFloat() * 5)} pts",
                             isCurrentUser = item.userId == currentUserId
                         )
                     }
