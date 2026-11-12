@@ -17,7 +17,7 @@ android {
         applicationId "com.apollo9921.quizrise"
         minSdk 24
         targetSdk 37
-        versionCode 24
+        versionCode 25
         versionName "1.1.4"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
