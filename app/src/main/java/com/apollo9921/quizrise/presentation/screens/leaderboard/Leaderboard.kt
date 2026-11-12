@@ -272,7 +272,7 @@ private fun LeaderboardRow(
                 .padding(16.dp)
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Absolute.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
             val positionColor = when (item.position) {
                 1 -> Gold

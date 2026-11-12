@@ -98,6 +98,8 @@ private fun ProfileScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(bottom = paddingValues.calculateBottomPadding())
+                .statusBarsPadding()
+                .navigationBarsPadding()
                 .verticalScroll(rememberScrollState())
         ) {
             when (uiState) {
@@ -454,7 +456,7 @@ private fun RankBadge(rank: Int) {
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun ProfileScreenDarkPreview() {
     val mockUser = User(name = "Golden Hercules", totalPoints = 750, badge = "Newbie")
