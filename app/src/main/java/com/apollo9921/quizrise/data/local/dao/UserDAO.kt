@@ -29,4 +29,7 @@ interface UserDAO {
 
     @Query("UPDATE user_table SET name=:name WHERE name =:oldName")
     suspend fun updateName(name: String, oldName: String)
+
+    @Query("UPDATE user_table SET currentStreak=:currentStreak, currentLives=:currentLives, lastLoginDate=:lastLoginDate WHERE name =:name")
+    suspend fun updateStreak(currentStreak: Int, currentLives: Int, lastLoginDate: Long, name: String)
 }

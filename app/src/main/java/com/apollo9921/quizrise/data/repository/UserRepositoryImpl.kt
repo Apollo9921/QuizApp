@@ -432,4 +432,20 @@ class UserRepositoryImpl(
                 onFailure(exception)
             }
     }
+
+    override suspend fun updateStreak(
+        currentStreak: Int,
+        currentLives: Int,
+        lastLoginDate: Long,
+        name: String
+    ): Result<Unit> {
+        return withContext(ioDispatcher) {
+            try {
+                userDAO.updateStreak(currentStreak, currentLives, lastLoginDate, name)
+                Result.success(Unit)
+            } catch (e: Exception) {
+                Result.failure(e)
+            }
+        }
+    }
 }

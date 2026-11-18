@@ -1,6 +1,8 @@
 package com.apollo9921.quizrise.di
 
 import androidx.room.Room
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.work.WorkManager
 import com.apollo9921.quizrise.data.local.database.QuizDatabase
 import com.apollo9921.quizrise.data.network.instance.Instance
@@ -77,11 +79,18 @@ val dispatchersModule = module {
 
 val localModule = module {
     single {
+        val migration1To2 = object : Migration(1, 2) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE user_table ADD COLUMN currentStreak INTEGER NOT NULL DEFAULT 0")
+                db.execSQL("ALTER TABLE user_table ADD COLUMN currentLives INTEGER NOT NULL DEFAULT 0")
+                db.execSQL("ALTER TABLE user_table ADD COLUMN lastLoginDate INTEGER NOT NULL DEFAULT 0")
+            }
+        }
         Room.databaseBuilder(
             androidContext(),
             QuizDatabase::class.java,
             "quiz_database"
-        ).build()
+        ).addMigrations(migration1To2).build()
     }
     single { get<QuizDatabase>().userDao() }
     single { get<QuizDatabase>().resultsDao() }

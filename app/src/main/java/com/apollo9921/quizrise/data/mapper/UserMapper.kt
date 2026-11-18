@@ -9,7 +9,10 @@ fun UserEntity.toUser(): User {
         totalPoints = totalPoints,
         totalPointsPossible = totalPointsPossible,
         badge = badge,
-        session = session
+        session = session,
+        currentStreak = currentStreak,
+        currentLives = currentLives,
+        lastLoginDate = lastLoginDate
     )
 }
 
@@ -19,6 +22,9 @@ fun User.toUserEntity(): UserEntity {
         totalPoints = totalPoints,
         totalPointsPossible = totalPointsPossible,
         badge = badge,
-        session = session
+        session = session,
+        currentStreak = currentStreak,
+        currentLives = currentLives,
+        lastLoginDate = lastLoginDate
     )
 }

@@ -10,5 +10,8 @@ data class UserEntity(
     val totalPoints: Int,
     val totalPointsPossible: Int,
     val badge: String,
-    val session: String
+    val session: String,
+    val currentStreak: Int = 0,
+    val currentLives: Int = 0,
+    val lastLoginDate: Long = 0
 )

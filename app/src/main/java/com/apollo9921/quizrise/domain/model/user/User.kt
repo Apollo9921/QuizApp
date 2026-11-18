@@ -9,5 +9,8 @@ data class User(
     val totalPoints: Int = 0,
     val totalPointsPossible: Int = 0,
     val badge: String = "",
-    val session: String = ""
+    val session: String = "",
+    val currentStreak: Int = 0,
+    val currentLives: Int = 0,
+    val lastLoginDate: Long = 0
 )
