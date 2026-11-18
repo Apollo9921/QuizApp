@@ -142,4 +142,20 @@
     <string name="no_achievements">Sem Conquistas ainda</string>
     <string name="top1_each_category">Top 1 de cada categoria</string>
     <string name="top5_each_category">Top 5 de cada categoria</string>
+    <string name="streak_title">Sequência &amp; Vidas</string>
+    <string name="streak_days">%1$d Dias</string>
+    <string name="current_lives">%1$d Vidas</string>
+    <string name="actual_sequence">Sequência Atual</string>
+    <string name="available">Disponíveis</string>
+    <string name="sequence_counter_title">1. Contador de Sequência</string>
+    <string name="sequence_counter_description">Abre a aplicação todos os dias para aumentar a tua sequência (+1 dia). Se passares um dia inteiro sem entrar, o contador volta a zero.</string>
+    <string name="consistence_title">MARCOS DE CONSISTÊNCIA</string>
+    <string name="one_extra_life">1 Vida Extra</string>
+    <string name="three_extras_life">3 Vidas Extras</string>
+    <string name="second_opportunity_title">2. Segunda Oportunidade</string>
+    <string name="second_opportunity_description">Errou uma pergunta durante o quiz? Usa as tuas vidas acumuladas para ter uma nova hipótese sem perder a pontuação.</string>
+    <string name="eureka_help">Ajuda "Eureka!"</string>
+    <string name="use_life">"Queres usar 1 Vida para tentar outra vez?" — Consome 1 coração e permite escolher outra resposta.</string>
+    <string name="got_it">Entendi!</string>
+    <string name="consecutive_days">%1$d dias consecutivos</string>
 </resources>

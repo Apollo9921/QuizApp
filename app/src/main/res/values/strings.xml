@@ -154,4 +154,20 @@
     <string name="no_achievements">No Achievements so far</string>
     <string name="top1_each_category">Top 1 of each category</string>
     <string name="top5_each_category">Top 5 of each category</string>
+    <string name="streak_title">Sequence &amp; Lives</string>
+    <string name="streak_days">%1$d Days</string>
+    <string name="current_lives">%1$d Lives</string>
+    <string name="actual_sequence">Actual Sequence</string>
+    <string name="available">Available</string>
+    <string name="sequence_counter_title">1. Sequence Counter</string>
+    <string name="sequence_counter_description">Open the app every day to increase your streak (+1 day). If you go a full day without logging in, the counter resets to zero.</string>
+    <string name="consistence_title">CONSISTENCY MARKERS</string>
+    <string name="one_extra_life">1 Extra Life</string>
+    <string name="three_extras_life">3 Extra Lives</string>
+    <string name="second_opportunity_title">2. Second Chance</string>
+    <string name="second_opportunity_description">Got a question wrong during the quiz? Use your accumulated lives to get another chance without losing your score.</string>
+    <string name="eureka_help">Help "Eureka!"</string>
+    <string name="use_life">"Do you want to use 1 Life to try again?" — Consumes 1 heart and allows you to choose a different answer.</string>
+    <string name="got_it">Got it!</string>
+    <string name="consecutive_days">%1$d consecutive days</string>
 </resources>
