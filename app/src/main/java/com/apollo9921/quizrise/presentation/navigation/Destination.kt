@@ -74,4 +74,6 @@ sealed class Destination(val route: String) {
             return "achievements?$titleParams&$iconParams&$rankParams"
         }
     }
+
+    data object StreakAndLivesTrackerInfo : Destination(route = "streak_lives_tracker_info")
 }

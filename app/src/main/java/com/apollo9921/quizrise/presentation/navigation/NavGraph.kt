@@ -38,6 +38,7 @@ import com.apollo9921.quizrise.presentation.screens.quizResult.QuizResultRoute
 import com.apollo9921.quizrise.presentation.screens.register.RegisterRoute
 import com.apollo9921.quizrise.presentation.screens.results.ResultsRoute
 import com.apollo9921.quizrise.presentation.screens.settings.SettingsScreenRoute
+import com.apollo9921.quizrise.presentation.screens.streakTracker.StreakAndLivesInfoRoute
 import com.apollo9921.quizrise.presentation.screens.wrongAnswers.WrongAnswersRoute
 import kotlin.emptyArray
 
@@ -67,6 +68,7 @@ fun AnimationNav(navHostController: NavHostController, startDestination: String)
                 currentRoute.startsWith("wrong_answers") -> "WrongAnswers"
                 currentRoute.startsWith("settings") -> "Settings"
                 currentRoute.startsWith("achievements") -> "Achievements"
+                currentRoute.startsWith("streak_lives_tracker_info") -> "StreakAndLivesTrackerInfo"
                 else -> currentRoute
             }
 
@@ -374,6 +376,16 @@ fun AnimationNav(navHostController: NavHostController, startDestination: String)
                 achievementsTitle = achievementsTitle.toList(),
                 achievementsIcon = achievementsIcon?.toList() ?: emptyList(),
                 rank = rank?.toList() ?: emptyList()
+            )
+        }
+        composable(
+            route = Destination.StreakAndLivesTrackerInfo.route
+        ) {
+            //TODO GET STREAK AND LIVES FROM DATA LAYER
+            StreakAndLivesInfoRoute(
+                navHostController = navHostController,
+                currentStreak = 7,
+                currentLives = 3
             )
         }
     }

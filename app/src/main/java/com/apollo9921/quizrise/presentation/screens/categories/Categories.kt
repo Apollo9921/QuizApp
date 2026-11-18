@@ -19,16 +19,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.apollo9921.quizrise.R
 import com.apollo9921.quizrise.presentation.components.BottomNavigationBar
-import com.apollo9921.quizrise.presentation.components.QuizTooltipIcon
 import com.apollo9921.quizrise.presentation.navigation.Destination
-import com.apollo9921.quizrise.presentation.utils.componentSizeByScreen
 import com.apollo9921.quizrise.presentation.utils.widthOfScreen
 import androidx.compose.ui.platform.LocalResources
+import com.apollo9921.quizrise.presentation.components.StreakAndLivesTracker
 
 @Composable
 fun CategoriesRoute(navHostController: NavHostController) {
@@ -90,19 +88,25 @@ private fun CategoriesScreen(
         else -> 4
     }
 
-    val maxLayoutWidth = if (screenWidth < 600.dp) Dp.Unspecified else componentSizeByScreen(720.dp)
-
     Scaffold(
+        topBar = {
+            //TODO IMPLEMENT WITH REAL DATA FROM VIEWMODEL
+            StreakAndLivesTracker(
+                streakDays = 7,
+                livesCount = 3,
+                onTrackerClick = { navHostController.navigate(Destination.StreakAndLivesTrackerInfo.route) }
+            )
+        },
         bottomBar = { BottomNavigationBar(navHostController) },
-        topBar = { QuizTooltipIcon(text = stringResource(id = R.string.tooltip_categories)) },
         containerColor = MaterialTheme.colorScheme.primary
     ) { paddingValues ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .safeDrawingPadding()
-                .padding(bottom = paddingValues.calculateBottomPadding()),
-            contentAlignment = Alignment.TopCenter
+                .padding(
+                    top = paddingValues.calculateTopPadding(),
+                    bottom = paddingValues.calculateBottomPadding()
+                )
         ) {
             LazyVerticalGrid(
                 columns = GridCells.Fixed(columnCount),
@@ -110,14 +114,16 @@ private fun CategoriesScreen(
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
                 contentPadding = PaddingValues(horizontal = 24.dp, vertical = 20.dp),
                 modifier = Modifier
-                    .fillMaxHeight()
-                    .widthIn(max = maxLayoutWidth)
+                    .wrapContentHeight()
                     .fillMaxWidth()
             ) {
                 items(categories.size) { index ->
                     Card(
                         shape = RoundedCornerShape(20.dp),
-                        border = BorderStroke(width = 1.dp, color = MaterialTheme.colorScheme.surface.copy(alpha = 0.15f)),
+                        border = BorderStroke(
+                            width = 1.dp,
+                            color = MaterialTheme.colorScheme.surface.copy(alpha = 0.15f)
+                        ),
                         colors = CardDefaults.cardColors(
                             containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.06f)
                         ),
