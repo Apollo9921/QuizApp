@@ -26,10 +26,19 @@ import com.apollo9921.quizrise.presentation.components.BottomNavigationBar
 import com.apollo9921.quizrise.presentation.navigation.Destination
 import com.apollo9921.quizrise.presentation.utils.widthOfScreen
 import androidx.compose.ui.platform.LocalResources
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.apollo9921.quizrise.presentation.components.ErrorScreen
+import com.apollo9921.quizrise.presentation.components.Loading
 import com.apollo9921.quizrise.presentation.components.StreakAndLivesTracker
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun CategoriesRoute(navHostController: NavHostController) {
+fun CategoriesRoute(
+    navHostController: NavHostController,
+    viewModel: CategoriesViewModel = koinViewModel<CategoriesViewModel>()
+) {
+    val streakUIState = viewModel.streakUIState.collectAsStateWithLifecycle().value
+    val tryAgain = { viewModel.fetchUser() }
     val categories = listOf(
         R.string.artsAndLiterature_translatable,
         R.string.filmAndTV_translatable,
@@ -66,6 +75,8 @@ fun CategoriesRoute(navHostController: NavHostController) {
 
     CategoriesScreen(
         navHostController = navHostController,
+        streakUIState = streakUIState,
+        tryAgain = tryAgain,
         navigateToCategory = navigateToCategory,
         categoriesImages = categoriesImages,
         categories = categories
@@ -76,6 +87,8 @@ fun CategoriesRoute(navHostController: NavHostController) {
 @Composable
 private fun CategoriesScreen(
     navHostController: NavHostController,
+    streakUIState: CategoriesViewModel.StreakUIState,
+    tryAgain: () -> Unit,
     navigateToCategory: (Int) -> Unit,
     categoriesImages: List<Int>,
     categories: List<Int>
@@ -90,12 +103,13 @@ private fun CategoriesScreen(
 
     Scaffold(
         topBar = {
-            //TODO IMPLEMENT WITH REAL DATA FROM VIEWMODEL
-            StreakAndLivesTracker(
-                streakDays = 7,
-                livesCount = 3,
-                onTrackerClick = { navHostController.navigate(Destination.StreakAndLivesTrackerInfo.route) }
-            )
+            if (streakUIState is CategoriesViewModel.StreakUIState.Success) {
+                StreakAndLivesTracker(
+                    streakDays = streakUIState.streak,
+                    livesCount = streakUIState.lives,
+                    onTrackerClick = { navHostController.navigate(Destination.StreakAndLivesTrackerInfo.route) }
+                )
+            }
         },
         bottomBar = { BottomNavigationBar(navHostController) },
         containerColor = MaterialTheme.colorScheme.primary
@@ -108,66 +122,81 @@ private fun CategoriesScreen(
                     bottom = paddingValues.calculateBottomPadding()
                 )
         ) {
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(columnCount),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
-                contentPadding = PaddingValues(horizontal = 24.dp, vertical = 20.dp),
-                modifier = Modifier
-                    .wrapContentHeight()
-                    .fillMaxWidth()
-            ) {
-                items(categories.size) { index ->
-                    Card(
-                        shape = RoundedCornerShape(20.dp),
-                        border = BorderStroke(
-                            width = 1.dp,
-                            color = MaterialTheme.colorScheme.surface.copy(alpha = 0.15f)
-                        ),
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.06f)
-                        ),
+            when (streakUIState) {
+                is CategoriesViewModel.StreakUIState.Idle -> {
+                    Loading()
+                }
+
+                is CategoriesViewModel.StreakUIState.Error -> {
+                    ErrorScreen(
+                        errorMessage = stringResource(id = streakUIState.message),
+                        onClick = { tryAgain() }
+                    )
+                }
+
+                is CategoriesViewModel.StreakUIState.Success -> {
+                    LazyVerticalGrid(
+                        columns = GridCells.Fixed(columnCount),
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                        contentPadding = PaddingValues(horizontal = 24.dp, vertical = 20.dp),
                         modifier = Modifier
+                            .wrapContentHeight()
                             .fillMaxWidth()
-                            .aspectRatio(1f)
-                            .clip(RoundedCornerShape(20.dp))
-                            .clickable { navigateToCategory(index) }
                     ) {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(12.dp),
-                            verticalArrangement = Arrangement.Center,
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Box(
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .fillMaxWidth(),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Image(
-                                    painter = painterResource(id = categoriesImages[index]),
-                                    contentDescription = null,
-                                    modifier = Modifier.fillMaxSize(0.65f),
-                                    contentScale = ContentScale.Fit
-                                )
-                            }
-
-                            Spacer(modifier = Modifier.height(4.dp))
-
-                            Text(
-                                text = stringResource(id = categories[index]),
-                                color = MaterialTheme.colorScheme.surface,
-                                style = MaterialTheme.typography.labelSmall,
-                                fontWeight = FontWeight.Bold,
-                                textAlign = TextAlign.Center,
-                                maxLines = 2,
-                                overflow = TextOverflow.Ellipsis,
+                        items(categories.size) { index ->
+                            Card(
+                                shape = RoundedCornerShape(20.dp),
+                                border = BorderStroke(
+                                    width = 1.dp,
+                                    color = MaterialTheme.colorScheme.surface.copy(alpha = 0.15f)
+                                ),
+                                colors = CardDefaults.cardColors(
+                                    containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.06f)
+                                ),
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(horizontal = 4.dp)
-                            )
+                                    .aspectRatio(1f)
+                                    .clip(RoundedCornerShape(20.dp))
+                                    .clickable { navigateToCategory(index) }
+                            ) {
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .padding(12.dp),
+                                    verticalArrangement = Arrangement.Center,
+                                    horizontalAlignment = Alignment.CenterHorizontally
+                                ) {
+                                    Box(
+                                        modifier = Modifier
+                                            .weight(1f)
+                                            .fillMaxWidth(),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        Image(
+                                            painter = painterResource(id = categoriesImages[index]),
+                                            contentDescription = null,
+                                            modifier = Modifier.fillMaxSize(0.65f),
+                                            contentScale = ContentScale.Fit
+                                        )
+                                    }
+
+                                    Spacer(modifier = Modifier.height(4.dp))
+
+                                    Text(
+                                        text = stringResource(id = categories[index]),
+                                        color = MaterialTheme.colorScheme.surface,
+                                        style = MaterialTheme.typography.labelSmall,
+                                        fontWeight = FontWeight.Bold,
+                                        textAlign = TextAlign.Center,
+                                        maxLines = 2,
+                                        overflow = TextOverflow.Ellipsis,
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(horizontal = 4.dp)
+                                    )
+                                }
+                            }
                         }
                     }
                 }

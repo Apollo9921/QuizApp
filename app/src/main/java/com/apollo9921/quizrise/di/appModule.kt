@@ -48,8 +48,10 @@ import com.apollo9921.quizrise.domain.usecase.PostUserAnonymouslyUseCase
 import com.apollo9921.quizrise.domain.usecase.SaveQuizUseCase
 import com.apollo9921.quizrise.domain.usecase.UpdateNameUseCase
 import com.apollo9921.quizrise.domain.usecase.UpdatePasswordByLinkUseCase
+import com.apollo9921.quizrise.domain.usecase.UpdateStreakUseCase
 import com.apollo9921.quizrise.domain.usecase.UpdateUserSessionUseCase
 import com.apollo9921.quizrise.domain.util.NetworkObserver
+import com.apollo9921.quizrise.presentation.screens.categories.CategoriesViewModel
 import com.apollo9921.quizrise.presentation.screens.deleteAccount.DeleteAccountViewModel
 import com.apollo9921.quizrise.presentation.screens.editUsername.EditUsernameViewModel
 import com.apollo9921.quizrise.presentation.screens.forgotPassword.ForgotPasswordViewModel
@@ -129,6 +131,7 @@ val viewModelModule = module {
     viewModel { EditUsernameViewModel(get(), get(), get()) }
     viewModel { SettingsScreenViewModel(get(), get(), get()) }
     viewModel { ForgotPasswordViewModel(get()) }
+    viewModel { CategoriesViewModel(get(), get()) }
 }
 
 val useCaseModule = module {
@@ -161,4 +164,5 @@ val useCaseModule = module {
     factory { GetUserLevelRankUseCase(get()) }
     factory { GetMyCategoryRankUseCase(get(), get()) }
     factory { NetworkObserver(androidContext()) }
+    factory { UpdateStreakUseCase(get()) }
 }
