@@ -64,6 +64,26 @@ class UserRepositoryImpl(
         workManager.enqueue(updateRequest)
     }
 
+    private fun scheduleUpdateStreak(user: User) {
+        val data = workDataOf(
+            "currentStreak" to user.currentStreak,
+            "currentLives" to user.currentLives,
+            "lastLoginDate" to user.lastLoginDate
+        )
+
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .build()
+
+        val updateRequest = OneTimeWorkRequestBuilder<UpdateUserWorker>()
+            .setInputData(data)
+            .setConstraints(constraints)
+            .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 1, TimeUnit.MINUTES)
+            .build()
+
+        workManager.enqueue(updateRequest)
+    }
+
     override suspend fun fetchUser(): Result<User> {
         return withContext(ioDispatcher) {
             try {
@@ -442,9 +462,52 @@ class UserRepositoryImpl(
         return withContext(ioDispatcher) {
             try {
                 userDAO.updateStreak(currentStreak, currentLives, lastLoginDate, name)
+                postStreak(currentStreak, currentLives, lastLoginDate, name)
                 Result.success(Unit)
             } catch (e: Exception) {
                 Result.failure(e)
+            }
+        }
+    }
+
+    override suspend fun postStreak(
+        currentStreak: Int,
+        currentLives: Int,
+        lastLoginDate: Long,
+        name: String
+    ): AppResult<Unit> {
+        return withContext(ioDispatcher) {
+            try {
+                val currentUser =
+                    FirebaseAuth.getInstance().currentUser ?: return@withContext AppResult.Error(
+                        AppError.Unauthorized
+                    )
+                val userId = currentUser.uid
+                val userRef = firestore.collection("users").document(userId)
+                val batch = firestore.batch()
+                batch.update(
+                    userRef,
+                    "currentStreak",
+                    currentStreak,
+                    "currentLives",
+                    currentLives,
+                    "lastLoginDate",
+                    lastLoginDate
+                )
+                batch.commit().await()
+                AppResult.Success(Unit)
+            } catch (e: Exception) {
+                if (e is UnknownHostException || e.cause is UnknownHostException) {
+                    val user = User(
+                        currentStreak = currentStreak,
+                        currentLives = currentLives,
+                        lastLoginDate = lastLoginDate
+                    )
+                    scheduleUpdateStreak(user)
+                    AppResult.Success(Unit)
+                } else {
+                    AppResult.Error(AppError.Unknown)
+                }
             }
         }
     }

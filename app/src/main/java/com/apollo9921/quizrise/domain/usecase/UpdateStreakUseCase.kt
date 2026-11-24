@@ -11,14 +11,15 @@ class UpdateStreakUseCase(
     private val repository: UserRepository
 ) {
     suspend operator fun invoke(user: User): Pair<Int, Int> {
-        val lastLoginDateMs = user.lastLoginDate
-        val lastLoginDate = Instant.ofEpochMilli(lastLoginDateMs)
+        val lastLoginDate = Instant.ofEpochMilli(user.lastLoginDate)
             .atZone(ZoneId.systemDefault())
             .toLocalDate()
 
         val today = LocalDate.now()
         val daysBetween = ChronoUnit.DAYS.between(lastLoginDate, today)
-        when {
+        val currentTimeMillis = System.currentTimeMillis()
+
+        return when {
             daysBetween == 1L -> {
                 val newStreak = user.currentStreak + 1
                 var newLives = user.currentLives
@@ -32,26 +33,27 @@ class UpdateStreakUseCase(
                 repository.updateStreak(
                     currentStreak = newStreak,
                     currentLives = newLives,
-                    lastLoginDate = today.toEpochDay(),
+                    lastLoginDate = currentTimeMillis,
                     name = user.name
                 )
 
-                return Pair(newStreak, newLives)
+                Pair(newStreak, newLives)
             }
 
             daysBetween > 1L -> {
+                val resetLives = 0
                 repository.updateStreak(
                     currentStreak = 1,
-                    currentLives = 0,
-                    lastLoginDate = today.toEpochDay(),
+                    currentLives = resetLives,
+                    lastLoginDate = currentTimeMillis,
                     name = user.name
                 )
 
-                return Pair(1, 0)
+                Pair(1, resetLives)
             }
 
             else -> {
-                return Pair(user.currentStreak, user.currentLives)
+                Pair(user.currentStreak, user.currentLives)
             }
         }
     }

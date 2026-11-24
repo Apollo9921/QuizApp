@@ -16,7 +16,10 @@ class PostUserAndResultsUseCase(
             totalPoints = 0,
             totalPointsPossible = 0,
             badge = PlayerLevel.RECRUIT.badgeName,
-            session = session
+            session = session,
+            currentStreak = 1,
+            currentLives = 0,
+            lastLoginDate = System.currentTimeMillis()
         )
 
         val resultsList = QuizCategory.entries.map { categoryRes ->
