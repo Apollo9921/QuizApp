@@ -107,7 +107,14 @@ private fun CategoriesScreen(
                 StreakAndLivesTracker(
                     streakDays = streakUIState.streak,
                     livesCount = streakUIState.lives,
-                    onTrackerClick = { navHostController.navigate(Destination.StreakAndLivesTrackerInfo.route) }
+                    onTrackerClick = {
+                        navHostController.navigate(
+                            Destination.StreakAndLivesTrackerInfo.passArgument(
+                                currentStreak = streakUIState.streak,
+                                currentLives = streakUIState.lives
+                            )
+                        )
+                    }
                 )
             }
         },

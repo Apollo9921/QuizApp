@@ -75,5 +75,9 @@ sealed class Destination(val route: String) {
         }
     }
 
-    data object StreakAndLivesTrackerInfo : Destination(route = "streak_lives_tracker_info")
+    data object StreakAndLivesTrackerInfo : Destination(route = "streak_lives_tracker_info?currentStreak={currentStreak}&currentLives={currentLives}") {
+        fun passArgument(currentStreak: Int, currentLives: Int): String {
+            return "streak_lives_tracker_info?currentStreak=$currentStreak&currentLives=$currentLives"
+        }
+    }
 }

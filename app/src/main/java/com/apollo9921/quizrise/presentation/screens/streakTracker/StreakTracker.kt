@@ -36,8 +36,8 @@ import com.apollo9921.quizrise.R
 @Composable
 fun StreakAndLivesInfoRoute(
     navHostController: NavHostController,
-    currentStreak: Int = 3,
-    currentLives: Int = 1
+    currentStreak: Int = 0,
+    currentLives: Int = 0
 ) {
     StreakAndLivesInfoScreen(
         currentStreak = currentStreak,
@@ -321,7 +321,7 @@ private fun MilestoneRow(
                 imageVector = Icons.Default.LocalFireDepartment,
                 contentDescription = null,
                 tint = Color(0xFFFF9800),
-                modifier = Modifier.size(18.dp)
+                modifier = Modifier.size(componentSizeByScreen(18.dp))
             )
             Text(
                 text = stringResource(R.string.consecutive_days, days),
@@ -331,6 +331,8 @@ private fun MilestoneRow(
             )
         }
 
+        Spacer(modifier = Modifier.padding(16.dp))
+
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(6.dp)
@@ -339,11 +341,11 @@ private fun MilestoneRow(
                 imageVector = Icons.Default.Favorite,
                 contentDescription = null,
                 tint = heartColor,
-                modifier = Modifier.size(16.dp)
+                modifier = Modifier.size(componentSizeByScreen(16.dp))
             )
             Text(
                 text = reward,
-                style = MaterialTheme.typography.labelSmall,
+                style = MaterialTheme.typography.displaySmall,
                 fontWeight = FontWeight.Bold,
                 color = if (isReached) Color(0xFF4ADE80) else White.copy(alpha = 0.85f)
             )

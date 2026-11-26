@@ -379,13 +379,22 @@ fun AnimationNav(navHostController: NavHostController, startDestination: String)
             )
         }
         composable(
-            route = Destination.StreakAndLivesTrackerInfo.route
+            route = Destination.StreakAndLivesTrackerInfo.route,
+            arguments = listOf(
+                navArgument("currentStreak") {
+                    type = NavType.IntType
+                },
+                navArgument("currentLives") {
+                    type = NavType.IntType
+                }
+            )
         ) {
-            //TODO GET STREAK AND LIVES FROM DATA LAYER
+            val currentStreak = it.arguments?.getInt("currentStreak") ?: 0
+            val currentLives = it.arguments?.getInt("currentLives") ?: 0
             StreakAndLivesInfoRoute(
                 navHostController = navHostController,
-                currentStreak = 7,
-                currentLives = 3
+                currentStreak = currentStreak,
+                currentLives = currentLives
             )
         }
     }
